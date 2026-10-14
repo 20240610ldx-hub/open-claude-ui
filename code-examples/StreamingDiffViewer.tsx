@@ -10,9 +10,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
  * - `tree-sitter-Tbdz49RR.js` (incremental parser tokens)
  * 
  * 核心工程机制:
- * 1. Shadow DOM 隔离与行高对齐约束:
- *    通过 `attachShadow({ mode: 'open' })` 隔离外部样式污染，
- *    左右分栏 (Gutter 与 Code) 采用 CSS Grid `gridRow: span N` 强制行高物理对齐，
+ * 1. 表格行号约束与 tabular-nums 对齐:
+ *    左右分栏（行号 Gutter 与代码文本）采用严格结构化行对齐与等宽数字锁定，
  *    杜绝因字体回退或发丝间隙导致的行号错位。
  * 2. 增量流式追加管道 (Incremental Stream Feed):
  *    支持在 LLM 流式输出代码差异时增量消费，通过 `feed(chunk)` 局部追加 DOM 节点，
