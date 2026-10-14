@@ -1350,7 +1350,7 @@ mask-image: linear-gradient(
 
 ---
 
-#### 5.1.1 低延迟流式音频架构与 SharedArrayBuffer 环形缓冲 (`audioSinkWorklet.js`)
+#### 5.1.1 官方流式音频架构逆向解密：AudioWorklet 与 SharedArrayBuffer 环形缓冲 (`audioSinkWorklet.js`)
 
 在语音大模型实时对话（如 Claude Voice / Realtime API）场景下，传统的 `AudioContext.decodeAudioData` 或单次 `AudioBufferSourceNode` 调度会因为主线程垃圾回收（GC）或长任务阻塞而产生致命的爆音、破音或断断续续。
 
@@ -2973,18 +2973,18 @@ module.exports = {
 | `code-examples/RichComposerWithMentions.tsx` | **新一代富文本与指令输入框** | `cd5a31703-B4nKQMBN.js` / `cb6930dae-Q_S3-FcC.js`：CJK 输入法合成守卫 (`isComposing || keyCode === 229`)、`/` 指令与 `@` 上下文双触发符、自适应高度伸缩与 Token 预测。 |
 | `code-examples/DraggableSessionList.tsx` | **侧边栏会话拖放与固定物理** | `shared-21-CGGmSsMS.js` / `shared-22-DYCF-SVs.js`：`pinnedOrder` 乐观拓扑重排、4px 指针移动死区、微倾斜幽灵投影与对撞占位线。 |
 | `code-examples/ReasoningAmbientGlow.tsx` | **动态光效与推理氛围感组件** | `c6a992d55-C0zTICcS.css` / `cde7c3a92-zIg_rFtU.js`：`cds-shimmer-text-shine` 非对称贝塞尔曲线、`wl-glow` 暖光漫反射、三点相位跳跃与 Canvas 焦散光场。 |
-| `code-examples/StreamingDiffViewer.tsx` | **代码差异对比与流式高亮引擎** | `c19e90103-CvUj-0ZH.js` / `tree-sitter-Tbdz49RR.js`：Shadow DOM 隔离、CSS Grid 行高对齐锁定、增量流式追加管道、统一/分屏双模式与 2.5s 复制衰减状态机。 |
+| `code-examples/StreamingDiffViewer.tsx` | **代码差异对比与流式高亮引擎** | `c19e90103-CvUj-0ZH.js` / `tree-sitter-Tbdz49RR.js`：表格行号对齐与 `tabular-nums` 约束、增量流式追加管道、统一/分屏双模式切换与 2.5s 复制衰减状态机。 |
 | `code-examples/MediaLightboxViewer.tsx` | **多模态媒体查看器与画廊** | `c4b054ed5-BGjH-Uu6.js`：75vw 跑道滑动位移、以光标为锚点的仿射平移缩放、4px 拖拽死区、Ctrl 滚轮指数缩放与按键陷阱。 |
 | `code-examples/useClaudeSharedElementTransition.ts` | **View Transitions 共享元素变形** | `cd5136de8-BDys1vAN.js`：基于 `startViewTransition("chat-image-preview")`、缩略图动态圆角检测与 `object-fit: contain` 内切百分比剪裁。 |
 | `code-examples/useClaudeScrollPinning.ts` | **流式滚动视口图钉 Hook** | `ca2ef848d-Dz47ULRM.js`：150ms 冷却时间戳防抢夺、40px 底部容差图钉锁定、35vh 弹性缓冲与 GPU 字符模糊消解。 |
-| `code-examples/ContainerResponsiveBar.tsx` | **自适应容器查询响应栏** | `c6a992d55-C0zTICcS.css`：基于 `@container` 的紧凑 (<254px)、中等 (255-420px) 与宽屏 (>420px) 渐进增强排版，彻底杜绝单字垂直折断。 |
+| `code-examples/ContainerResponsiveBar.tsx` | **自适应容器查询响应栏** | `c6a992d55-C0zTICcS.css`：基于 `@container` 的 4 阶流体压缩梯队 (>=576px / <480px / <384px / <320px)，彻底杜绝单字垂直折断。 |
 | `code-examples/EpitaxyIframeBridge.tsx` | **Artifacts 预览沙箱桥接器** | `index.chunk-CiiI592G.js`：基于严格 Origin 白名单校验与通道隔离的 postMessage RPC 协议，实现双向安全通信与高度自适应。 |
-| `code-examples/createClaudeMainWindow.ts` | **Electron 宿主主窗口创建工厂** | `mainWindow.js` / 主进程：`hiddenInset` 标题栏、macOS Vibrancy (`under-window`) 毛玻璃材质融合、最小尺寸 800×600 与状态持久化。 |
-| `code-examples/ClaudeDesktopHeader.tsx` | **macOS 沉浸式标题栏组件** | macOS 交通灯 76px 安全边距 (`-webkit-app-region: drag`)、多标签页切换胶囊与无缝沉浸式过渡。 |
+| `code-examples/createClaudeMainWindow.ts` | **Electron 宿主主窗口创建工厂** | `mainWindow.js` / 主进程：`hiddenInset` 标题栏、macOS Vibrancy (`under-window`) 毛玻璃材质融合、默认尺寸 1200×800、最小尺寸 600×400 与状态持久化。 |
+| `code-examples/ClaudeDesktopHeader.tsx` | **macOS 沉浸式标题栏组件** | macOS 交通灯 74px 逆缩放补偿避让槽 (`-webkit-app-region: drag`)、45px 全局拖拽带与 `.draggable-none` 交互隔离。 |
 | `code-examples/useClaudeRovingFocus.ts` | **全键盘无障碍焦点漫游 Hook** | W3C WAI-ARIA 规范：方向键 (ArrowUp/Down/Left/Right) 二维与一维网格漫游导航、Home/End 边界快速跳跃、动态 tabindex 维护。 |
 | `code-examples/useRateLimitBackoff.ts` | **指数退避重试与熔断状态机** | `shared-50-Bmc9oUMm.js`：截断指数退避 (`t = min(t_max, t_base * 2^a) * (1 ± J)`)、全抖动注入与自动熔断恢复。 |
-| `code-examples/ThinkingAccordion.tsx` | **思考过程状态机组件** | CSS Grid `0fr -> 1fr` 弹性高度伸缩无抖动动画、思考中 3 点波浪脉冲与耗时折叠器展示。 |
-| `code-examples/ClaudeAudioPlayer.ts` | **低延迟流式音频播放核心** | Web Audio API、24kHz 单声道、`AudioContext` 状态监听与平滑淡入淡出增益防爆音。 |
+| `code-examples/ThinkingAccordion.tsx` | **思考过程状态机组件** | Framer Motion 贝塞尔曲线高度弹性展开收缩、思考中单颗陶土色呼吸脉冲与引用复制状态机。 |
+| `code-examples/ClaudeAudioPlayer.ts` | **低延迟流式音频播放核心** | 原生 Web Audio API 振荡器无损合成、`AudioContext` 状态监听、30% 舒缓音量标准与平滑增益淡入淡出防爆音。 |
 | `code-examples/LiveMicActivityBars.tsx` | **6 频段非线性麦克风波形柱** | 6 柱波形、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩、8% 噪声门限过滤与 Framer Motion 动态阻尼弹性映射。 |
 
 ### 7.3 资产规范与系统级字体/音频替代方案

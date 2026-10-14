@@ -96,7 +96,7 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 * **[4.3 Smooth Scroll Edge Alpha Mask System](docs/04-动效物理学、着色器与环境光影.md#43-滚动边缘平滑渐变遮罩系统)**: Official 7-stop quintic ease non-linear alpha gradient mask with dynamic scroll sensors (zeroing at edges).
 
 ### 🎨 Part 5: Audiovisual Multimedia & Artifact Interaction Physics
-* **[5.1 Voice Mode & Web Audio Physical Acoustics System](docs/05-视听多媒体与产物交互物理学.md#51-语音模式与-web-audio-物理声学系统)**: `SharedArrayBuffer` + `Atomics` lock-free ring buffer Worklet, 30% soothing gain standard, and 6-band non-linear gamma spectrum bars.
+* **[5.1 Voice Mode & Web Audio Physical Acoustics System](docs/05-视听多媒体与产物交互物理学.md#51-语音模式与-web-audio-物理声学系统)**: Procedural Web Audio API oscillator synthesis, 30% soothing gain standard, and 6-band non-linear gamma spectrum bars (with decompiled AudioWorklet architecture analysis).
 * **[5.2 Multimodal Media Viewer & Gallery Runway Physics](docs/05-视听多媒体与产物交互物理学.md#52-多模态媒体查看器与画廊转场物理学)**: View Transitions shared-element morphing, cursor-anchored infinite pan/zoom affine equations, and 75vw runway viewport.
 * **[5.3 Split Pane Resizing & Collapsing Physics](docs/05-视听多媒体与产物交互物理学.md#53-双栏弹性分割与折叠物理学)**: Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds, and geometric clamping.
 * **[5.4 Artifact Preview Sandbox & Isolated IPC Architecture](docs/05-视听多媒体与产物交互物理学.md#54-工件预览沙箱与隔离通信架构)**: Epitaxy isolated container, 7 proprietary MIME dispatchers, user-gesture gating, and virtual package redirection.
@@ -107,7 +107,7 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 * **[6.2 Sidebar Session Drag-and-Drop Reordering & Topology Grid](docs/06-系统级桌面架构与协作拓扑.md#62-侧边栏会话拖放重排与拓扑网格)**: `pinnedOrder` optimistic topological reordering, 4px movement deadzone, tilted ghost drop shadow, and insertion collision indicators.
 * **[6.3 Multi-Agent Collaboration Board & Cowork Topology](docs/06-系统级桌面架构与协作拓扑.md#63-多代理协作看板与-cowork-空间拓扑)**: Multi-agent task delegation state machine, team-shared artifact asset pool, and cross-window `BroadcastChannel` synchronization.
 * **[6.4 Streaming Large-Text Output & Scroll Viewport Physics](docs/06-系统级桌面架构与协作拓扑.md#64-流式大文本输出与滚动视口物理学)**: 150ms cooldown latch against scroll hijacking, 40px bottom-tolerance scroll pin, and GPU subpixel blur elimination.
-* **[6.5 Container Query Responsive Layout & Anti-Squeeze Protection](docs/06-系统级桌面架构与协作拓扑.md#65-容器查询自适应排版与极端防挤压)**: `@container`-driven compact (<254px), medium (255-420px), and wide (>420px) progressive layouts, preventing single-glyph line wrapping.
+* **[6.5 Container Query Responsive Layout & Anti-Squeeze Protection](docs/06-系统级桌面架构与协作拓扑.md#65-容器查询自适应排版与极端防挤压)**: `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing single-glyph line wrapping.
 * **[6.6 Full-Keyboard Roving TabIndex & Accessibility](docs/06-系统级桌面架构与协作拓扑.md#66-全键盘盲操网格与无障碍访问)**: W3C WAI-ARIA compliance, roving tabindex focus loop, 2D arrow key grid navigation, and RTL mirroring.
 * **[6.7 Resiliency, Rate Limiting & Circuit Breaker State Machine](docs/06-系统级桌面架构与协作拓扑.md#67-异常容灾模型限流与业务状态机)**: Truncated exponential backoff for 429/503 errors, full jitter injection, and automatic 3-retry circuit breaker recovery.
 
@@ -244,27 +244,28 @@ open-claude-ui/
 | **Atomic Controls** | `ConfirmationDialog.tsx` | 16px corner radius, dual-ring popover diffused shadow, Gaussian blur backdrop, focus trapping. |
 | **Atomic Controls** | `AttachmentCard.tsx` | 10px panel radius, desktop card grid (128×96px) and composer inline pill dual-mode, growth entrance animation. |
 | **Stream & Input** | `ChatMessageBubbles.tsx` | User 18px radius with soft tint vs Assistant zero-border transparent layout with synchronized code blocks. |
-| **Stream & Input** | `ThinkingAccordion.tsx` | CSS Grid `0fr -> 1fr` spring expansion, enforcing an expansion mutex during active generation. |
+| **Stream & Input** | `ThinkingAccordion.tsx` | Framer Motion bezier height spring expansion, single clay breathing pulse, active generation mutex. |
+| **Stream & Input** | `ChatComposer.tsx` | 20px core input terminal, 3-state dual-ring focus shadow, `field-sizing: content` auto-resizing, thinking toggle. |
 | **Stream & Input** | `RichComposerWithMentions.tsx` | CJK IME guard (`isComposing || keyCode === 229`), `/` command & `@` context dual triggers, token budget estimation. |
 | **Stream & Input** | `ModelSwitcherWithTokenGauge.tsx` | 3-tier model hierarchy, Extended Thinking toggle, Prompt Caching 4-color memory breakdown, SVG circular gauge. |
 | **Stream & Input** | `McpToolDecisionCard.tsx` | Strict 3-state authorization lifecycle (`pending_approval` → `running` → `success` / `error`), 3-tier action array. |
 | **Motion & Atmosphere** | `ClaudeMotionPresets.ts` | 4 production-tuned spring physics presets (Bouncy/Snappy/Gentle/Heavy Snap) with settle-time & overshoot optimizations. |
 | **Motion & Atmosphere** | `ReasoningAmbientGlow.tsx` | `wl-glow` warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric bezier sweep, caustic light field. |
 | **Motion & Atmosphere** | `ScrollFadeContainer.tsx` | 7-stop non-linear alpha fade mask with dynamic scroll sensors (zeroing at edges). |
-| **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 24kHz channel, anti-pop gain ramp smoothing. |
-| **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band visualizer, 8% noise floor gate, and `Math.pow(energy, 0.7)` non-linear Gamma power compression. |
+| **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 30% gentle volume standard, anti-pop gain ramp smoothing. |
+| **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band full vocal coverage visualizer, 8% noise floor gate, `Math.pow(energy, 0.7)` non-linear Gamma compression. |
 | **Audiovisual & Media** | `MediaLightboxViewer.tsx` | 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming. |
 | **Audiovisual & Media** | `useClaudeSharedElementTransition.ts` | Built on `startViewTransition`, dynamic corner radius detection, and `object-fit: contain` reverse clip computation. |
 | **Audiovisual & Media** | `ArtifactsSplitPaneResizer.tsx` | Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds, geometric clamping. |
 | **Audiovisual & Media** | `EpitaxyIframeBridge.tsx` | Strict Origin validation & channel-isolated postMessage RPC, 7 proprietary MIME handlers, user-gesture gating. |
-| **Audiovisual & Media** | `StreamingDiffViewer.tsx` | Shadow DOM isolation, CSS Grid line-height lock, incremental streaming pipeline, unified/split dual viewing. |
+| **Audiovisual & Media** | `StreamingDiffViewer.tsx` | Table line-number alignment with `tabular-nums`, incremental streaming pipeline, unified/split view switching, 2.5s copy cooldown. |
 | **Audiovisual & Media** | `CodeBlock.tsx` | 12px radius, `#0d0d0c` solid black background, inline optical alignment for language tags, 2.5s copy cooldown. |
-| **System & Desktop** | `createClaudeMainWindow.ts` | Electron host window factory: `hiddenInset` titlebar, macOS Vibrancy (`under-window`) glass blending. |
-| **System & Desktop** | `ClaudeDesktopHeader.tsx` | macOS traffic light 76px safety margin (`-webkit-app-region: drag`), multi-tab switcher pills. |
+| **System & Desktop** | `createClaudeMainWindow.ts` | Electron host window factory: `hiddenInset` titlebar, macOS Vibrancy (`under-window`) glass blending, 1200×800 (min 600×400). |
+| **System & Desktop** | `ClaudeDesktopHeader.tsx` | macOS traffic light 74px inverse zoom compensation slot (`-webkit-app-region: drag`), multi-tab switcher pills. |
 | **System & Desktop** | `DraggableSessionList.tsx` | `pinnedOrder` optimistic topological reordering, 4px pointer deadzone, tilted ghost shadow, insertion collision lines. |
 | **System & Desktop** | `CoworkAgentCanvas.tsx` | Multi-agent task delegation state machine, team-shared artifact asset pool, cross-window `BroadcastChannel` sync. |
 | **System & Desktop** | `useClaudeScrollPinning.ts` | 150ms cooldown latch against scroll hijacking, 40px bottom-tolerance scroll pin, GPU subpixel blur elimination. |
-| **System & Desktop** | `ContainerResponsiveBar.tsx` | `@container`-driven compact (<254px), medium (255-420px), and wide (>420px) progressive layout, preventing glyph breaks. |
+| **System & Desktop** | `ContainerResponsiveBar.tsx` | `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing glyph breaks. |
 | **System & Desktop** | `useClaudeRovingFocus.ts` | W3C WAI-ARIA compliance: 1D & 2D arrow key grid navigation, Home/End boundary jumps, RTL mirroring. |
 | **System & Desktop** | `useRateLimitBackoff.ts` | 429/503 truncated exponential backoff (`t = min(t_max, t_base * 2^a) * (1 ± J)`), full jitter, circuit breaker. |
 
