@@ -149,7 +149,7 @@ mask-image: linear-gradient(to bottom,
 
 ### 2. Microphone 8% Noise Floor Gating & Procedural Web Audio Engine (Noise Floor Gating & Synthetic SFX)
 * **The Problem**: Ambient room noise (e.g. AC rumble) causes voice visualizers to jitter during silence; additionally, external MP3 audio assets introduce download latency and audio popping on abrupt interruption.
-* **Claude's Algorithm**: First, introduces an 8% noise floor gate (`NOISE_FLOOR = 0.08`) to cut out ambient hum before rendering voice bars; second, synthesizes pleasant interaction chimes using native Web Audio `OscillatorNode` with frequency ramps (e.g. 440Hz → 880Hz) and 15ms anti-pop exponential gain ramps, requiring zero external audio assets.
+* **Claude's Algorithm**: First, introduces an 8% noise floor gate (`NOISE_FLOOR = 0.08`) to cut out ambient hum before rendering voice bars; second, synthesizes pleasant interaction chimes using native Web Audio `OscillatorNode` with frequency ramps (e.g. 440Hz → 880Hz) and anti-pop exponential gain ramp smoothing, requiring zero external audio assets.
 
 ### 3. CJK IME Composition Double-Interlock Guard
 * **The Problem**: When Chinese, Japanese, or Korean users press Enter on an IME candidate floating list to confirm phonetic characters, the unfinished message is erroneously sent.
@@ -251,7 +251,7 @@ open-claude-ui/
 | **Motion & Atmosphere** | `ClaudeMotionPresets.ts` | 4 production-tuned spring physics presets (Bouncy/Snappy/Gentle/Heavy Snap) with settle-time & overshoot optimizations. |
 | **Motion & Atmosphere** | `ReasoningAmbientGlow.tsx` | `wl-glow` warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric bezier sweep, caustic light field. |
 | **Motion & Atmosphere** | `ScrollFadeContainer.tsx` | 7-stop non-linear alpha fade mask with dynamic scroll sensors (zeroing at edges). |
-| **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 24kHz channel, 15ms anti-pop gain ramp smoothing. |
+| **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 24kHz channel, anti-pop gain ramp smoothing. |
 | **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band visualizer, 8% noise floor gate, and `Math.pow(energy, 0.7)` non-linear Gamma power compression. |
 | **Audiovisual & Media** | `MediaLightboxViewer.tsx` | 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming. |
 | **Audiovisual & Media** | `useClaudeSharedElementTransition.ts` | Built on `startViewTransition`, dynamic corner radius detection, and `object-fit: contain` reverse clip computation. |

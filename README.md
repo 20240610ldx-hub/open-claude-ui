@@ -149,7 +149,7 @@ mask-image: linear-gradient(to bottom,
 
 ### 2. 麦克风 8% 底噪门限截断与原生 Web Audio 振荡器无损合成 (Noise Floor Gating & Synthetic SFX)
 * **痛点**：语音会话模式中空调等环境底噪容易导致波形持续微震抽搐；同时传统 Web 音效加载外部 MP3 有网络延迟并伴随切断爆音。
-* **Claude 算法**：一是引入 8% 噪声门限过滤（`NOISE_FLOOR = 0.08`）物理截断底噪；二是基于原生 Web Audio `OscillatorNode` 进行纯代码频率调制（如 440Hz → 880Hz 上扬）与 15ms 平滑指数淡入淡出（`exponentialRampToValueAtTime`），零外部音频依赖且彻底消除爆音。
+* **Claude 算法**：一是引入 8% 噪声门限过滤（`NOISE_FLOOR = 0.08`）物理截断底噪；二是基于原生 Web Audio `OscillatorNode` 进行纯代码频率调制（如 440Hz → 880Hz 上扬）与平滑指数淡入淡出（`exponentialRampToValueAtTime`），零外部音频依赖且彻底消除爆音。
 
 ### 3. CJK 输入法合成双重互锁守卫 (IME Composition Guard)
 * **痛点**：中日韩用户在拼音/假名输入法候选词浮层敲击 Enter 键确认汉字时，消息被粗暴误发送。
@@ -250,7 +250,7 @@ open-claude-ui/
 | **动效与环境光** | `ClaudeMotionPresets.ts` | 4 套生产级物理弹簧预设（Bouncy/Snappy/Gentle/Heavy Snap），精调超调量与收敛时延。 |
 | **动效与环境光** | `ReasoningAmbientGlow.tsx` | `wl-glow` 陶土暖光漫反射、`cds-shimmer-text-shine` 非对称贝塞尔曲线、焦散光场。 |
 | **动效与环境光** | `ScrollFadeContainer.tsx` | 7 档非线性透明度手写渐隐遮罩、动态滚动位置传感器（触顶/触底动态归零）。 |
-| **视听与多模态** | `ClaudeAudioPlayer.ts` | 原生 Web Audio API 合成振荡器、24kHz 声学通道、15ms 平滑淡入淡出增益防爆音。 |
+| **视听与多模态** | `ClaudeAudioPlayer.ts` | 原生 Web Audio API 合成振荡器、24kHz 声学通道、平滑淡入淡出增益防爆音。 |
 | **视听与多模态** | `LiveMicActivityBars.tsx` | 6 柱波形、8% 噪声门限过滤、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩。 |
 | **视听与多模态** | `MediaLightboxViewer.tsx` | 75vw 跑道滑动位移、以光标为锚点的仿射平移缩放（Pan/Zoom）、4px 拖拽死区、Ctrl 滚轮缩放。 |
 | **视听与多模态** | `useClaudeSharedElementTransition.ts` | 基于 `startViewTransition`、缩略图动态圆角检测与 `object-fit: contain` 内切剪裁逆向计算。 |
