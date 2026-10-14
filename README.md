@@ -55,6 +55,69 @@ graph TD
 
 ---
 
+## 🔬 逆向解密的 8 大硬核算法与工程物理学 (Decompiled Algorithms & Physics)
+
+UI 组件只是外壳，**真正让 Claude 交互质感脱颖而出的是隐藏在混淆代码底部的物理学方程与数学模型**。本项目从生产环境反编译还原了以下 8 项关键算法：
+
+### 1. 7 阶五次缓动非线性 Alpha 渐变遮罩 (Quintic Ease Mask)
+* **痛点**：常规 `linear-gradient` 滚动遮罩在视网膜高分屏上存在严重的色阶断层（Color Banding）与生硬切断感。
+* **Claude 算法**：采用苹果五次缓动曲线（Quintic Ease）精密采样的 7 阶非线性透明度阶梯（`0x0d, 0x26, 0x4d, 0x80, 0xb3, 0xd9, 0xff`），搭配触顶/触底动态归零传感器，呈现温润如沉入水雾的边缘渐变消隐：
+```css
+/* 提取自 c6a992d55-C0zTICcS.css */
+mask-image: linear-gradient(to bottom,
+  transparent,
+  #0000000d calc(var(--cds-scroll-fade-top) * .15),
+  #00000026 calc(var(--cds-scroll-fade-top) * .3),
+  #0000004d calc(var(--cds-scroll-fade-top) * .45),
+  #00000080 calc(var(--cds-scroll-fade-top) * .6),
+  #000000b3 calc(var(--cds-scroll-fade-top) * .75),
+  #000000d9 calc(var(--cds-scroll-fade-top) * .87),
+  #000 var(--cds-scroll-fade-top),
+  #000 calc(100% - var(--cds-scroll-fade-bottom)),
+  #000000d9 calc(100% - var(--cds-scroll-fade-bottom) * .87),
+  #000000b3 calc(100% - var(--cds-scroll-fade-bottom) * .75),
+  #00000080 calc(100% - var(--cds-scroll-fade-bottom) * .6),
+  #0000004d calc(100% - var(--cds-scroll-fade-bottom) * .45),
+  #00000026 calc(100% - var(--cds-scroll-fade-bottom) * .3),
+  #0000000d calc(100% - var(--cds-scroll-fade-bottom) * .15),
+  transparent
+);
+```
+
+### 2. AudioWorklet + Atomics 无锁环形缓冲区 (Lock-Free SAB RingBuffer)
+* **痛点**：流式大模型音频播放时，主线程垃圾回收（GC）或微小阻塞会导致音频管线欠载爆音（Pop/Glitch）。
+* **Claude 算法**：在独立高优先级 `AudioWorkletProcessor` 线程中以 ~375Hz 频率消费，主线程与音频线程通过 `SharedArrayBuffer` 与 `Atomics.load/store` 原子操作无锁读写指针，欠载时自动静音填充自愈。
+
+### 3. CJK 输入法合成双重互锁守卫 (IME Composition Guard)
+* **痛点**：中日韩用户在拼音/假名输入法候选词浮层敲击 Enter 键确认汉字时，消息被粗暴误发送。
+* **Claude 算法**：构建 `!(e.nativeEvent.isComposing || e.keyCode === 229)` 双重互锁守卫，并在按键拦截状态机中接管 `Escape` 键，防止候选词关闭时意外冒泡退避整个对话窗口。
+
+### 4. 150ms 冷却时间戳防抢夺视口图钉 (Scroll Pinning Cooldown)
+* **痛点**：流式 Token 生成时，用户向上滚动查阅历史消息，会被源源不断的生成内容强制拉回底部。
+* **Claude 算法**：建立 40px 底部容差图钉锁定 + 150ms 人工滚动冷却时间戳机制。用户一旦主动向上微移视口，系统立即锁定滚动权限 150ms，彻底杜绝“自动滚动抢夺屏幕”。
+
+### 5. 以鼠标光标为物理不动点的仿射 Pan/Zoom 方程
+* **痛点**：普通画廊放大图片时以视口中心为原点，导致鼠标想查看的细节区域被推离屏幕。
+* **Claude 算法**：将光标指针 $(O_x, O_y)$ 视为物理世界不变不动点，解算仿射变换矩阵：
+$$\text{idealTx} = O_x - (O_x - \text{prevTx}) \cdot \frac{S_{\text{target}}}{S_{\text{current}}}$$
+配合 4px 手部微抖死区与视口边界溢出阻尼系数 ($y = 0.7$)。
+
+### 6. 麦克风 6 频段非线性 Gamma 幂律能量压缩
+* **痛点**：直接将分贝映射为波形高度会导致低音爆格、说话停顿时空调噪音引起持续微抖。
+* **Claude 算法**：引入 8% 噪声门限过滤底噪，叠加 0.7 次幂非线性 Gamma 压缩：
+$$\text{Compressed} = \min\left(1, (\max(0, E - 0.08) / 0.92)^{0.7} \times 1.5 \times W_b\right)$$
+使微弱的人声细语被温和放大，高分贝爆音被自然平抑，波形动态范围极其均匀。
+
+### 7. Shadow DOM 隔离 + CSS Grid 行高几何硬锁
+* **痛点**：代码差异对比引擎在遇到长行换行（Word Wrap）时，左侧行号与右侧代码经常严重错位。
+* **Claude 算法**：采用 Shadow DOM 隔离语法选择器，左右两栏在 CSS Grid 中被强制同步硬锁为相同网格行跨度：`gridRow = span ${lines}`，并使用 `feed: e.slice(m.length)` 增量向 Worker 发送 Delta，避免 $O(N^2)$ 重复语法树重排。
+
+### 8. Iframe 事件防吞噬护盾与双击 50/50 吸附
+* **痛点**：拖拽 Artifacts 双栏分割条划过内部展示 iframe 时，iframe 截获指针事件导致拖拽状态死锁卡住。
+* **Claude 算法**：拖拽激活瞬间向全局注入 `data-pane-dragging="true"`，在预览容器上方强制覆盖一层透明的 `pointer-events: none` 阻断层；双击手柄瞬时触发二阶弹簧 50/50 平分居中吸附。
+
+---
+
 ## 📂 项目结构 (Repository Structure)
 
 ```
