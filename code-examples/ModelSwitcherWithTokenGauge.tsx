@@ -17,7 +17,7 @@ import React, { useState } from 'react';
  * 2. 深度思考 (Extended Thinking) 动态开关联动:
  *    支持在 Sonnet/Opus 下切换 Thinking 思考配额 (如 16k tokens)。
  * 3. Prompt Caching 显存成本解构表:
- *    精确展示普通输入、`cache_read_input_tokens` (读缓存节省 90% 资费)
+ *    精确展示普通输入、`cache_read_input_tokens` (读缓存命中优惠)
  *    与 `cache_creation_input_tokens` (写入缓存)。
  * 4. 环形 SVG 动态容量仪表盘 (Circular Capacity Gauge):
  *    基于 `strokeDashoffset` 渲染 200k 窗口饱和度，80% 触发陶土警告色。
@@ -265,7 +265,7 @@ export const ModelSwitcherWithTokenGauge: React.FC<ModelSwitcherProps> = ({
             <div className="grid grid-cols-2 gap-1.5 pt-1 text-[10px] text-[var(--cds-text-muted,#8c8c8c)]">
               <div className="flex items-center gap-1.5">
                 <span className="size-2 rounded-full bg-emerald-500" />
-                <span>缓存读取 (立省90%): {tokenMetrics.cacheReadTokens.toLocaleString()}</span>
+                <span>缓存命中读取: {tokenMetrics.cacheReadTokens.toLocaleString()}</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="size-2 rounded-full bg-blue-500" />

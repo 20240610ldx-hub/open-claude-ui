@@ -32,7 +32,7 @@ All reverse derivation, de-obfuscation static analysis, and ASAR package deconst
 
 Unlike superficial visual approximations or guesswork replicas, every component specification, damping constant, shader keyframe, and audio pipeline in this project has been **rigorously verified against decompiled production front-end architecture**:
 * **Editorial Warmth**: Signature Clay orange (`#d97757`), a 4-tier micro-contrast surface ladder (Surfaces 0 to 3), and Retina subpixel hairline compensation rings;
-* **Rigorous Interaction Physics**: Second-order damped harmonic oscillator mathematical solutions, 4px pointer movement deadzones, CJK IME composition guards, and 7-stop quintic ease alpha fade masks;
+* **Rigorous Interaction Physics**: 4 production-tuned spring physics presets, 4px pointer movement deadzones, CJK IME composition guards, and 7-stop non-linear alpha fade masks;
 * **Audiovisual & Desktop Architecture**: Zero-latency procedural audio synthesis via Web Audio API oscillators, cursor-anchored gallery pan/zoom affine transformations, macOS vibrancy glass fusion, and Cowork multi-agent orchestration topologies.
 
 > ⚖️ **Copyright & Asset Compliance (DMCA & Assets Policy)**:  
@@ -122,9 +122,9 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 
 UI components are merely the presentation layer. **What truly sets Claude's interaction quality apart are the mathematical models and physics equations buried beneath minified production code**. This repository decompiled and faithfully recreated 8 core algorithms:
 
-### 1. 7-Stop Quintic Ease Non-Linear Alpha Gradient Fade Mask
-* **The Problem**: Conventional `linear-gradient` scroll masks cause harsh color banding and jarring geometric cutoffs on high-DPI Retina displays.
-* **Claude's Algorithm**: Utilizes a 7-stop non-linear opacity ladder sampled from Apple's quintic ease curve (`0x0d, 0x26, 0x4d, 0x80, 0xb3, 0xd9, 0xff`), coupled with dynamic scroll sensors that smoothly collapse the mask to zero at top/bottom scroll boundaries:
+### 1. 7-Stop Non-Linear Alpha Gradient Fade Mask
+* **The Problem**: Conventional two-stop linear scroll masks cause harsh color banding and jarring geometric cutoffs on high-DPI Retina displays.
+* **Claude's Algorithm**: Discards blunt linear cuts in favor of 7 tuned non-linear opacity steps (`#0000000d` at 15% through `#000000d9` at 87% to solid `#000` at 100%), dynamically zeroed out by scroll boundary sensors at the top and bottom:
 ```css
 /* Extracted from production bundle c6a992d55-C0zTICcS.css */
 mask-image: linear-gradient(to bottom,
@@ -147,9 +147,9 @@ mask-image: linear-gradient(to bottom,
 );
 ```
 
-### 2. AudioWorklet + Atomics Lock-Free SAB RingBuffer
-* **The Problem**: During streaming LLM audio playback, main thread garbage collection (GC) or micro-stutters cause buffer underruns, producing audio pops and glitches.
-* **Claude's Algorithm**: Consumes audio chunks in a dedicated high-priority `AudioWorkletProcessor` thread at approx. 375Hz. The main thread and audio thread exchange read/write pointers lock-free via `SharedArrayBuffer` and `Atomics.load/store`, automatically padding with silence during underruns to self-heal seamlessly.
+### 2. Microphone 8% Noise Floor Gating & Procedural Web Audio Engine (Noise Floor Gating & Synthetic SFX)
+* **The Problem**: Ambient room noise (e.g. AC rumble) causes voice visualizers to jitter during silence; additionally, external MP3 audio assets introduce download latency and audio popping on abrupt interruption.
+* **Claude's Algorithm**: First, introduces an 8% noise floor gate (`NOISE_FLOOR = 0.08`) to cut out ambient hum before rendering voice bars; second, synthesizes pleasant interaction chimes using native Web Audio `OscillatorNode` with frequency ramps (e.g. 440Hz → 880Hz) and 15ms anti-pop exponential gain ramps, requiring zero external audio assets.
 
 ### 3. CJK IME Composition Double-Interlock Guard
 * **The Problem**: When Chinese, Japanese, or Korean users press Enter on an IME candidate floating list to confirm phonetic characters, the unfinished message is erroneously sent.
@@ -248,11 +248,11 @@ open-claude-ui/
 | **Stream & Input** | `RichComposerWithMentions.tsx` | CJK IME guard (`isComposing || keyCode === 229`), `/` command & `@` context dual triggers, token budget estimation. |
 | **Stream & Input** | `ModelSwitcherWithTokenGauge.tsx` | 3-tier model hierarchy, Extended Thinking toggle, Prompt Caching 4-color memory breakdown, SVG circular gauge. |
 | **Stream & Input** | `McpToolDecisionCard.tsx` | Strict 3-state authorization lifecycle (`pending_approval` → `running` → `success` / `error`), 3-tier action array. |
-| **Motion & Atmosphere** | `ClaudeMotionPresets.ts` | Second-order damped harmonic oscillator math solver (`m·x'' + c·x' + kx = 0`), 4 spring presets, and bezier constants. |
+| **Motion & Atmosphere** | `ClaudeMotionPresets.ts` | 4 production-tuned spring physics presets (Bouncy/Snappy/Gentle/Heavy Snap) with settle-time & overshoot optimizations. |
 | **Motion & Atmosphere** | `ReasoningAmbientGlow.tsx` | `wl-glow` warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric bezier sweep, caustic light field. |
-| **Motion & Atmosphere** | `ScrollFadeContainer.tsx` | Official 7-stop quintic ease non-linear alpha gradient mask with dynamic scroll sensors (zeroing at edges). |
+| **Motion & Atmosphere** | `ScrollFadeContainer.tsx` | 7-stop non-linear alpha fade mask with dynamic scroll sensors (zeroing at edges). |
 | **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 24kHz channel, 15ms anti-pop gain ramp smoothing. |
-| **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band visualizer, `Math.pow(energy, 0.7)` non-linear Gamma power compression, 8% noise floor cutoff. |
+| **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band visualizer, 8% noise floor gate, and `Math.pow(energy, 0.7)` non-linear Gamma power compression. |
 | **Audiovisual & Media** | `MediaLightboxViewer.tsx` | 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming. |
 | **Audiovisual & Media** | `useClaudeSharedElementTransition.ts` | Built on `startViewTransition`, dynamic corner radius detection, and `object-fit: contain` reverse clip computation. |
 | **Audiovisual & Media** | `ArtifactsSplitPaneResizer.tsx` | Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds, geometric clamping. |

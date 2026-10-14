@@ -32,7 +32,7 @@
 
 不同于市面上常见的盲猜或近似复刻，本项目所有组件规范、物理阻尼常数、着色器关键帧及音频管道均**严格依据真实前端架构反编译验证**提炼而成：
 * **温润的人文质感 (Editorial Warmth)**：纯正陶土橙（Clay `#d97757`）、4 层微对比表面阶梯（Surface 0-3）与视网膜高分屏发丝细边补偿（Hairline Ring）；
-* **严苛的交互物理学 (Interaction Physics)**：二阶阻尼谐振子数学求解、4px 指针移动死区、CJK 输入法合成守卫、7 阶五次缓动 Alpha 遮罩；
+* **严苛的交互物理学 (Interaction Physics)**：4 套生产级物理弹簧参数调校、4px 指针移动死区、CJK 输入法合成守卫、7 档渐隐非线性 Alpha 遮罩；
 * **高阶视听与系统架构 (Audiovisual & Architecture)**：基于原生 Web Audio API 的零延迟合成提示音、以光标为锚点的画廊跑道平移缩放、macOS 桌面毛玻璃透明融合与 Cowork 多代理协同拓扑。
 
 > ⚖️ **版权与合规声明 (DMCA & Assets Policy)**：  
@@ -122,9 +122,9 @@ graph TD
 
 UI 组件只是外壳，**真正让 Claude 交互质感脱颖而出的是隐藏在混淆代码底部的物理学方程与数学模型**。本项目从生产环境反编译还原了以下 8 项关键算法：
 
-### 1. 7 阶五次缓动非线性 Alpha 渐变遮罩 (Quintic Ease Mask)
-* **痛点**：常规 `linear-gradient` 滚动遮罩在视网膜高分屏上存在严重的色阶断层（Color Banding）与生硬切断感。
-* **Claude 算法**：采用苹果五次缓动曲线（Quintic Ease）精密采样的 7 阶非线性透明度阶梯（`0x0d, 0x26, 0x4d, 0x80, 0xb3, 0xd9, 0xff`），搭配触顶/触底动态归零传感器，呈现温润如沉入水雾的边缘渐变消隐：
+### 1. 7 档渐隐非线性透明度遮罩 (7-Stop Non-Linear Fade Mask)
+* **痛点**：常规双色线性滚动遮罩在视网膜高分屏上存在严重的色阶断层（Color Banding）与生硬切断感。
+* **Claude 算法**：没有采用粗暴的线性双色切线，而是精确使用 7 档非线性透明度手写数值（`#0000000d` 15% 至 `#000000d9` 87% 至 `#000` 100%），搭配触顶/触底动态归零传感器，呈现温润如沉入水雾的边缘渐隐：
 ```css
 /* 提取自 c6a992d55-C0zTICcS.css */
 mask-image: linear-gradient(to bottom,
@@ -147,9 +147,9 @@ mask-image: linear-gradient(to bottom,
 );
 ```
 
-### 2. AudioWorklet + Atomics 无锁环形缓冲区 (Lock-Free SAB RingBuffer)
-* **痛点**：流式大模型音频播放时，主线程垃圾回收（GC）或微小阻塞会导致音频管线欠载爆音（Pop/Glitch）。
-* **Claude 算法**：在独立高优先级 `AudioWorkletProcessor` 线程中以约 375Hz 频率消费，主线程与音频线程通过 `SharedArrayBuffer` 与 `Atomics.load/store` 原子操作无锁读写指针，欠载时自动静音填充自愈。
+### 2. 麦克风 8% 底噪门限截断与原生 Web Audio 振荡器无损合成 (Noise Floor Gating & Synthetic SFX)
+* **痛点**：语音会话模式中空调等环境底噪容易导致波形持续微震抽搐；同时传统 Web 音效加载外部 MP3 有网络延迟并伴随切断爆音。
+* **Claude 算法**：一是引入 8% 噪声门限过滤（`NOISE_FLOOR = 0.08`）物理截断底噪；二是基于原生 Web Audio `OscillatorNode` 进行纯代码频率调制（如 440Hz → 880Hz 上扬）与 15ms 平滑指数淡入淡出（`exponentialRampToValueAtTime`），零外部音频依赖且彻底消除爆音。
 
 ### 3. CJK 输入法合成双重互锁守卫 (IME Composition Guard)
 * **痛点**：中日韩用户在拼音/假名输入法候选词浮层敲击 Enter 键确认汉字时，消息被粗暴误发送。
@@ -247,11 +247,11 @@ open-claude-ui/
 | **会话流与输入** | `RichComposerWithMentions.tsx` | CJK 输入法合成守卫（`isComposing || keyCode === 229`）、`/` 指令与 `@` 上下文双触发符、Token 预测。 |
 | **会话流与输入** | `ModelSwitcherWithTokenGauge.tsx` | 三大模型梯队切换、Extended Thinking 开关、Prompt Caching 四色显存解构与 SVG 环形表。 |
 | **会话流与输入** | `McpToolDecisionCard.tsx` | 三态授权生命周期（`pending_approval` → `running` → `success` / `error`）、三阶决议动作阵列。 |
-| **动效与环境光** | `ClaudeMotionPresets.ts` | 二阶阻尼谐振子数学求解（`m·x'' + c·x' + kx = 0`）、4 大弹簧预设与贝塞尔常量。 |
+| **动效与环境光** | `ClaudeMotionPresets.ts` | 4 套生产级物理弹簧预设（Bouncy/Snappy/Gentle/Heavy Snap），精调超调量与收敛时延。 |
 | **动效与环境光** | `ReasoningAmbientGlow.tsx` | `wl-glow` 陶土暖光漫反射、`cds-shimmer-text-shine` 非对称贝塞尔曲线、焦散光场。 |
-| **动效与环境光** | `ScrollFadeContainer.tsx` | 官方 7 阶五次缓动非线性 Alpha 渐变遮罩、动态滚动位置传感器（触顶/触底动态归零）。 |
+| **动效与环境光** | `ScrollFadeContainer.tsx` | 7 档非线性透明度手写渐隐遮罩、动态滚动位置传感器（触顶/触底动态归零）。 |
 | **视听与多模态** | `ClaudeAudioPlayer.ts` | 原生 Web Audio API 合成振荡器、24kHz 声学通道、15ms 平滑淡入淡出增益防爆音。 |
-| **视听与多模态** | `LiveMicActivityBars.tsx` | 6 柱波形、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩、8% 噪声门限过滤。 |
+| **视听与多模态** | `LiveMicActivityBars.tsx` | 6 柱波形、8% 噪声门限过滤、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩。 |
 | **视听与多模态** | `MediaLightboxViewer.tsx` | 75vw 跑道滑动位移、以光标为锚点的仿射平移缩放（Pan/Zoom）、4px 拖拽死区、Ctrl 滚轮缩放。 |
 | **视听与多模态** | `useClaudeSharedElementTransition.ts` | 基于 `startViewTransition`、缩略图动态圆角检测与 `object-fit: contain` 内切剪裁逆向计算。 |
 | **视听与多模态** | `ArtifactsSplitPaneResizer.tsx` | Iframe 事件防吞噬护盾、4px 移动死区、双击 50/50 居中吸附、边缘折叠门限与约束钳制。 |
