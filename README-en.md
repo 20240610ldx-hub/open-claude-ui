@@ -124,7 +124,7 @@ UI components are merely the presentation layer. **What truly sets Claude's inte
 
 ### 1. 7-Stop Non-Linear Alpha Gradient Fade Mask
 * **The Problem**: Conventional two-stop linear scroll masks cause harsh color banding and jarring geometric cutoffs on high-DPI Retina displays.
-* **Claude's Algorithm**: Discards blunt linear cuts in favor of 7 tuned non-linear opacity steps (`#0000000d` at 15% through `#000000d9` at 87% to solid `#000` at 100%), dynamically zeroed out by scroll boundary sensors at the top and bottom:
+* **Claude's Algorithm**: Discards blunt linear cuts in favor of 7 non-linear gradient stops across the fade distance (15% position with 5.1% alpha `#0d`, 30% with 14.9% `#26`, 45% with 30.2% `#4d`, 60% with 50.2% `#80`, 75% with 70.2% `#b3`, 87% with 85.1% `#d9`, closely tracking a $y \approx x^{1.5}$ power curve), dynamically zeroed out by scroll boundary sensors at the top and bottom:
 ```css
 /* Extracted from production bundle c6a992d55-C0zTICcS.css */
 mask-image: linear-gradient(to bottom,

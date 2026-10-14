@@ -230,7 +230,7 @@ export const RichComposerWithMentions: React.FC<RichComposerProps> = ({
     setAttachedMentions((prev) => prev.filter((m) => m.id !== id));
   };
 
-  // 估算 Token 数量 (标准经验算法: 英文 ~4 字符/token, 中文 ~1.5 字符/token)
+  // 估算 Token 数量 (基于 Math.ceil(rawLen * 0.7)，折合 ~1.43 字符/token，适度向上对齐中英文混合平均密度)
   const estimatedTokens = useMemo(() => {
     const rawLen = text.length;
     let tokens = Math.ceil(rawLen * 0.7);

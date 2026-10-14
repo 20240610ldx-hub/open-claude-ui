@@ -3,8 +3,8 @@
  * 逆向还原自 Claude Desktop: c58115fda-BKnbLmi3.js / cd5a31703-B4nKQMBN.js
  * 
  * 核心特性：
- * 1. 5 重权限沙箱隔离与 strict-origin
- * 2. 用户手势激活门禁拦截 (hasUserActivation 校验)
+ * 1. 严格权限沙箱隔离 (严格移除 allow-same-origin，切断 parent DOM 逃逸路径与 Cookie 共享，确保 null-origin 隔离)
+ * 2. 原生用户手势激活门禁拦截 (基于 event.userActivation 原生特性防御不可信合成事件)
  * 3. 7 种 ant 专有 MIME 协议分流
  * 4. 虚拟包别名重定向与自愈解析
  */
@@ -23,6 +23,7 @@ export type EpitaxyMimeType =
 interface EpitaxyIframeBridgeProps {
   srcDoc: string;
   mimeType?: EpitaxyMimeType;
+  allowedOrigins?: string[];
   onMessage?: (payload: any) => void;
   onError?: (err: any) => void;
   onRecovered?: (moduleName: string) => void;
@@ -30,6 +31,7 @@ interface EpitaxyIframeBridgeProps {
 
 export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
   srcDoc,
+  allowedOrigins,
   onMessage,
   onError,
   onRecovered
@@ -39,13 +41,30 @@ export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
   const handleMessage = useCallback(
     (event: MessageEvent) => {
       // 核心安全校验 1：确保消息确实来自受管辖的当前 iframe Window
-      if (event.source !== iframeRef.current?.contentWindow) return;
-      const { channel, type, payload, hasUserActivation, recoveredModule } = event.data || {};
+      if (!iframeRef.current || event.source !== iframeRef.current.contentWindow) return;
 
-      // 核心安全校验 2：严格门禁，拦截未带真实用户交互标记的恶意合成消息
+      // 核心安全校验 2：受限沙箱 iframe 在移除 allow-same-origin 后 origin 为 'null'
+      // 若处于独立安全域名部署架构，校验是否在白名单内
+      const isNullOrigin = event.origin === 'null';
+      const isAllowedOrigin = allowedOrigins ? allowedOrigins.includes(event.origin) : false;
+      if (!isNullOrigin && !isAllowedOrigin && event.origin !== window.location.origin) {
+        console.warn('[Epitaxy Sandbox] Discarded message from untrusted origin:', event.origin);
+        return;
+      }
+
+      const { channel, type, payload, recoveredModule } = event.data || {};
+
+      // 核心安全校验 3：严格用户手势激活门禁拦截（防御未经授权自动触发的高危 MCP / 外部通信）
+      // 检查浏览器原生 userActivation，而非轻信未经签名的 payload 数据
       if (channel === 'epitaxy_mcp_app') {
-        if (!event.isTrusted || !hasUserActivation) {
-          console.warn('[Epitaxy MCP App] Blocked synthetic message without iframe-originated user activation');
+        const hasRealUserActivation =
+          (event as any).userActivation?.hasBeenActive ??
+          (event as any).userActivation?.isActive ??
+          (window.navigator as any).userActivation?.hasBeenActive ??
+          false;
+
+        if (!hasRealUserActivation) {
+          console.warn('[Epitaxy MCP App] Blocked synthetic message without verified user activation');
           return;
         }
         onMessage?.(payload);
@@ -55,7 +74,7 @@ export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
         onRecovered?.(recoveredModule);
       }
     },
-    [onMessage, onError, onRecovered]
+    [allowedOrigins, onMessage, onError, onRecovered]
   );
 
   useEffect(() => {
@@ -68,8 +87,8 @@ export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
       ref={iframeRef}
       title="Claude Epitaxy Artifact Sandbox"
       srcDoc={srcDoc}
-      // 官方 5 重权限安全沙箱配置
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
+      // 严格权限安全沙箱配置：移除 allow-same-origin，切断同源父 DOM 穿透逃逸路径
+      sandbox="allow-scripts allow-forms allow-popups allow-modals"
       referrerPolicy="strict-origin"
       allow="clipboard-write; fullscreen"
       className="h-full w-full border-0 bg-transparent"

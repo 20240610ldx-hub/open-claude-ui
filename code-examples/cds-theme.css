@@ -76,6 +76,21 @@
   --cds-message-bubble-radius: 18px;
   --cds-radius-composer: 20px;
   --df-radius-pill: 999px;
+
+  /* 9. 语义化组件别名映射 (Component Semantic Aliases) */
+  --cds-bg-surface: var(--cds-surface-2);
+  --cds-bg-surface-elevated: var(--cds-surface-3);
+  --cds-bg-primary: var(--cds-surface-0);
+  --cds-bg-secondary: var(--cds-surface-1);
+  --cds-bg-hover: var(--cds-fill-ghost-hover);
+  --cds-bg-selected: var(--cds-fill-ghost-selected);
+  --cds-border-subtle: var(--cds-alpha-2);
+  --cds-border-accent: var(--cds-clay);
+  --cds-fill-brand: var(--cds-clay);
+  --cds-fill-brand-hover: var(--cds-clay-hover);
+  --cds-fill-brand-subtle: var(--cds-clay-light);
+  --cds-fill-danger: #ef4444;
+  --cds-text-accent: var(--cds-clay);
 }
 
 /* 高分屏视网膜物理发丝细线补偿 */
@@ -144,6 +159,21 @@
   --cds-bg-tint-blue: rgba(255, 255, 255, 0.06);
   --cds-segmented-track: rgba(255, 255, 255, 0.08);
   --cds-segmented-thumb: #2c2c2a;
+
+  /* 语义化组件别名暗色重载 */
+  --cds-bg-surface: var(--cds-surface-2);
+  --cds-bg-surface-elevated: var(--cds-surface-3);
+  --cds-bg-primary: var(--cds-surface-0);
+  --cds-bg-secondary: var(--cds-surface-1);
+  --cds-bg-hover: var(--cds-fill-ghost-hover);
+  --cds-bg-selected: var(--cds-fill-ghost-selected);
+  --cds-border-subtle: var(--cds-alpha-2);
+  --cds-border-accent: var(--cds-clay);
+  --cds-fill-brand: var(--cds-clay);
+  --cds-fill-brand-hover: var(--cds-clay-hover);
+  --cds-fill-brand-subtle: rgba(217, 119, 87, 0.15);
+  --cds-fill-danger: #f87171;
+  --cds-text-accent: var(--cds-clay);
 }
 
 /* ==========================================================================

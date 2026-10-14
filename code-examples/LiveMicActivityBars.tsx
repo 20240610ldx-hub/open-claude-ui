@@ -22,9 +22,17 @@ export const LiveMicActivityBars: React.FC<LiveMicActivityBarsProps> = ({
 }) => {
   const VIEWBOX_SIZE = 48;
   const BAR_COUNT = 6;
-  const ACTIVE_INDICES = [1, 2, 3]; // 核心 3 频段主要响应
-  const NOISE_FLOOR = [0.08, 0.08, 0.08];
-  const BAND_WEIGHTS = [1.0, 1.2, 0.9];
+  // 6 频段非重叠区间采样（覆盖 85Hz - 4.8kHz 人声基频与关键共振峰，fftSize=512, ~86Hz/bin）
+  const SPEECH_BANDS = [
+    { start: 1, end: 3 },   // ~86-258 Hz: 人声基频 (F0)
+    { start: 3, end: 6 },   // ~258-516 Hz: 低频元音能量
+    { start: 6, end: 12 },  // ~516-1033 Hz: 第一共振峰 (F1)
+    { start: 12, end: 22 }, // ~1033-1895 Hz: 第二共振峰 (F2)
+    { start: 22, end: 36 }, // ~1895-3100 Hz: 辅音与第三共振峰 (F3)
+    { start: 36, end: 56 }, // ~3100-4823 Hz: 齿音与清辅音细节
+  ];
+  const NOISE_FLOOR = [0.08, 0.08, 0.08, 0.08, 0.08, 0.08];
+  const BAND_WEIGHTS = [1.1, 1.2, 1.3, 1.2, 1.0, 0.9];
 
   // 6 条音频柱的独立 Framer Motion 动态高度
   const motionValues = Array.from({ length: BAR_COUNT }, () => useMotionValue(minHeight));
@@ -33,7 +41,7 @@ export const LiveMicActivityBars: React.FC<LiveMicActivityBarsProps> = ({
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
-  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const dataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const pulseStartTimeRef = useRef<number>(0);
   const animationFrameId = useRef<number | null>(null);
 
@@ -55,7 +63,7 @@ export const LiveMicActivityBars: React.FC<LiveMicActivityBarsProps> = ({
         source.connect(analyser);
         sourceRef.current = source;
 
-        dataArrayRef.current = new Uint8Array(analyser.frequencyBinCount);
+        dataArrayRef.current = new Uint8Array(new ArrayBuffer(analyser.frequencyBinCount));
       } catch (err) {
         console.error('[LiveMicActivityBars] AudioContext init failed', err);
       }
@@ -112,14 +120,12 @@ export const LiveMicActivityBars: React.FC<LiveMicActivityBarsProps> = ({
         if (analyser && dataArray) {
           analyser.getByteFrequencyData(dataArray);
 
-          // 核心 3 频段非线性 Gamma 幂律压缩采样
-          for (let b = 0; b < 3; b++) {
-            const barIndex = ACTIVE_INDICES[b];
-            const startBin = (b + 1) * 8;
-            const endBin = startBin + 16;
+          // 核心 6 频段非线性 Gamma 幂律压缩采样
+          for (let b = 0; b < BAR_COUNT; b++) {
+            const { start, end } = SPEECH_BANDS[b];
             let sum = 0;
             let count = 0;
-            for (let bin = startBin; bin < endBin; bin++) {
+            for (let bin = start; bin < end; bin++) {
               sum += dataArray[bin] || 0;
               count++;
             }
@@ -131,8 +137,8 @@ export const LiveMicActivityBars: React.FC<LiveMicActivityBarsProps> = ({
             const compressed = Math.min(1, Math.pow(gated, 0.7) * 1.5 * weight);
             const targetHeight = minHeight + (maxHeight - minHeight) * compressed;
 
-            motionValues[barIndex]?.set(targetHeight);
-            opacityValues[barIndex]?.set(1);
+            motionValues[b]?.set(targetHeight);
+            opacityValues[b]?.set(1);
           }
         }
       }

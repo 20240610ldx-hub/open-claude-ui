@@ -56,7 +56,7 @@ export function calcDampedHarmonicOscillator(
 
 /**
  * 预设 1: 按钮点击、开关切换、图标按压 (Button & Small Controls)
- * 特征：高频微弹，利落归位无粘滞。超调量 +4.2%，0.22s 极速收敛。
+ * 特征：高频微弹，利落归位无粘滞。超调量 +8.8% (ζ = 0.612)，0.22s 极速收敛。
  */
 export const SPRING_BOUNCY: Transition = {
   type: "spring",

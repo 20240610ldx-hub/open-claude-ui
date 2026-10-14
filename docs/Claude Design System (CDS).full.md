@@ -1174,7 +1174,7 @@ $$m \frac{d^2 x}{dt^2} + c \frac{dx}{dt} + k (x - x_{\text{target}}) = 0$$
 #### 1. 生产环境四大标准物理预设表
 | 预设方案代号 | 刚度 (`stiffness`) | 阻尼 (`damping`) | 质量 (`mass`) | 阻尼比 $\zeta$ | 超调量 (Overshoot) | 收敛时间 | 核心应用场景与物理质感 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **Button & Small Controls** | `600` | `30` | `1.0` | `0.612` (欠阻尼) | `+4.2%` | `0.22s` | **按钮点击、开关切换、图标按压**。高频微弹，利落归位无粘滞。 |
+| **Button & Small Controls** | `600` | `30` | `1.0` | `0.612` (欠阻尼) | `+8.8%` | `0.22s` | **按钮点击、开关切换、图标按压**。高频微弹，利落归位无粘滞。 |
 | **Card / Popover Reveal** | `320` | `28` | `1.0` | `0.783` (欠阻尼) | `+1.8%` | `0.35s` | **消息上浮、卡片展开、气泡悬浮窗**。沉稳顺滑，微冲后平稳着陆。 |
 | **Bouncy Light Feedback** | `380` (或 `dur 0.32`) | `18` (或 `bounce 0.15`) | `1.0` | `0.462` (明显欠阻尼) | `+19.4%` | `0.58s` | **点赞、复制成功勾选、新消息微提示**。明显两周期弹簧跳跃感。 |
 | **High Damping Panel Drag** | `1200` | `80` | `0.1` | `3.650` (过阻尼) | `0%` (绝对零过冲) | `0.14s` | **侧边栏与浮层手势拖拽吸附**。超高刚度与阻尼，松手瞬间极速绝对咬合。 |
@@ -1291,7 +1291,7 @@ Claude 拥有极具辨识度的“思考与推理”视觉氛围。不同于常�
 
 在官方混淆样式表 `c6a992d55-C0zTICcS.css` 中提取出的 7 阶非线性 Alpha 渐变遮罩规则：
 ```css
-/* 官方精密 7-Stop 五次缓动渐变遮罩 (Quintic Ease Alpha Mask) */
+/* 官方精密 7-Stop 非线性渐变遮罩 (7-Stop Non-Linear Alpha Mask) */
 mask-image: linear-gradient(
   to bottom,
   transparent,
@@ -1313,10 +1313,10 @@ mask-image: linear-gradient(
 );
 ```
 
-#### 4.3.2 官方 7 阶五次缓动透明度遮罩 (7-Stop Quintic Ease Alpha Mask)
-常规 CSS 渐变（如 `from transparent to black`）在现代高分辨率显示器上会产生明显的色阶断层（Color Banding）。Claude 采用了类似苹果原生五次缓动曲线（Quintic Ease）的精密采样点：
-- **距离阶梯**：[15%, 30%, 45%, 60%, 75%, 87%, 100%]
-- **Alpha 阶梯**：[5.1%, 14.9%, 30.2%, 50.2%, 70.2%, 85.1%, 100%]
+#### 4.3.2 官方 7 档非线性透明度遮罩 (7-Stop Non-Linear Alpha Mask)
+常规 CSS 渐变（如 `from transparent to black`）在现代高分辨率显示器上会产生明显的色阶断层（Color Banding）。Claude 采用了 7 组非线性梯度精密采样点，数据紧密拟合 $y \approx x^{1.5}$ 幂律感知曲线：
+- **距离阶梯 (Position Stops)**：[15%, 30%, 45%, 60%, 75%, 87%, 100%]
+- **Alpha 阶梯 (True Alpha)**：[5.1% (`#0d`), 14.9% (`#26`), 30.2% (`#4d`), 50.2% (`#80`), 70.2% (`#b3`), 85.1% (`#d9`), 100% (`#000`)]
 通过非线性透明度加权，使得文字或卡片滑入视口边缘时如同沉入水雾，极其温润自然。
 
 #### 4.3.3 动态滚动位置传感器与双轴羽化消隐
@@ -2967,7 +2967,7 @@ module.exports = {
 | :--- | :--- | :--- |
 | `code-examples/ArtifactsSplitPaneResizer.tsx` | **双栏弹性分割与折叠引擎** | `shared-22-DYCF-SVs.js` / `c909d93e7-BsSzOQcm.js`：Iframe 事件防吞噬护盾、4px 移动死区、双击 50/50 居中吸附、边缘折叠门限与 min/max 约束钳制。 |
 | `code-examples/McpToolDecisionCard.tsx` | **MCP 交互式工具调用决策卡片** | `cc1aae219-CPC-WA-x.js` / `c05b96c7f-DSH7iwX5.js`：三态授权生命周期 (`pending_approval` → `running` → `success` / `error`)、三阶决议动作阵列与 Payload 审查。 |
-| `code-examples/ScrollFadeContainer.tsx` | **滚动边缘平滑渐变遮罩系统** | `frame-shell-chrome-BDKWDTvx.js` / `c6a992d55-C0zTICcS.css`：7 阶五次缓动非线性 Alpha 渐变遮罩、动态滚动位置传感器与双轴羽化消隐。 |
+| `code-examples/ScrollFadeContainer.tsx` | **滚动边缘平滑渐变遮罩系统** | `frame-shell-chrome-BDKWDTvx.js` / `c6a992d55-C0zTICcS.css`：7 档非线性 Alpha 渐变遮罩、动态滚动位置传感器与双轴羽化消隐。 |
 | `code-examples/ModelSwitcherWithTokenGauge.tsx` | **模型矩阵选择器与 Token 仪表盘** | `shared-8-4Jj8qhmU.js` / `shared-3-DVMvy2kM.js`：三大模型梯队架构、Thinking 思考开关、Prompt Caching 显存成本解构与环形 SVG 仪表盘。 |
 | `code-examples/CoworkAgentCanvas.tsx` | **多智能体协同看板与拓扑空间** | `shared-6-zKKz0bS2.js` / `shared-21-CGGmSsMS.js`：多 Agent 任务委派状态机、团队共享 Artifacts 工件网格资产池与 BroadcastChannel 事件同步。 |
 | `code-examples/RichComposerWithMentions.tsx` | **新一代富文本与指令输入框** | `cd5a31703-B4nKQMBN.js` / `cb6930dae-Q_S3-FcC.js`：CJK 输入法合成守卫 (`isComposing || keyCode === 229`)、`/` 指令与 `@` 上下文双触发符、自适应高度伸缩与 Token 预测。 |

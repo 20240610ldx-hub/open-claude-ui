@@ -6,13 +6,14 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
  * 
  * 逆向还原自官方 Claude Desktop / Web 边缘平滑渐变遮罩系统:
  * - `frame-shell-chrome-BDKWDTvx.js` (cds-scroll-fade-y-active / cds-scroll-fade-top-raw)
- * - `c6a992d55-C0zTICcS.css` (7 阶五次缓动 Alpha 渐变遮罩公式)
+ * - `c6a992d55-C0zTICcS.css` (7 档非线性 Alpha 渐变遮罩)
  * 
  * 核心视觉物理学:
- * 1. 官方 7 阶五次缓动透明度遮罩 (7-Stop Quintic Ease Alpha Mask):
- *    Claude 没有采用粗暴的双色透明切线，而是精确使用 7 组非线性 Alpha 梯度：
- *    [0% (transparent), 15% (#0d), 30% (#26), 45% (#4d), 60% (#80), 75% (#b3), 87% (#d9), 100% (#000)]
- *    配合 `mask-image` 实现物理级顺滑边缘消隐，彻底杜绝内容截断割裂感。
+ * 1. 官方 7 档非线性透明度遮罩 (7-Stop Non-Linear Alpha Mask):
+ *    Claude 没有采用粗暴的双色透明切线，而是在羽化距离内精确采用 7 组非线性梯度采样：
+ *    - 距离位置 (Stops): 0%, 15%, 30%, 45%, 60%, 75%, 87%, 100%
+ *    - 实际 Alpha 值: 0.0 (transparent), ~0.05 (#0d), ~0.15 (#26), ~0.30 (#4d), ~0.50 (#80), ~0.70 (#b3), ~0.85 (#d9), 1.0 (#000)
+ *    数据紧密贴合 y ≈ x^1.5 幂律感知平滑曲线，配合 `mask-image` 实现物理级温润边缘消隐，彻底杜绝色阶断层。
  * 2. 动态滚动位置传感器 (Scroll State Sensor):
  *    - 触顶时 (`scrollTop <= 1`)：`--cds-scroll-fade-top = 0px`，顶边缘恢复完全清晰；
  *    - 滚入内容时：动态淡入 28px 平滑羽化边缘；

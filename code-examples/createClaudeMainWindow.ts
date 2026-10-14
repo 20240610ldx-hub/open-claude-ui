@@ -65,7 +65,7 @@ export function createClaudeMainWindow() {
 
   const updateRadius = () => {
     // 窗口化赋予 8px 圆角，最大化或全屏时收缩为 0px，防止黑色锯齿边缘溢出
-    contentView.setBorderRadius(
+    (contentView as any).setBorderRadius(
       hostWindow.isMaximized() || hostWindow.isFullScreen() ? 0 : 8
     );
   };
@@ -82,7 +82,7 @@ export function createClaudeMainWindow() {
     hostWindow.setWindowButtonPosition(getCompensatedTrafficLightPosition(zoom));
   });
 
-  contentView.webContents.once('ready-to-show', () => {
+  hostWindow.once('ready-to-show', () => {
     updateBounds();
     updateRadius();
     hostWindow.show();
