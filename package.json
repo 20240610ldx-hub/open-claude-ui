@@ -1,7 +1,7 @@
 {
   "name": "open-claude-ui",
   "version": "1.0.0",
-  "description": "基于洁净室逆向工程的高保真 Claude 设计系统 (CDS) 与工程交互物理学实现。包含 30 个生产级独立模块、8 大硬核算法与七大篇章逆向分析手册。",
+  "description": "深度逆向还原 Claude 官方桌面端 UI 与丝滑交互物理学。纯手写 30 个开箱即用的 React 独立组件、8 项硬核物理与音频算法，附带 3000+ 行七大篇章逆向分析手册。",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
