@@ -31,6 +31,7 @@ tags:
 # Claude Design System (CDS) 前端 UI 与动效完整开发指导手册
 
 > **版本**：1.0 (基于 Claude Desktop `/Applications/Claude.app` 生产环境全量逆向分析)  
+> **逆向框架**：全流程依托 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** 完成 Vite/Rollup AST 反混淆、运行时行为追踪与 ASAR 资源解包。  
 > **定位**：供前端工程师、UI 设计师与独立开发者像素级复刻 Claude 质感与交互的完整工程指导规范。  
 > **技术栈适配**：HTML5 + Tailwind CSS v3/v4 + React/Vue + Framer Motion (或原生 CSS)
 

@@ -10,6 +10,7 @@
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
+  <a href="https://github.com/morluto/rea"><img src="https://img.shields.io/badge/Reverse%20Engineered%20with-REA-ea580c?logo=github" alt="Reverse Engineered with REA" /></a>
   <a href="assets/README.md"><img src="https://img.shields.io/badge/assets-clean--room%20compliance-success" alt="Asset Compliance" /></a>
   <a href="https://www.typescriptlang.org/"><img src="https://img.shields.io/badge/TypeScript-5.5+-blue?logo=typescript" alt="TypeScript" /></a>
   <a href="https://react.dev/"><img src="https://img.shields.io/badge/React-18+-61DAFB?logo=react" alt="React" /></a>
@@ -22,6 +23,8 @@
 ## 📖 简介 (Introduction)
 
 `open-claude-ui` 是基于对现代桌面端 AI 客户端进行深度洁净室逆向工程（Clean-Room Reverse Engineering）构建的高保真开源 UI 组件库与动效引擎。
+
+整个逆向推导、反混淆静态分析与 ASAR 资源解构，均依托于先进的多平台逆向工程框架 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** 完成——通过 REA 的静态 AST 解析、闭包代码反混淆与运行时跟踪能力，穿透生产级压缩包，精准还原了底层工程物理常数与数学模型。
 
 不同于市面上常见的盲猜或近似复刻，本项目所有组件规范、物理阻尼常数、着色器关键帧及音频管道均**严格依据真实前端架构反编译验证**提炼而成：
 * **温润的人文质感 (Editorial Warmth)**：纯正陶土橙（Clay `#d97757`）、4 层微对比表面阶梯（Surface 0~3）与视网膜高分屏发丝细边补偿（Hairline Ring）；
@@ -52,6 +55,17 @@ graph TD
 2. **纯原生系统级排版与音效**：支持系统高保真字体回退栈，内置基于 Web Audio 振荡器的零延迟提示音合成引擎。
 3. **交互式组件故事书 (Storybook Preview)**：内置单文件开箱即用的离线 Storybook，支持浏览器直接打开预览全部组件动效。
 4. **七大领域分卷完整技术手册**：附带深度逆向分析开发手册 [`docs/Claude Design System (CDS).md`](docs/Claude%20Design%20System%20(CDS).md)。
+
+---
+
+## 🛠️ 逆向工程工具链支持 (Reverse Engineering Tooling: REA)
+
+本项目的代码解密、ASAR 资源解包、抽象语法树 (AST) 还原与底层二阶阻尼物理方程逆向推导，均深度依托开源逆向框架 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)**：
+* **穿透生产级混淆**：依托 REA 的 Electron/JavaScript 运行时静态与动态追踪能力，自动化穿透生产级 Vite/Rollup 代码混淆与闭包隔离逻辑；
+* **物理模型精准提取**：通过 REA 工具链精确提取客户端内部的未压缩物理常数（如 7 阶五次缓动遮罩系数、`AudioWorklet` 无锁环形缓冲区设计及二阶弹簧微分方程）；
+* **跨端架构协议还原**：借助 REA 快速定位 Electron 宿主与渲染进程的 IPC 通信协议，高保真复刻 macOS 窗口毛玻璃融合同步机制。
+
+> 💡 如果你需要对任意二进制目标、Electron/Web 应用或运行时行为进行深层次逆向分析与代码解密，推荐探索开源项目 **[morluto/rea (Reverse Engineer Anything)](https://github.com/morluto/rea)**。
 
 ---
 
@@ -343,6 +357,13 @@ open docs/claude-components-storybook.html
 * **[7.1 开箱即用的 Tailwind 配置与基础 CSS 代码](docs/Claude%20Design%20System%20(CDS).md#71-开箱即用的-tailwind-配置与基础-css-代码)**：完整的全局主题样式表与 Tailwind 工程扩展。
 * **[7.2 生产级工程源码清单](docs/Claude%20Design%20System%20(CDS).md#72-生产级工程源码清单)**：全量 30 个生产级独立代码文件（11 个基础原子 + 19 个深度架构模块）。
 * **[7.3 资产规范与系统级字体/音频替代方案](docs/Claude%20Design%20System%20(CDS).md#73-资产规范与系统级字体音频替代方案)**：系统级字体回退栈与 Web Audio API 纯代码合成提示音规范。
+
+---
+
+## 🙏 致谢与逆向支持 (Acknowledgements)
+
+* 特别鸣谢开源逆向框架 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** 为本项目提供的 AST 解密、Electron 运行时分析与工程常数反编译工具链支持。
+* 致敬 Anthropic 设计与前端团队打造的人文级交互系统与工程细节，启发了本开源洁净室复现研究。
 
 ---
 
