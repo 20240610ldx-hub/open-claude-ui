@@ -354,6 +354,20 @@ open docs/claude-components-storybook.html
 
 ---
 
+## 🤖 AI Agent 协同与开发规范 (Agent Guidelines)
+
+本项目针对现代 AI Coding Agents（如 Cursor, Windsurf, Claude Code, GitHub Copilot, Devin, Antigravity 等）深度适配了前端 UI 与动效开发指引规范：
+
+* **全局 Agent 规范指南**：[`AGENTS.md`](AGENTS.md)（根目录自动生效，包含设计令牌、物理弹簧选型矩阵、单闭合边框原则、输入法防御守卫与质量门禁）。
+* **Claude Code 专用指引**：[`CLAUDE.md`](CLAUDE.md)（针对 Anthropic 官方 CLI 工具链的指令与开发约束）。
+* **IDE Agent 规则**：[`.cursorrules`](.cursorrules) 与 [`.github/copilot-instructions.md`](.github/copilot-instructions.md)。
+
+> 💡 **给使用 AI 助手的开发者提示**：  
+> 当你让 Cursor / Claude Code / Copilot 为你的产品实现前端页面或动效时，可直接向 Agent 提示：  
+> *“请严格遵循本仓库中的 AGENTS.md 规范，使用 CDS 陶土设计令牌与 ClaudeMotionPresets 弹簧预设构建当前组件。”*
+
+---
+
 ## 🙏 致谢与逆向支持 (Acknowledgements)
 
 * 特别鸣谢开源逆向框架 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** 为本项目提供的 AST 解密、Electron 运行时分析与工程常数反编译工具链支持。

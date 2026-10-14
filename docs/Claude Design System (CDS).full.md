@@ -82,6 +82,14 @@ tags:
    - [7.1 开箱即用的 Tailwind 配置与基础 CSS 代码](#71-开箱即用的-tailwind-配置与基础-css-代码)
    - [7.2 生产级工程源码清单](#72-生产级工程源码清单)
    - [7.3 资产规范与系统级字体/音频替代方案](#73-资产规范与系统级字体音频替代方案)
+8. [第八篇：AI Agent 前端 UI 与动效开发指南](#第八篇ai-agent-前端-ui-与动效开发指南)
+   - [8.1 Agent 角色定位与设计哲学](#81-agent-角色定位与设计哲学)
+   - [8.2 设计令牌与色彩引用契约](#82-设计令牌与色彩引用契约)
+   - [8.3 动效物理学：四套弹簧预设决策树](#83-动效物理学四套弹簧预设决策树)
+   - [8.4 控件原子规则与单闭合边框原则](#84-控件原子规则与单闭合边框原则)
+   - [8.5 交互防御与边缘场景守卫](#85-交互防御与边缘场景守卫)
+   - [8.6 生产级组件库快速装配指南 (30 模块)](#86-生产级组件库快速装配指南-30-模块)
+   - [8.7 智能体自检与质量门禁清单](#87-智能体自检与质量门禁清单)
 
 ---
 
@@ -3008,3 +3016,117 @@ module.exports = {
 - `tool_approval_needed`: 520Hz 木质短促共鸣双音
 - `disconnected`: 320Hz 降调平滑衰减
 同时也支持调用 `player.setSfxPath(name, url)` 接入自定义免版权音效。
+
+---
+
+## 第八篇：AI Agent 前端 UI 与动效开发指南
+
+> **技术领域与英文指代**：`AI Agent Frontend UI & Motion Guidelines`  
+> **适用对象**：Cursor Agent, Claude Code, GitHub Copilot, Windsurf, Devin, Antigravity 及所有接入代码库的自主式或辅助式 AI 智能体。  
+> **核心使命**：指引 AI Agent 在阅读、生成、重构基于 Claude Design System (CDS) 的前端组件与页面时，严格遵循人文温润质感、二阶弹簧动力学、单闭合边框原则与零版权风险规范。
+
+### 8.1 Agent 角色定位与设计哲学
+
+当 Agent 在本项目或下游消费项目中使用 CDS 时，必须理解 Anthropic Claude 界面的根本差异点：
+
+1. **温润的人文质感（Editorial Warmth）**：
+   - 严禁生成高饱和度的赛博朋克蓝/紫渐变或刺眼的荧光色。
+   - 品牌主强调色为**陶土色（Clay: `#d97757` / Dark: `#cc6b49`）**。
+   - 界面底色使用微温的纸质灰底（`#fcfcfb` / `#1b1b19`），严禁使用纯白 `#ffffff` 或纯黑 `#000000`（代码高亮背景 `#0d0d0c` 除外）。
+2. **多层微对比表面（Low-contrast Surface Layering）**：
+   - 放弃传统的 1px 黑色硬描边思维，通过 `Surface 0 ~ 3` 的层级微小明度差（阶梯差仅 1%~3%）与 `border-subtle` 发丝细线（透明度 6%~8%）构建深邃沉浸的空间。
+3. **触感物理反馈（Tactile Organic Physics）**：
+   - 严禁使用 CSS 默认的 `ease`、`linear` 或过度弹跳的夸张动画。
+   - 所有的位移、缩放、展开必须依托基于质量、刚度与阻尼的真实弹簧动力学模型。
+
+### 8.2 设计令牌与色彩引用契约
+
+所有样式必须优先引用预置 CSS 变量或 Tailwind 扩展类名（见 `code-examples/cds-theme.css` 与 `code-examples/tailwind.config.js`）：
+
+#### 1. 表面体系对应表
+```css
+/* Agent 编写组件时应使用的背景颜色映射 */
+--cds-bg-surface-0: #fcfcfb; /* [Light] 画布底色 / [Dark]: #1b1b19 */
+--cds-bg-surface-1: #fbfbfa; /* [Light] 侧边栏、卡片背景 / [Dark]: #21211e */
+--cds-bg-surface-2: #f7f7f5; /* [Light] 输入框底盘、弹窗底色 / [Dark]: #282824 */
+--cds-bg-surface-3: #efeee9; /* [Light] 悬停状态、选中高亮 / [Dark]: #32322d */
+--cds-bg-input:     #fdfdfc; /* [Light] 输入终端核心底色 / [Dark]: #1e1e1b */
+```
+
+#### 2. 文本与排版阶梯
+```css
+--cds-text-primary:   #1f1e1d; /* 一级主要正文、标题 / [Dark]: #eeede8 */
+--cds-text-secondary: #6b6966; /* 二级辅助文字、副标题 / [Dark]: #b4b2ac */
+--cds-text-tertiary:  #999793; /* 三级微弱文字、快捷键、占位符 / [Dark]: #7d7b76 */
+```
+
+#### 3. 双环聚焦光晕 (Dual-Ring Focus Halo)
+在为按钮、输入框、下拉菜单实现聚焦态时，统一采用双层环状阴影（内层微对比，外层陶土色漫反射）：
+```css
+box-shadow: 0 0 0 2px var(--cds-bg-surface-0), 0 0 0 4px rgba(217, 119, 87, 0.4);
+```
+
+### 8.3 动效物理学：四套弹簧预设决策树
+
+Agent 在编写交互动画时，必须从 `code-examples/ClaudeMotionPresets.ts` 导入标准弹簧配置：
+
+1. **`SPRING_SNAPPY`** (`stiffness: 600, damping: 30, mass: 0.6`, $\zeta = 0.791$):
+   - 超调 `+1.8%`，时延 `~0.22s`。用于按钮点击、SegmentedControl pill 切换、选项卡移动。
+2. **`SPRING_BOUNCY`** (`stiffness: 400, damping: 25, mass: 0.8`, $\zeta = 0.612$):
+   - 超调 `+8.8%`，时延 `~0.38s`。用于 Switch 开关、Badge 芯片生长入场、成功操作弹出。
+3. **`SPRING_GENTLE`** (`stiffness: 220, damping: 24, mass: 1.0`, $\zeta = 0.809$):
+   - 超调 `+1.5%`，时延 `~0.48s`。用于对话框弹窗、ThinkingAccordion 思考折叠、气泡入场。
+4. **`SPRING_HEAVY_SNAP`** (`stiffness: 1200, damping: 80, mass: 0.1`, $\zeta = 1.826$, 过阻尼):
+   - 严格 `0%` 超调。用于拖拽占位线碰撞吸附、抽屉闭合、边界锁定。
+
+#### 7 档渐隐非线性透明度手写遮罩
+当 Agent 实现滚动视口上下边缘渐隐时，必须使用以下 7 档非线性遮罩：
+```typescript
+const FADE_MASK = `linear-gradient(
+  to bottom,
+  transparent 0%,
+  rgba(0, 0, 0, 0.05) 15%,
+  rgba(0, 0, 0, 0.18) 32%,
+  rgba(0, 0, 0, 0.38) 50%,
+  rgba(0, 0, 0, 0.64) 68%,
+  rgba(0, 0, 0, 0.88) 85%,
+  black 100%
+)`;
+```
+
+### 8.4 控件原子规则与单闭合边框原则
+
+1. **单闭合边框原则 (Single-Stroke Border Discipline)**：
+   - 严禁在带边框的容器内嵌套带边框的次级按钮或功能 Chips。
+   - 内部内联按钮必须使用 `border-none` + `bg-transparent`，依靠 Hover 状态的背景色微差表达交互。
+2. **四级按钮尺寸阶梯**：
+   - XS (24px/6px)、SM (28px/8px)、MD (32px/8px)、LG (40px/12px)。触感反馈采用 `active:scale-[0.98]`。
+3. **等宽数字约束 (Tabular Numbers)**：
+   - 所有动态变化的计数器、指标、波形柱、时间戳或 Diff 行号，必须声明 `tabular-nums` 或 `font-mono`，防止排版抖动。
+
+### 8.5 交互防御与边缘场景守卫
+
+1. **CJK 输入法合成守卫**：
+   - 在输入框 `onKeyDown` 中拦截 `!(e.nativeEvent.isComposing || e.keyCode === 229)`，杜绝候选词回车误触。
+2. **流式滚动防抢夺图钉**：
+   - 40px 底部容差与 150ms 用户人工滚动冷却互锁，防止视口抢夺。
+3. **沙箱安全与手势门禁**：
+   - 工件预览必须严格隔离（严禁同时 `allow-scripts` 与 `allow-same-origin`），调用 privileged 桥接时校验 `navigator.userActivation.isActive`。
+4. **零外部黑盒音频资产**：
+   - 统一使用原生 Web Audio API 振荡器和弦合成，并加入平滑增益淡入淡出（防爆音），锁定 30% 舒缓音量。
+
+### 8.6 生产级组件库快速装配指南 (30 模块)
+
+全量 30 个生产级独立代码文件均存放在 `code-examples/` 目录下，开箱即用。
+
+### 8.7 智能体自检与质量门禁清单
+
+Agent 在完成任何前端代码修改或产物提交前，**必须逐项自检并执行验证**：
+- [ ] 语义令牌引用无硬编码色值；
+- [ ] 动态交互均采用 `ClaudeMotionPresets` 弹簧；
+- [ ] 输入框已植入 CJK IME 守卫；
+- [ ] `:root` 与 `.dark` 双主题自适应良好；
+- [ ] 频繁跳动的指标已配置 `tabular-nums`；
+- [ ] 容器内二级控件遵循单闭合边框原则；
+- [ ] `npm run typecheck` 与 `npm run build` 0 报错通过。
+

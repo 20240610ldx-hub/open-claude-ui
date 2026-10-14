@@ -356,6 +356,20 @@ The storybook includes:
 
 ---
 
+## 🤖 AI Agent Guidelines & Development Standards
+
+This repository includes first-class development specifications tailored for modern AI Coding Agents (such as Cursor, Windsurf, Claude Code, GitHub Copilot, Devin, Antigravity, etc.):
+
+* **Universal Agent Guidelines**: [`AGENTS.md`](AGENTS.md) (Loaded automatically in repository root, covering semantic design tokens, the 4-tier spring preset matrix, single-stroke border discipline, IME guards, and verification gates).
+* **Claude Code Instructions**: [`CLAUDE.md`](CLAUDE.md) (Dedicated CLI commands and conventions for Anthropic's Claude Code toolchain).
+* **IDE Agent Rules**: [`.cursorrules`](.cursorrules) and [`.github/copilot-instructions.md`](.github/copilot-instructions.md).
+
+> 💡 **Tip for developers using AI assistants**:  
+> When prompting Cursor / Claude Code / Copilot to implement frontend UI or animations for your application, simply instruct:  
+> *"Strictly adhere to the AGENTS.md specification in this repository, using CDS Clay design tokens and ClaudeMotionPresets physics."*
+
+---
+
 ## 🙏 Acknowledgements
 
 * Special thanks to the open-source reverse engineering framework **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** for providing the AST deconstruction, Electron runtime analysis, and engineering constant decompilation toolchain that made this project possible.
