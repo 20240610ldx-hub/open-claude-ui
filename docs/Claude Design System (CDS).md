@@ -96,7 +96,7 @@ Claude 的界面设计在当下 AI 产品中独树一帜，其核心调性可以
 1. **温润的人文质感（Editorial Warmth）**：
    - 彻底摒弃冰冷的高饱和赛博朋克蓝/紫色，主品牌色选用温润的**陶土色（Clay: `#d97757`）**与柔和米白/暗灰底色（`#fcfcfb` / `#151515`）。
 2. **多层微对比表面（Low-contrast Surface Layering）**：
-   - 界面几乎不使用生硬的 1px 黑色边框，而是通过 `Surface 0 ~ 3` 的层级微小明度差以及 `color-mix()` 半透明外环投影来建立空间感。
+   - 界面几乎不使用生硬的 1px 黑色边框，而是通过 `Surface 0 - 3` 的层级微小明度差以及 `color-mix()` 半透明外环投影来建立空间感。
 3. **高帧率轻负担动效（Lightweight Organic Motion）**：
    - 文字流式输出使用 GPU 硬件加速的模糊消解，复杂展开使用 CSS Grid 0fr 解决高度抖动，手势交互使用真实的阻尼弹簧。
 
@@ -160,13 +160,13 @@ Claude 绝非全局采用单一圆角，而是有着极严格的**角色语义�
 #### 1.3.2 控件高度与排版尺寸 (Heights & Sizing)
 | 令牌名称 | 高度定义 | 实际像素 | 对应组件 |
 | :--- | :--- | :--- | :--- |
-| `--cds-h-control--xs` | `1.25rem ~ 1.5rem` | **20px ~ 24px** | 极小按钮、标签关闭按钮、行内操作栏 |
-| `--cds-h-control--sm` | `1.5rem ~ 1.75rem` | **24px ~ 28px** | 紧凑型按钮、下拉选择器触发器 |
+| `--cds-h-control--xs` | `1.25rem - 1.5rem` | **20px - 24px** | 极小按钮、标签关闭按钮、行内操作栏 |
+| `--cds-h-control--sm` | `1.5rem - 1.75rem` | **24px - 28px** | 紧凑型按钮、下拉选择器触发器 |
 | `--cds-h-control` (默认) | `2rem` | **32px** | **标准交互按钮、输入框内操作图标、Tab 导航项** |
 | `--cds-h-control--lg` | `2.5rem` | **40px** | 强调大按钮、登录/注册主操作按钮 |
-| `--df-titlebar` | 固定 `46px` ~ `48px` | **46px ~ 48px** | 桌面端无边框窗口顶部拖拽条（Titlebar） |
+| `--df-titlebar` | 固定 `46px - 48px` | **46px - 48px** | 桌面端无边框窗口顶部拖拽条（Titlebar） |
 | `--static-sidebar-width` | `18rem` | **288px** | 桌面端常驻侧边栏宽度 |
-| `--chat-max-width` | `42rem` / `48rem` | **672px ~ 768px** | 最佳阅读体验的中心对话宽度（`max-w-2xl / max-w-3xl`） |
+| `--chat-max-width` | `42rem / 48rem` | **672px - 768px** | 最佳阅读体验的中心对话宽度（`max-w-2xl / max-w-3xl`） |
 | `--composer-max-height` | `24rem` | **384px** | 输入框内容自动撑开的最大高度（超出滚动） |
 
 ---
@@ -377,13 +377,13 @@ Claude 桌面端构建了一套专为高密度信息架构设计的 7 阶排版�
 
 | 阶梯等级 (Token) | CSS 表达式 (Rem Scale) | 换算像素 (Desktop) | 行高 (Leading) | 行高比率 | 核心承载内容场景 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **`caption`** | `calc(0.6875rem * var(--cds-rem-scale))` | **10.35px (~11px)** | `1rem` (16px) | 1.55 | 快捷键徽标 (`Kbd`)、消息时间戳、模型版本号、Token 消耗统计 |
-| **`footnote`** | `calc(0.75rem * var(--cds-rem-scale))` | **11.29px (~12px)** | `calc(0.9375rem * scale)` (14.1px) | 1.25 | 附件文件体积大小、图片元数据、次级辅助说明文本、免责声明 |
-| **`code`** | `calc(0.75rem * var(--cds-rem-scale))` | **11.29px (~12px)** | `1rem` (16px) | 1.42 | 代码块语法高亮文本、行内代码、Thinking 内部思维链路日志、Diff 差异 |
-| **`body`** | `calc(0.8125rem * var(--cds-rem-scale))` | **12.24px (~13px / 14px)** | `1.125rem` (18px) | 1.46 | 对话流助理回答、用户气泡正文、主输入框 (Composer) 键入文本与占位符 |
-| **`prose`** | `0.875rem` ~ `1rem` (舒适阅读) | **14.0px ~ 16.0px** | `1.25rem` ~ `1.5rem` (20px~24px) | 1.43~1.50 | 长文 Artifacts 渲染、Markdown 深度阅读、文档预览视图 |
-| **`heading`** | `calc(0.875rem * var(--cds-rem-scale))` | **13.18px (~14px / 15px)** | `calc(1.125rem * scale)` (17px) | 1.29 | 弹窗标题 (Modal Title)、卡片分块小标题、侧边栏分组标题、设置项名称 |
-| **`title`** | `calc(1.25rem * var(--cds-rem-scale))` | **18.82px (~20px / 21px)** | `calc(1.5rem * scale)` (23.5px) | 1.25 | 对话顶栏标题、Project 项目主标题、工作区主导航头部 |
+| **`caption`** | `calc(0.6875rem * var(--cds-rem-scale))` | **10.35px (约 11px)** | `1rem` (16px) | 1.55 | 快捷键徽标 (`Kbd`)、消息时间戳、模型版本号、Token 消耗统计 |
+| **`footnote`** | `calc(0.75rem * var(--cds-rem-scale))` | **11.29px (约 12px)** | `calc(0.9375rem * scale)` (14.1px) | 1.25 | 附件文件体积大小、图片元数据、次级辅助说明文本、免责声明 |
+| **`code`** | `calc(0.75rem * var(--cds-rem-scale))` | **11.29px (约 12px)** | `1rem` (16px) | 1.42 | 代码块语法高亮文本、行内代码、Thinking 内部思维链路日志、Diff 差异 |
+| **`body`** | `calc(0.8125rem * var(--cds-rem-scale))` | **12.24px (约 13px / 14px)** | `1.125rem` (18px) | 1.46 | 对话流助理回答、用户气泡正文、主输入框 (Composer) 键入文本与占位符 |
+| **`prose`** | `0.875rem - 1rem` (舒适阅读) | **14.0px - 16.0px** | `1.25rem - 1.5rem` (20px - 24px) | 1.43 - 1.50 | 长文 Artifacts 渲染、Markdown 深度阅读、文档预览视图 |
+| **`heading`** | `calc(0.875rem * var(--cds-rem-scale))` | **13.18px (约 14px / 15px)** | `calc(1.125rem * scale)` (17px) | 1.29 | 弹窗标题 (Modal Title)、卡片分块小标题、侧边栏分组标题、设置项名称 |
+| **`title`** | `calc(1.25rem * var(--cds-rem-scale))` | **18.82px (约 20px / 21px)** | `calc(1.5rem * scale)` (23.5px) | 1.25 | 对话顶栏标题、Project 项目主标题、工作区主导航头部 |
 
 ```css
 /* 提取自 c6a992d55-C0zTICcS.css 核心排版变量 */
@@ -415,9 +415,9 @@ Claude 桌面端构建了一套专为高密度信息架构设计的 7 阶排版�
 
 #### 3. 暗色模式视网膜光渗字重逆补偿 (Retinal Irradiation Compensation)
 
-在物理光学与人眼视网膜感知中，**高对比度白字在黑底上会向外发散光晕（Irradiation Phenomenon）**，导致同等粗细的文字在深色模式下显得比浅色模式粗 10%~15%，产生视觉膨胀与边缘模糊。
+在物理光学与人眼视网膜感知中，**高对比度白字在黑底上会向外发散光晕（Irradiation Phenomenon）**，导致同等粗细的文字在深色模式下显得比浅色模式粗 10% - 15%，产生视觉膨胀与边缘模糊。
 
-Claude 依托其专有 Variable Font 轴进行了精准的物理逆补偿：在深色模式下，主动将字重数值降低 **30 ~ 40 个刻度**，使文字在人眼感官中达到与浅色模式完全绝对一致的感知纤细度与锐度。
+Claude 依托其专有 Variable Font 轴进行了精准的物理逆补偿：在深色模式下，主动将字重数值降低 **30 - 40 个刻度**，使文字在人眼感官中达到与浅色模式完全绝对一致的感知纤细度与锐度。
 
 | 语义字重级别 | 浅色模式字重 (Light) | 深色模式减薄字重 (Dark) | 补偿工程机制与变化幅度 |
 | :--- | :--- | :--- | :--- |
@@ -482,11 +482,11 @@ Claude 依托其专有 Variable Font 轴进行了精准的物理逆补偿：在�
 | | 工件语言标签 ("REACT", "HTML") | Mono | `10.5px` (Caption) | 12px | `500` / `460` (Medium) | 大写等宽无衬线，字距 `letter-spacing: 0.05em` |
 | | 附件卡片主文件名 | Sans | `12px` | 16px | `500` / `460` (Medium) | 文本截断 `text-overflow: ellipsis;` |
 | | 附件卡片文件大小 ("24.8 KB") | Mono | `10.5px` (Caption) | 14px | `400` / `360` (Regular) | `tabular-nums`，辅助弱灰 |
-| **控制与弹窗 (Controls)** | 模态弹窗主标题 (Modal Dialog) | Sans | `15px` ~ `16px` | 20px (1.25) | `580` / `550` (Semibold) | `text-wrap: balance;` 居中或左对齐 |
+| **控制与弹窗 (Controls)** | 模态弹窗主标题 (Modal Dialog) | Sans | `15px - 16px` | 20px (1.25) | `580` / `550` (Semibold) | `text-wrap: balance;` 居中或左对齐 |
 | | 分段选择器标签 (Segmented Tab) | Sans | `12px` | 16px | 常规 `400` / 激活 `500` | 胶囊滑块平移背景 |
 | | 按钮 (Button SM / 32px) | Sans | `12.5px` | 16px | `500` / `460` (Medium) | 紧凑控制动作 |
 | | 按钮 (Button MD / 38px) | Sans | `13.5px` | 18px | `500` / `460` (Medium) | 标准页面主次操作按钮 |
-| | 快捷键键帽 (`Kbd`) | Mono | `10px` ~ `11px` | 12px | `580` / `550` (Semibold) | 阴影衬底，紧凑字形 |
+| | 快捷键键帽 (`Kbd`) | Mono | `10px - 11px` | 12px | `580` / `550` (Semibold) | 阴影衬底，紧凑字形 |
 
 ---
 
@@ -495,8 +495,8 @@ Claude 依托其专有 Variable Font 轴进行了精准的物理逆补偿：在�
 在 Web 排版中，默认行内 SVG 或图标会坐落于 `vertical-align: baseline`，导致图标的视觉几何重心明显高于小写字母的 x-Height 与大写字母的 Cap-Height，产生“图标浮在上空”的脱节感。
 
 Claude 体系强制采用专门提取的负偏置实用类：
-* **`.align-[-0.125em]` (`vertical-align: -0.125em;`)**：用于 14px~16px 标准 Body 与 Heading 文本。将图标恰好下沉 1/8em（约 1.75px~2px），使图标的上下对称中心与字母几何重心 100% 严丝合缝重合！
-* **`.align-[-0.075em]` (`vertical-align: -0.075em;`)**：用于 11px~12px Caption 与说明性小字。
+* **`.align-[-0.125em]` (`vertical-align: -0.125em;`)**：用于 14px - 16px 标准 Body 与 Heading 文本。将图标恰好下沉 1/8em（约 1.75px - 2px），使图标的上下对称中心与字母几何重心 100% 严丝合缝重合！
+* **`.align-[-0.075em]` (`vertical-align: -0.075em;`)**：用于 11px - 12px Caption 与说明性小字。
 * **`.align-[-1px]` / `.align-[-2px]`**：用于固定高度（32px/46px）工具栏与标题栏的行内徽章。
 
 ```css
@@ -555,7 +555,7 @@ font-feature-settings: "tnum" 1;
 * **尺寸阶梯**：
   * **XS (12px)**：徽章、关闭小图标
   * **SM (14px)**：密集操作栏按钮
-  * **MD (16px)**：标准交互件，应用公式 `calc(1rem * var(--cds-rem-scale, 1))` ≈ `15.06px ~ 16px`
+  * **MD (16px)**：标准交互件，应用公式 `calc(1rem * var(--cds-rem-scale, 1))` ≈ `15.06px - 16px`
   * **LG (20px)**：卡片主操作按钮
   * **XL (24px)**：模态窗与空状态主图
 
@@ -565,18 +565,18 @@ Claude 针对各 UI 语义角色定义了严格绑定的原子类，内置了基
 
 | 语义原子类名 | 字号 (`font-size`) | 行高 (`line-height`) | 默认字重 (`font-weight`) | 光学校准 (`font-variation-settings`) | 适用场景 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| `.text-caption-regular` | `calc(0.6875rem * scale)` (~11px) | `calc(1.0625rem * scale)` (~17px) | Regular (400) | `"GRAD" 0` | 时间戳、底部小字说明、微徽章 |
-| `.text-caption-medium` | `calc(0.6875rem * scale)` (~11px) | `calc(1.0625rem * scale)` (~17px) | Medium (470 / 460) | `"wght" 460` (Dark) | 紧凑状态标签、计数微标 |
-| `.text-caption-bold` | `calc(0.6875rem * scale)` (~11px) | `calc(1.0625rem * scale)` (~17px) | Bold (700 / 660) | `"wght" 660` (Dark) | 强调小标签、快捷键提示 |
-| `.text-footnote-medium` | `calc(0.8125rem * scale)` (~13px) | `calc(1.0625rem * scale)` (~17px) | Medium (470 / 460) | `"wght" 460` (Dark) | 列表项副标题、侧边栏次级文本 |
-| `.text-footnote-semibold` | `calc(0.8125rem * scale)` (~13px) | `calc(1.0625rem * scale)` (~17px) | Semibold (600 / 560)| `"wght" 560` (Dark) | 侧边栏活动会话分组头 |
-| `.text-body-regular` | `calc(0.875rem * scale)` (~14px) | `calc(1.25rem * scale)` (~20px) | Regular (400) | `"GRAD" 0` | **标准聊天对话正文、设置表单文字** |
-| `.text-body-medium` | `calc(0.875rem * scale)` (~14px) | `calc(1.25rem * scale)` (~20px) | Medium (470 / 460) | `"wght" 460` (Dark) | 按钮文本、常规交互链接 |
-| `.text-body-bold` | `calc(0.875rem * scale)` (~14px) | `calc(1.25rem * scale)` (~20px) | Bold (700 / 660) | `"wght" 660` (Dark) | 正文强调文本（`<b>`, `<strong>`） |
-| `.text-heading-regular` | `calc(0.9375rem * scale)` (~15px) | `calc(1.25rem * scale)` (~20px) | Regular (400) | `"opsz" 20` | 对话轮次提示头、卡片小标题 |
-| `.text-heading-semibold`| `calc(0.9375rem * scale)` (~15px) | `calc(1.25rem * scale)` (~20px) | Semibold (600 / 560)| `"opsz" 20, "wght" 560` | 卡片主标题、弹窗面板分组名 |
-| `.text-title-medium` | `calc(1.25rem * scale)` (~20px) | `calc(1.75rem * scale)` (~28px) | Medium (500 / 460) | `"opsz" 28, "wght" 460` | 页面级主标题、设置大栏目 |
-| `.text-title-bold` | `calc(1.25rem * scale)` (~20px) | `calc(1.75rem * scale)` (~28px) | Bold (700 / 660) | `"opsz" 28, "wght" 660` | 模态框首要标题 |
+| `.text-caption-regular` | `calc(0.6875rem * scale)` (约 11px) | `calc(1.0625rem * scale)` (约 17px) | Regular (400) | `"GRAD" 0` | 时间戳、底部小字说明、微徽章 |
+| `.text-caption-medium` | `calc(0.6875rem * scale)` (约 11px) | `calc(1.0625rem * scale)` (约 17px) | Medium (470 / 460) | `"wght" 460` (Dark) | 紧凑状态标签、计数微标 |
+| `.text-caption-bold` | `calc(0.6875rem * scale)` (约 11px) | `calc(1.0625rem * scale)` (约 17px) | Bold (700 / 660) | `"wght" 660` (Dark) | 强调小标签、快捷键提示 |
+| `.text-footnote-medium` | `calc(0.8125rem * scale)` (约 13px) | `calc(1.0625rem * scale)` (约 17px) | Medium (470 / 460) | `"wght" 460` (Dark) | 列表项副标题、侧边栏次级文本 |
+| `.text-footnote-semibold` | `calc(0.8125rem * scale)` (约 13px) | `calc(1.0625rem * scale)` (约 17px) | Semibold (600 / 560)| `"wght" 560` (Dark) | 侧边栏活动会话分组头 |
+| `.text-body-regular` | `calc(0.875rem * scale)` (约 14px) | `calc(1.25rem * scale)` (约 20px) | Regular (400) | `"GRAD" 0` | **标准聊天对话正文、设置表单文字** |
+| `.text-body-medium` | `calc(0.875rem * scale)` (约 14px) | `calc(1.25rem * scale)` (约 20px) | Medium (470 / 460) | `"wght" 460` (Dark) | 按钮文本、常规交互链接 |
+| `.text-body-bold` | `calc(0.875rem * scale)` (约 14px) | `calc(1.25rem * scale)` (约 20px) | Bold (700 / 660) | `"wght" 660` (Dark) | 正文强调文本（`<b>`, `<strong>`） |
+| `.text-heading-regular` | `calc(0.9375rem * scale)` (约 15px) | `calc(1.25rem * scale)` (约 20px) | Regular (400) | `"opsz" 20` | 对话轮次提示头、卡片小标题 |
+| `.text-heading-semibold`| `calc(0.9375rem * scale)` (约 15px) | `calc(1.25rem * scale)` (约 20px) | Semibold (600 / 560)| `"opsz" 20, "wght" 560` | 卡片主标题、弹窗面板分组名 |
+| `.text-title-medium` | `calc(1.25rem * scale)` (约 20px) | `calc(1.75rem * scale)` (约 28px) | Medium (500 / 460) | `"opsz" 28, "wght" 460` | 页面级主标题、设置大栏目 |
+| `.text-title-bold` | `calc(1.25rem * scale)` (约 20px) | `calc(1.75rem * scale)` (约 28px) | Bold (700 / 660) | `"opsz" 28, "wght" 660` | 模态框首要标题 |
 | `.font-display` | `2.375rem` (38px) | `1.2 (45.6px)` | Light (`wght: 330`) | `"opsz" 48` (Serif 轴) | **问候语首屏大字标（Serif Greeting）** |
 
 #### 8. 多行文本截断阶梯 (Multi-line Truncation & Clamp Scale)
@@ -672,7 +672,7 @@ Claude 顶部或设置中的滑动 Tab 采用 **999px 全圆角轨道 + 纯几�
 
 #### 1. 轨道与指示器规范
 * **轨道外壳 (`.df-pills[data-segmented]`)**：
-  - 高度：`32px ~ 36px`，全圆角 `border-radius: 999px;`
+  - 高度：`32px - 36px`，全圆角 `border-radius: 999px;`
   - 内边距：严格 `2px`（`padding: 2px;`）
   - 背景：`var(--cds-segmented-control-track)`（浅色 `rgba(0,0,0,0.06)`，深色 `rgba(255,255,255,0.08)`）
   - 容器声明：`container-type: inline-size;`（支撑自适应收缩）
@@ -716,11 +716,11 @@ Claude 顶部或设置中的滑动 Tab 采用 **999px 全圆角轨道 + 纯几�
 在 Claude 界面中，微型指示灯与扫光条承担着系统实时状态（运行中、思考中、空闲、就绪）的关键传达职责：
 
 #### 1. 核心状态指示灯矩阵
-* **陶土明度呼吸指示灯 (`dframe-clay-breathe`)**：周期 $2.4\text{s}$，在陶土色透明度 $40\% \sim 100\%$ 间平滑律动，用于 Extended Thinking 与模型推理状态；
-* **实时运行活动脉冲 (`dframe-dot-pulse`)**：周期 $1.2\text{s}$，高亮指示前台活跃通信；
-* **思考三点波浪跳跃 (`timeline-quiet-dot`)**：周期 $1.9\text{s}$，三点施加 $180\text{ms}$ 阶梯相位差，基准透明度锚定为 $28.57\%$ ($2/7$ 黄金特定常数)；
-* **骨架屏倾斜扫光条 (`cds-skeleton-sweep`)**：高光条以 $1.6\text{s}$ 周期沿 $105^\circ$ 倾角平移扫过，赋予占位骨架以生生不息的计算活力；
-* **流式文本光标 (`streaming-cursor-blink`)**：宽度 $2\text{px}$、高度 $1.15\text{em}$，在字符流生成过程中保持常亮，流结束前执行柔和淡隐。
+* **陶土明度呼吸指示灯 (`dframe-clay-breathe`)**：周期 2.4s，在陶土色透明度 40% - 100% 间平滑律动，用于 Extended Thinking 与模型推理状态；
+* **实时运行活动脉冲 (`dframe-dot-pulse`)**：周期 1.2s，高亮指示前台活跃通信；
+* **思考三点波浪跳跃 (`timeline-quiet-dot`)**：周期 1.9s，三点施加 180ms 阶梯相位差，基准透明度锚定为 28.57% (2/7 黄金特定常数)；
+* **骨架屏倾斜扫光条 (`cds-skeleton-sweep`)**：高光条以 1.6s 周期沿 105° 倾角平移扫过，赋予占位骨架以生生不息的计算活力；
+* **流式文本光标 (`streaming-cursor-blink`)**：宽度 2px、高度 1.15em，在字符流生成过程中保持常亮，流结束前执行柔和淡隐。
 
 > **生产级独立组件实现**：[`code-examples/StatusIndicators.tsx`](code-examples/StatusIndicators.tsx)。
 
@@ -782,7 +782,7 @@ Claude 顶部或设置中的滑动 Tab 采用 **999px 全圆角轨道 + 纯几�
 
 #### 2. 模型回答正文（Assistant Message）
 * **背景色**：完全透明无背景，直接呈现在画布表面。
-* **版心控制**：最大宽度 `max-w-2xl` 到 `max-w-3xl`（`672px ~ 768px`），保持最佳行长。
+* **版心控制**：最大宽度 `max-w-2xl` 到 `max-w-3xl`（`672px - 768px`），保持最佳行长。
 * **入场动效**：新消息块以 `message-fade-up`（`1.1s cubic-bezier(.34, 1.56, .64, 1)`）超调微弹进入。
 
 ---
@@ -1002,7 +1002,7 @@ function bs(e, t, n, r) {
 - **焦点漫游 (Roving Focus)**：浮层内部采用方向键 `ArrowUp` / `ArrowDown` 循环漫游高亮项，按 `Tab` 或 `Enter` 快速补全并消费触发字符。
 
 #### 3.3.4 弹性高度自适应与 Token 动态计量预测数学模型
-- **高度自适应**：基于 `scrollHeight` 动态计算，施加物理高度限制 $[h_{\min}, h_{\max}] = [44\text{px}, 240\text{px}]$，超出阈值时无缝切换为内部原生滚动条。
+- **高度自适应**：基于 `scrollHeight` 动态计算，施加物理高度限制区间 `44px - 240px`，超出阈值时无缝切换为内部原生滚动条。
 - **Token 预测算法**：对输入缓冲区采用混合权值估算模型：
   $$\text{EstimatedTokens} \approx \lceil \text{CharLength} \times 0.7 \rceil + 10 \times \mathbb{I}_{\text{Slash}} + 25 \times N_{\text{Mentions}}$$
   当预测值接近窗口极限（90%）时，右上角计量指示灯由中性灰色渐变转换为陶土警示红。
@@ -1264,17 +1264,17 @@ Claude 拥有极具辨识度的“思考与推理”视觉氛围。不同于常�
 
 #### 4.2.2 陶土暖光推理晕染与 HSL 动态光晕 (`--shadow-drop-glow`, `wl-glow`)
 在进行思维链（Extended Thinking）或复杂代码分析时，Claude 卡片外侧会激活 `wl-glow` 动态光场：
-- 采用内层发丝光圈（2px 陶土底色）与外层 14px~24px 复合径向漫反射；
-- 震荡周期采用严苛的 $T = 1.8\text{s}$ 与 $2.2\text{s}$ 双正弦交错频率，使光效如同自然呼吸，不产生视觉疲劳。
+- 采用内层发丝光圈（2px 陶土底色）与外层 14px - 24px 复合径向漫反射；
+- 震荡周期采用严苛的 1.8s 与 2.2s 双正弦交错频率，使光效如同自然呼吸，不产生视觉疲劳。
 
 #### 4.2.3 文本扫光波纹物理学与非对称贝塞尔曲线 (`cds-shimmer-text-shine`)
 - 传统的平移线性扫光容易让人产生机械停顿感；
 - Claude 使用了高度非对称的贝塞尔曲线 `cubic-bezier(0.714, 0.121, 0.211, 0.888)`：
-  在 $t \in [0\%, 15\%]$ 进行光波能量蓄积与轻微位移，随后在中段高速释放掠过文字，最后在 $t \in [85\%, 100\%]$ 柔和衰减，呈现出思考突破时的能量涌动感。
+  在 0% - 15% 区间进行光波能量蓄积与轻微位移，随后在中段高速释放掠过文字，最后在 85% - 100% 区间柔和衰减，呈现出思考突破时的能量涌动感。
 
 #### 4.2.4 三相差分跳跃点与 Epitaxy 线性扫光 (`cds-dot-pulse`, `epitaxy-linear-sweep`)
-- 三个指示圆点采用 180ms 阶梯延迟 (`animation-delay: i * 180ms`)，基础不透明度锚定为 $28.57\%$（即 $2/7$ 这一极具数学美感的特定常数），高亮时跃升至 $100\%$ 并放大 $1.15$ 倍；
-- 卡片底部的 `LinearSweepProgress` 以 $1.6\text{s}$ 周期将一道高光脉冲从 $-100\%$ 平移至 $+350\%$，赋予整体容器以生生不息的计算活力。
+- 三个指示圆点采用 180ms 阶梯延迟 (`animation-delay: i * 180ms`)，基础不透明度锚定为 28.57%（即 2/7 黄金特定常数），高亮时跃升至 100% 并放大 1.15 倍；
+- 卡片底部的 `LinearSweepProgress` 以 1.6s 周期将一道高光脉冲从 -100% 平移至 +350%，赋予整体容器以生生不息的计算活力。
 
 #### 4.2.5 生产级完整 React 落地实现
 完整独立源码已落地至：[`code-examples/ReasoningAmbientGlow.tsx`](code-examples/ReasoningAmbientGlow.tsx)。
@@ -1315,13 +1315,13 @@ mask-image: linear-gradient(
 
 #### 4.3.2 官方 7 阶五次缓动透明度遮罩 (7-Stop Quintic Ease Alpha Mask)
 常规 CSS 渐变（如 `from transparent to black`）在现代高分辨率显示器上会产生明显的色阶断层（Color Banding）。Claude 采用了类似苹果原生五次缓动曲线（Quintic Ease）的精密采样点：
-- **距离阶梯**：$[15\%, 30\%, 45\%, 60\%, 75\%, 87\%, 100\%]$
-- **Alpha 阶梯**：$[5.1\%, 14.9\%, 30.2\%, 50.2\%, 70.2\%, 85.1\%, 100\%]$
+- **距离阶梯**：[15%, 30%, 45%, 60%, 75%, 87%, 100%]
+- **Alpha 阶梯**：[5.1%, 14.9%, 30.2%, 50.2%, 70.2%, 85.1%, 100%]
 通过非线性透明度加权，使得文字或卡片滑入视口边缘时如同沉入水雾，极其温润自然。
 
 #### 4.3.3 动态滚动位置传感器与双轴羽化消隐
 - **触顶消除**：容器初始状态 `scrollTop <= 2px` 时，`--cds-scroll-fade-top` 设为 `0px`，第一条消息的顶部不产生遮罩削弱；
-- **滚入激活**：一旦向下滚动，遮罩尺寸平滑展开至标准常数 $28\text{px}$（`--cds-scroll-fade-size`）；
+- **滚入激活**：一旦向下滚动，遮罩尺寸平滑展开至标准常数 28px（`--cds-scroll-fade-size`）；
 - **触底消除**：当滚到最底端 `scrollTop + clientHeight >= scrollHeight - 2px` 时，底遮罩恢复为 `0px`，确保最新的输入框或建议胶囊 100% 清晰呈现。
 
 #### 4.3.4 生产级完整 React 落地实现
@@ -1389,7 +1389,7 @@ class RingBuffer {
     return n;
   }
 
-  // 消费者（AudioWorklet 高优先级线程以 ~375Hz 频率读取）
+  // 消费者（AudioWorklet 高优先级线程以约 375Hz 频率读取）
   pop(output) {
     const rd = Atomics.load(this.indices, RD);
     const wr = Atomics.load(this.indices, WR);
@@ -1494,10 +1494,11 @@ Anthropic 在 `c4a1e6da6-B9dxf4-D.js` 中构建了 **LiveMicActivityBars** 算�
 ```mermaid
 flowchart LR
     Mic["麦克风音频流"] --> FFT["512 点 FFT 频域分析 (smoothing=0.5)"]
-    FFT --> DecibelClamp["动态分贝截断 (-70dB ~ -10dB)"]
-    DecibelClamp --> NoiseGate["8% 噪声门限过滤 (Math.max(0, u - 0.08) / 0.92)"]
+    FFT --> DecibelClamp["动态分贝截断 (-70dB 至 -10dB)"]
+    NoiseGate["8% 噪声门限过滤 (Math.max(0, u - 0.08) / 0.92)"]
+    DecibelClamp --> NoiseGate
     NoiseGate --> GammaComp["0.7 次幂非线性 Gamma 压缩 (f^0.7 * 1.5 * weight)"]
-    GammaComp --> MotionInterpolate["Framer Motion 弹性高度映射 (4px ~ 24px)"]
+    GammaComp --> MotionInterpolate["Framer Motion 弹性高度映射 (4px - 24px)"]
 ```
 
 #### 1. 核心数学公式与生产反编译算法
@@ -1511,7 +1512,7 @@ analyser.maxDecibels = -10;          // 正常说话饱和上限
 
 // 2. 核心 3 频段能量提取与 Gamma 幂律映射公式
 for (let b = 0; b < 3; b++) {
-  let rawEnergy = computeAverageBinEnergy(dataArray, b); // [0.0 ~ 1.0]
+  let rawEnergy = computeAverageBinEnergy(dataArray, b); // [0.0, 1.0]
   let noiseFloor = 0.08; // 8% 噪声门限：彻底消除空调背景杂音引发的虚假微动
   let gated = Math.max(0, rawEnergy - noiseFloor) / (1 - noiseFloor);
   
@@ -1519,7 +1520,7 @@ for (let b = 0; b < 3; b++) {
   // 放大微弱的人声细语，同时压制高分贝爆音，使波形动态范围分布极度均匀
   let compressed = Math.min(1, Math.pow(gated, 0.7) * 1.5 * bandWeights[b]);
   
-  // 映射至 4px ~ 24px 物理高度
+  // 映射至 4px - 24px 物理高度
   let targetHeight = 4 + (24 - 4) * compressed;
   motionValues[b].set(targetHeight);
 }
@@ -1782,8 +1783,8 @@ C = e => {
 
 #### 5.3.3 双击居中吸附 (50/50 Snap) 与边缘折叠门限 (Docking Threshold)
 - **双击归位**：双击分割条上的胶囊手柄（Pill Handle），立即触发弹性重置，将视口精准平分（50/50 居中吸附）；
-- **边缘折叠门限 (Docking)**：当拖拽比例超过临界值（如右栏宽度 $<18\%$ 或视口像素 $<420\text{px}$）时，系统自动触发吸附折叠，将右栏收起为侧边微型挂钩，为主聊天流释放完整阅读空间。
-- **极值约束钳制**：左栏会话流最小保留 $380\text{px}$，右栏 Artifacts 最小保留 $420\text{px}$。
+- **边缘折叠门限 (Docking)**：当拖拽比例超过临界值（如右栏宽度 < 18% 或视口像素 < 420px）时，系统自动触发吸附折叠，将右栏收起为侧边微型挂钩，为主聊天流释放完整阅读空间。
+- **极值约束钳制**：左栏会话流最小保留 380px，右栏 Artifacts 最小保留 420px。
 
 #### 5.3.4 生产级完整 React 落地实现
 完整独立源码已落地至：[`code-examples/ArtifactsSplitPaneResizer.tsx`](code-examples/ArtifactsSplitPaneResizer.tsx)。
@@ -2183,7 +2184,7 @@ case "channel_remote_control_session":
 #### 6.3.2 多智能体任务委派状态机与共享工件网格资产池
 - **委派拓扑生命周期**：
   任务从主架构师 (Lead Architect) 派发至特定领域子智能体（如逆向专家、UI 开发工程师、QA 验收员），状态机包含：
-  `idle` $\to$ `running`（陶土波浪脉冲）$\to$ `waiting_review`（等待人工确认）$\to$ `completed`；
+  `idle` → `running`（陶土波浪脉冲）→ `waiting_review`（等待人工确认）→ `completed`；
 - **共享工件库网格 (Shared Artifacts Pool)**：
   每个智能体生成的产物（文档、架构图、组件代码、音频脚本）自动同步至项目统一工件池，卡片支持类型过滤与一键预览对比。
 
@@ -2358,7 +2359,7 @@ export function useClaudeScrollPinning(dependencies: any[]) {
 graph TD
     Container["stage-container 容器可用宽度"]
     C1["< 520px (紧凑移动/侧边栏)"]
-    C2["521px ~ 820px (中等抽屉/平板)"]
+    C2["521px - 820px (中等抽屉/平板)"]
     C3["> 820px (宽屏全画布)"]
     
     Container --> C1
@@ -2965,7 +2966,7 @@ module.exports = {
 | 文件路径 | 模块名 | 逆向来源与工程机制 |
 | :--- | :--- | :--- |
 | `code-examples/ArtifactsSplitPaneResizer.tsx` | **双栏弹性分割与折叠引擎** | `shared-22-DYCF-SVs.js` / `c909d93e7-BsSzOQcm.js`：Iframe 事件防吞噬护盾、4px 移动死区、双击 50/50 居中吸附、边缘折叠门限与 min/max 约束钳制。 |
-| `code-examples/McpToolDecisionCard.tsx` | **MCP 交互式工具调用决策卡片** | `cc1aae219-CPC-WA-x.js` / `c05b96c7f-DSH7iwX5.js`：三态授权生命周期 (`pending_approval` $\to$ `running` $\to$ `success`/`error`)、三阶决议动作阵列与 Payload 审查。 |
+| `code-examples/McpToolDecisionCard.tsx` | **MCP 交互式工具调用决策卡片** | `cc1aae219-CPC-WA-x.js` / `c05b96c7f-DSH7iwX5.js`：三态授权生命周期 (`pending_approval` → `running` → `success` / `error`)、三阶决议动作阵列与 Payload 审查。 |
 | `code-examples/ScrollFadeContainer.tsx` | **滚动边缘平滑渐变遮罩系统** | `frame-shell-chrome-BDKWDTvx.js` / `c6a992d55-C0zTICcS.css`：7 阶五次缓动非线性 Alpha 渐变遮罩、动态滚动位置传感器与双轴羽化消隐。 |
 | `code-examples/ModelSwitcherWithTokenGauge.tsx` | **模型矩阵选择器与 Token 仪表盘** | `shared-8-4Jj8qhmU.js` / `shared-3-DVMvy2kM.js`：三大模型梯队架构、Thinking 思考开关、Prompt Caching 显存成本解构与环形 SVG 仪表盘。 |
 | `code-examples/CoworkAgentCanvas.tsx` | **多智能体协同看板与拓扑空间** | `shared-6-zKKz0bS2.js` / `shared-21-CGGmSsMS.js`：多 Agent 任务委派状态机、团队共享 Artifacts 工件网格资产池与 BroadcastChannel 事件同步。 |
@@ -2981,7 +2982,7 @@ module.exports = {
 | `code-examples/createClaudeMainWindow.ts` | **Electron 宿主主窗口创建工厂** | `mainWindow.js` / 主进程：`hiddenInset` 标题栏、macOS Vibrancy (`under-window`) 毛玻璃材质融合、最小尺寸 800×600 与状态持久化。 |
 | `code-examples/ClaudeDesktopHeader.tsx` | **macOS 沉浸式标题栏组件** | macOS 交通灯 76px 安全边距 (`-webkit-app-region: drag`)、多标签页切换胶囊与无缝沉浸式过渡。 |
 | `code-examples/useClaudeRovingFocus.ts` | **全键盘无障碍焦点漫游 Hook** | W3C WAI-ARIA 规范：方向键 (ArrowUp/Down/Left/Right) 二维与一维网格漫游导航、Home/End 边界快速跳跃、动态 tabindex 维护。 |
-| `code-examples/useRateLimitBackoff.ts` | **指数退避重试与熔断状态机** | `shared-50-Bmc9oUMm.js`：截断指数退避 ($t = \min(t_{\max}, t_{\text{base}} \times 2^a) \times (1 \pm J)$)、全抖动注入与自动熔断恢复。 |
+| `code-examples/useRateLimitBackoff.ts` | **指数退避重试与熔断状态机** | `shared-50-Bmc9oUMm.js`：截断指数退避 (`t = min(t_max, t_base * 2^a) * (1 ± J)`)、全抖动注入与自动熔断恢复。 |
 | `code-examples/ThinkingAccordion.tsx` | **思考过程状态机组件** | CSS Grid `0fr -> 1fr` 弹性高度伸缩无抖动动画、思考中 3 点波浪脉冲与耗时折叠器展示。 |
 | `code-examples/ClaudeAudioPlayer.ts` | **低延迟流式音频播放核心** | Web Audio API、24kHz 单声道、`AudioContext` 状态监听与 15ms 平滑淡入淡出增益防爆音。 |
 | `code-examples/LiveMicActivityBars.tsx` | **6 频段非线性麦克风波形柱** | 6 柱波形、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩、8% 噪声门限过滤与 Framer Motion 动态阻尼弹性映射。 |
@@ -3002,8 +3003,8 @@ module.exports = {
 
 #### 2. 原生合成交互音效 (Synthetic Web Audio SFX)
 `code-examples/ClaudeAudioPlayer.ts` 内置了纯原生 Web Audio API 振荡器（OscillatorNode），无需下载任何外部 MP3 即可零延迟合成温和的提示音：
-- `enter_voice_mode`: 440Hz $\to$ 880Hz 上扬双音阶
-- `exit_voice_mode`: 880Hz $\to$ 440Hz 平缓下沉音
+- `enter_voice_mode`: 440Hz → 880Hz 上扬双音阶
+- `exit_voice_mode`: 880Hz → 440Hz 平缓下沉音
 - `tool_approval_needed`: 520Hz 木质短促共鸣双音
 - `disconnected`: 320Hz 降调平滑衰减
 同时也支持调用 `player.setSfxPath(name, url)` 接入自定义免版权音效。

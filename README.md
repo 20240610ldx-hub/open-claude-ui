@@ -27,7 +27,7 @@
 整个逆向推导、反混淆静态分析与 ASAR 资源解构，均依托于先进的多平台逆向工程框架 **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)** 完成——通过 REA 的静态 AST 解析、闭包代码反混淆与运行时跟踪能力，穿透生产级压缩包，精准还原了底层工程物理常数与数学模型。
 
 不同于市面上常见的盲猜或近似复刻，本项目所有组件规范、物理阻尼常数、着色器关键帧及音频管道均**严格依据真实前端架构反编译验证**提炼而成：
-* **温润的人文质感 (Editorial Warmth)**：纯正陶土橙（Clay `#d97757`）、4 层微对比表面阶梯（Surface 0~3）与视网膜高分屏发丝细边补偿（Hairline Ring）；
+* **温润的人文质感 (Editorial Warmth)**：纯正陶土橙（Clay `#d97757`）、4 层微对比表面阶梯（Surface 0-3）与视网膜高分屏发丝细边补偿（Hairline Ring）；
 * **严苛的交互物理学 (Interaction Physics)**：二阶阻尼谐振子数学求解、4px 指针移动死区、CJK 输入法合成守卫、7 阶五次缓动 Alpha 遮罩；
 * **高阶视听与系统架构 (Audiovisual & Architecture)**：基于原生 Web Audio API 的零延迟合成提示音、以光标为锚点的画廊跑道平移缩放、macOS 桌面毛玻璃透明融合与 Cowork 多代理协同拓扑。
 
@@ -42,7 +42,7 @@
 graph TD
     OCUI["open-claude-ui"]
     
-    OCUI --> Tokens["1. 设计哲学与令牌体系<br/>(Surfaces 0~3, Clay, Hairlines, System Fonts)"]
+    OCUI --> Tokens["1. 设计哲学与令牌体系<br/>(Surfaces 0-3, Clay, Hairlines, System Fonts)"]
     OCUI --> Atoms["2. 基础原子交互控件<br/>(CdsButton, SegmentedControl, StatusIndicators, Dialog)"]
     OCUI --> Stream["3. 会话流与指令引擎<br/>(Composer, IME Guard, Model Switcher, MCP Cards)"]
     OCUI --> Motion["4. 动效物理学与着色器<br/>(Spring Physics, Ambient Shimmer, Scroll Fade Masks)"]
@@ -66,7 +66,7 @@ graph TD
 
 ### 📖 第一篇：设计哲学与设计令牌体系
 * **[1.1 设计哲学与视觉调性](docs/Claude%20Design%20System%20(CDS).md#11-设计哲学与视觉调性)**：温润的人文质感（Editorial Warmth）、四层低对比表面微阶梯、高帧率轻负担动效。
-* **[1.2 表面体系与色彩阶梯](docs/Claude%20Design%20System%20(CDS).md#12-表面体系与色彩阶梯)**：Surface 0~3 表面明度阶梯（浅色 `#f5f5f3`~`#ffffff`，深色 `#0b0b0a`~`#20201e`）与品牌陶土橙（`#d97757`）。
+* **[1.2 表面体系与色彩阶梯](docs/Claude%20Design%20System%20(CDS).md#12-表面体系与色彩阶梯)**：Surface 0 至 3 表面明度阶梯（浅色 `#f5f5f3` 至 `#ffffff`，深色 `#0b0b0a` 至 `#20201e`）与品牌陶土橙（`#d97757`）。
 * **[1.3 控件尺寸与精密圆角矩阵](docs/Claude%20Design%20System%20(CDS).md#13-控件尺寸与精密圆角矩阵)**：外框 Composer 20px、气泡 18px、面板 10px、按钮 6/8/10px 的精密圆角拓扑。
 * **[1.4 发丝细边、微光阴影与边框防臃肿体系](docs/Claude%20Design%20System%20(CDS).md#14-发丝细边微光阴影与边框防臃肿体系)**：高分屏 0.5px 发丝补偿（Hairline Ring）、单闭合边框原则、双环 Popover 弥散微光投影。
 * **[1.5 字体排版与图标对齐系统约束](docs/Claude%20Design%20System%20(CDS).md#15-字体排版与图标对齐系统约束)**：深色模式视网膜字重逆补偿算法（暗色下反向减细以防文字发胀）、行内图标 `-.125em` 光学垂直居中。
@@ -84,7 +84,7 @@ graph TD
 * **[3.2 思考过程折叠与时间状态机](docs/Claude%20Design%20System%20(CDS).md#32-思考过程折叠与时间状态机)**：CSS Grid `0fr -> 1fr` 弹性伸缩动画，生成期间传递 `onOpenChange = undefined` 强制展开互斥锁。
 * **[3.3 新一代富文本输入框终端与指令交互引擎](docs/Claude%20Design%20System%20(CDS).md#33-新一代富文本输入框终端与指令交互引擎)**：CJK 输入法双重互锁守卫、`/` 指令与 `@` 上下文双触发符、自适应高度伸缩与 Token 预测。
 * **[3.4 模型矩阵切换器与 Token 计量仪表盘](docs/Claude%20Design%20System%20(CDS).md#34-模型矩阵切换器与-token-计量仪表盘)**：三大模型梯队架构、Thinking 开关、Prompt Caching 四色显存成本解构与环形 SVG 仪表盘。
-* **[3.5 交互式工具调用与 MCP 决策卡片](docs/Claude%20Design%20System%20(CDS).md#35-交互式工具调用与-mcp-决策卡片)**：严格三态授权状态机（`pending_approval` $\to$ `running` $\to$ `success`/`error`）、三阶决议动作阵列与 Payload 审查。
+* **[3.5 交互式工具调用与 MCP 决策卡片](docs/Claude%20Design%20System%20(CDS).md#35-交互式工具调用与-mcp-决策卡片)**：严格三态授权状态机（`pending_approval` → `running` → `success` / `error`）、三阶决议动作阵列与 Payload 审查。
 
 ### ⚡ 第四篇：动效物理学、着色器与环境光影
 * **[4.1 全量动效引擎与关键帧规范](docs/Claude%20Design%20System%20(CDS).md#41-全量动效引擎与关键帧规范)**：二阶阻尼谐振子数学方程精确求解、四大生产级弹簧预设与核心 `@keyframes`。
@@ -145,7 +145,7 @@ mask-image: linear-gradient(to bottom,
 
 ### 2. AudioWorklet + Atomics 无锁环形缓冲区 (Lock-Free SAB RingBuffer)
 * **痛点**：流式大模型音频播放时，主线程垃圾回收（GC）或微小阻塞会导致音频管线欠载爆音（Pop/Glitch）。
-* **Claude 算法**：在独立高优先级 `AudioWorkletProcessor` 线程中以 ~375Hz 频率消费，主线程与音频线程通过 `SharedArrayBuffer` 与 `Atomics.load/store` 原子操作无锁读写指针，欠载时自动静音填充自愈。
+* **Claude 算法**：在独立高优先级 `AudioWorkletProcessor` 线程中以约 375Hz 频率消费，主线程与音频线程通过 `SharedArrayBuffer` 与 `Atomics.load/store` 原子操作无锁读写指针，欠载时自动静音填充自愈。
 
 ### 3. CJK 输入法合成双重互锁守卫 (IME Composition Guard)
 * **痛点**：中日韩用户在拼音/假名输入法候选词浮层敲击 Enter 键确认汉字时，消息被粗暴误发送。
@@ -242,8 +242,8 @@ open-claude-ui/
 | **会话流与输入** | `ThinkingAccordion.tsx` | CSS Grid `0fr -> 1fr` 弹性伸缩无抖动动画，生成中强制展开互斥锁。 |
 | **会话流与输入** | `RichComposerWithMentions.tsx` | CJK 输入法合成守卫（`isComposing || keyCode === 229`）、`/` 指令与 `@` 上下文双触发符、Token 预测。 |
 | **会话流与输入** | `ModelSwitcherWithTokenGauge.tsx` | 三大模型梯队切换、Extended Thinking 开关、Prompt Caching 四色显存解构与 SVG 环形表。 |
-| **会话流与输入** | `McpToolDecisionCard.tsx` | 三态授权生命周期（`pending_approval` $\to$ `running` $\to$ `success`/`error`）、三阶决议动作阵列。 |
-| **动效与环境光** | `ClaudeMotionPresets.ts` | 二阶阻尼谐振子数学求解（$m\ddot{x} + c\dot{x} + kx = 0$）、4 大弹簧预设与贝塞尔常量。 |
+| **会话流与输入** | `McpToolDecisionCard.tsx` | 三态授权生命周期（`pending_approval` → `running` → `success` / `error`）、三阶决议动作阵列。 |
+| **动效与环境光** | `ClaudeMotionPresets.ts` | 二阶阻尼谐振子数学求解（`m·x'' + c·x' + kx = 0`）、4 大弹簧预设与贝塞尔常量。 |
 | **动效与环境光** | `ReasoningAmbientGlow.tsx` | `wl-glow` 陶土暖光漫反射、`cds-shimmer-text-shine` 非对称贝塞尔曲线、焦散光场。 |
 | **动效与环境光** | `ScrollFadeContainer.tsx` | 官方 7 阶五次缓动非线性 Alpha 渐变遮罩、动态滚动位置传感器（触顶/触底动态归零）。 |
 | **视听与多模态** | `ClaudeAudioPlayer.ts` | 原生 Web Audio API 合成振荡器、24kHz 声学通道、15ms 平滑淡入淡出增益防爆音。 |
@@ -261,7 +261,7 @@ open-claude-ui/
 | **系统与协作拓扑** | `useClaudeScrollPinning.ts` | 150ms 冷却时间戳防抢夺、40px 底部容差图钉锁定、35vh 弹性缓冲与 GPU 字符模糊消解。 |
 | **系统与协作拓扑** | `ContainerResponsiveBar.tsx` | 基于 `@container` 的紧凑 (<254px)、中等 (255-420px) 与宽屏 (>420px) 渐进排版，杜绝单字折行。 |
 | **系统与协作拓扑** | `useClaudeRovingFocus.ts` | W3C WAI-ARIA 规范：方向键二维与一维网格漫游导航、Home/End 边界快速跳跃、RTL 翻转。 |
-| **系统与协作拓扑** | `useRateLimitBackoff.ts` | 429/503 截断指数退避（$t = \min(t_{\max}, t_{\text{base}} \times 2^a) \times (1 \pm J)$）、全抖动与熔断。 |
+| **系统与协作拓扑** | `useRateLimitBackoff.ts` | 429/503 截断指数退避（`t = min(t_max, t_base * 2^a) * (1 ± J)`）、全抖动与熔断。 |
 
 ---
 
