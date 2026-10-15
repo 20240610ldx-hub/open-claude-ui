@@ -99,14 +99,12 @@ tags:
 * [8.7 智能体自检与质量门禁清单](08-AI-Agent-前端-UI-与动效开发指南.md#87-智能体自检与质量门禁清单)：Agent 代码交付自检表与 `typecheck` / `build` 命令门禁。
 
 ### 🚀 [第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与 CDS 2.0 架构演进报告](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)
-* [9.0 CDS 2.0 规范总纲与三层演进血缘图谱](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#90-cds-20-规范总纲与三层演进血缘图谱-provenance--delta-matrix)：2.0 绝对新增、重构迭代与统一底座三层血缘界定。
-* [9.1 规范一：规范概览与全局设计契约演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#91-规范一规范概览与全局设计契约演进-overview--global-contracts)：1.x vs 2.0 对比、物理执行源隔离、环境不可变性与零丢失输入承诺。
-* [9.2 规范二：设计 Token 与原子物理量演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#92-规范二设计-token-与原子物理量演进-design-tokens--primitives)：5 阶时间 Token 矩阵 (60ms~450ms)、3 大 Cubic-Bezier 控制点与触控负边距补偿算法。
-* [9.3 规范三：组件全集与核心交互重构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#93-规范三组件全集与核心交互重构-components--patterns)：40 大 `data-cds` 原生命名空间、`ModelSelectorEffort` 5 阶调节器、离线消息队列与侧栏四态重构。
-* [9.4 规范四：动效物理引擎与微交互演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#94-规范四动效物理引擎与微交互演进-motion--micro-interactions)：47 项关键帧全景、原生 CSS `sibling-index()` 级联、View Transitions 转场、Scroll-Driven 遮罩与动效 Compositor 化解析。
-* [9.5 规范五：桌面底座与跨端运行架构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#95-规范五桌面底座与跨端运行架构-desktop-runtime--platform)：`PopoutWindow` 独立弹射架构、三大可视化库随包离线资产化、十大并发缺陷修复与 OpenSSH 路径硬锁定。
-* [9.6 规范六：企业托管与安全防御演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#96-规范六企业托管与安全防御演进-enterprise--managed-config)：6 大破坏性键名映射对照表与“静默降级为未托管”风险排查。
-* [9.7 附录：生产级参考实现代码库](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#97-附录生产级参考实现代码库-reference-implementation-codebase)：`ModelSelectorEffort`、`ChatComposerChin` 与 `CdsMotionEngine` 生产级代码。
+* [9.0 综述：版本边界与架构声明](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#90-综述版本边界与架构声明)：版本边界声明、演进血缘图谱与全局契约。
+* [9.1 新增](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#91-新增)：独立多窗口架构、离线可视化组件、离线消息重试机制、推理算力调节器、现代 CSS 动效系统、首页卡片微光浮空、极细发丝边与相对色彩、触控负边距补偿、企业托管配置迁移。
+* [9.2 重构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#92-重构)：会话侧边栏与环境收敛、工作台画布与底色演进、基础圆角与密度系统、模型选择器与用量感知、骨架屏与胶囊微交互、运行时并发与环境隔离、章节图钉界面泄漏、动效纯 CSS 合成器化。
+* [9.3 底座解密](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#93-底座解密)：纯 CSS 动效参数、原生组件命名空间、响应时间与贝塞尔曲线。
+* [9.4 参考实现](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#94-参考实现)：模型选择与算力调节器、输入框底部工具栏、动效引擎与微交互。
+* [9.5 总结与升格意义](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#95-总结与升格意义)：结构规范化、动效物理化与架构安全化三大工程升格。
 
 ---
 
