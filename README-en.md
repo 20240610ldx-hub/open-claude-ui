@@ -240,46 +240,6 @@ open-claude-ui/
 
 ---
 
-## 🧩 Component & Physics Directory
-
-| Category | Component / Hook | Decompiled Origin & Engineering Physics |
-| :--- | :--- | :--- |
-| **Atomic Controls** | `CdsButton.tsx` | 4-tier size ladder (XS/SM/MD/LG), 5 variants, single-stroke border discipline, `active:scale-[0.98]`. |
-| **Atomic Controls** | `SegmentedControl.tsx` | 999px fully rounded pill track, 2px geometric padding, dual mode supporting CSS absolute positioning & Framer Motion. |
-| **Atomic Controls** | `StatusIndicators.tsx` | Clay breathing light (2.4s), active run pulse (1.2s), 3-dot thinking wave, and slanted skeleton sweeps. |
-| **Atomic Controls** | `ConfirmationDialog.tsx` | 16px corner radius, dual-ring popover diffused shadow, Gaussian blur backdrop, focus trapping. |
-| **Atomic Controls** | `AttachmentCard.tsx` | 10px panel radius, desktop card grid (128×96px) and composer inline pill dual-mode, growth entrance animation. |
-| **Stream & Input** | `ChatMessageBubbles.tsx` | User 18px radius with soft tint vs Assistant zero-border transparent layout with synchronized code blocks. |
-| **Stream & Input** | `ThinkingAccordion.tsx` | Framer Motion bezier height spring expansion, single clay breathing pulse, active generation mutex. |
-| **Stream & Input** | `ChatComposer.tsx` | 20px core input terminal, 3-state dual-ring focus shadow, `field-sizing: content` auto-resizing, thinking toggle. |
-| **Stream & Input** | `RichComposerWithMentions.tsx` | CJK IME guard (`isComposing || keyCode === 229`), `/` command & `@` context dual triggers, token budget estimation. |
-| **Stream & Input** | `ModelSwitcherWithTokenGauge.tsx` | 3-tier model hierarchy, Extended Thinking toggle, Prompt Caching 4-color memory breakdown, SVG circular gauge. |
-| **Stream & Input** | `McpToolDecisionCard.tsx` | Strict 3-state authorization lifecycle (`pending_approval` → `running` → `success` / `error`), 3-tier action array. |
-| **Motion & Atmosphere** | `ClaudeMotionPresets.ts` | 4 production-tuned spring physics presets (Bouncy/Snappy/Gentle/Heavy Snap) with settle-time & overshoot optimizations. |
-| **Motion & Atmosphere** | `ReasoningAmbientGlow.tsx` | `wl-glow` warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric bezier sweep, caustic light field. |
-| **Motion & Atmosphere** | `ScrollFadeContainer.tsx` | 7-stop non-linear alpha fade mask with dynamic scroll sensors (zeroing at edges). |
-| **Audiovisual & Media** | `ClaudeAudioPlayer.ts` | Procedural Web Audio API oscillator synthesis, 30% gentle volume standard, anti-pop gain ramp smoothing. |
-| **Audiovisual & Media** | `LiveMicActivityBars.tsx` | 6-band full vocal coverage visualizer, 8% noise floor gate, `Math.pow(energy, 0.7)` non-linear Gamma compression. |
-| **Audiovisual & Media** | `MediaLightboxViewer.tsx` | 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming. |
-| **Audiovisual & Media** | `useClaudeSharedElementTransition.ts` | Built on `startViewTransition`, dynamic corner radius detection, and `object-fit: contain` reverse clip computation. |
-| **Audiovisual & Media** | `ArtifactsSplitPaneResizer.tsx` | Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds, geometric clamping. |
-| **Audiovisual & Media** | `EpitaxyIframeBridge.tsx` | Strict Origin validation & channel-isolated postMessage RPC, 7 proprietary MIME handlers, user-gesture gating. |
-| **Audiovisual & Media** | `StreamingDiffViewer.tsx` | Table line-number alignment with `tabular-nums`, incremental streaming pipeline, unified/split view switching, 2.5s copy cooldown. |
-| **Audiovisual & Media** | `CodeBlock.tsx` | 12px radius, `#0d0d0c` solid black background, inline optical alignment for language tags, 2.5s copy cooldown. |
-| **System & Desktop** | `createClaudeMainWindow.ts` | Electron host window factory: `hiddenInset` titlebar, macOS Vibrancy (`under-window`) glass blending, 1200×800 (min 600×400). |
-| **System & Desktop** | `ClaudeDesktopHeader.tsx` | macOS traffic light 74px inverse zoom compensation slot (`-webkit-app-region: drag`), multi-tab switcher pills. |
-| **System & Desktop** | `DraggableSessionList.tsx` | `pinnedOrder` optimistic topological reordering, 4px pointer deadzone, tilted ghost shadow, insertion collision lines. |
-| **System & Desktop** | `CoworkAgentCanvas.tsx` | Multi-agent task delegation state machine, team-shared artifact asset pool, cross-window `BroadcastChannel` sync. |
-| **System & Desktop** | `useClaudeScrollPinning.ts` | 150ms cooldown latch against scroll hijacking, 40px bottom-tolerance scroll pin, GPU subpixel blur elimination. |
-| **System & Desktop** | `ContainerResponsiveBar.tsx` | `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing glyph breaks. |
-| **System & Desktop** | `useClaudeRovingFocus.ts` | W3C WAI-ARIA compliance: 1D & 2D arrow key grid navigation, Home/End boundary jumps, RTL mirroring. |
-| **System & Desktop** | `useRateLimitBackoff.ts` | 429/503 truncated exponential backoff (`t = min(t_max, t_base * 2^a) * (1 ± J)`), full jitter, circuit breaker. |
-| **CDS 2.0 Industrial Expansion** | `ModelSelectorEffort.tsx` | 5-tier reasoning effort dial (Low/Medium/High/Extra/Max), dynamic Thinking pulse, enterprise policy injection. |
-| **CDS 2.0 Industrial Expansion** | `ChatComposerChin.tsx` | 12px flattened composer toolbar, touch hit-box negative margin algorithm, offline queued retry banner. |
-| **CDS 2.0 Industrial Expansion** | `CdsMotionEngine.tsx` | Pure CSS compositor motion engine: Pill 1.32x overshoot spring, native chip cascade, Skeleton 105° sweep. |
-
----
-
 ## 🚀 Quick Start
 
 ### 1. Import Stylesheet & Tailwind Extension
