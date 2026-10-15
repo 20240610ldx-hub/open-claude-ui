@@ -120,7 +120,7 @@ graph TD
 * **[8.1~8.7 Agent 角色定位、设计令牌契约与弹簧决策树](docs/08-AI-Agent-前端-UI-与动效开发指南.md)**：专为 AI Agent 定制的前端 UI 与动效装配自检指南。
 
 ### 🚀 第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析
-* **[9.1~9.6 界面拓扑骤变、Popout 多窗口架构、十大 Bug 清洗与托管配置迁移](docs/09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)**：Claude Desktop 2.0 全网首发深度逆向架构演进分析。
+* **[9.0~9.8 界面拓扑骤变、基础组件与圆角迭代、动效物理引擎、Popout 多窗口架构与十大 Bug 清洗](docs/09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)**：Claude Desktop 2.0 全网首发深度逆向架构演进分析与 3 级溯源体系。
 
 ---
 

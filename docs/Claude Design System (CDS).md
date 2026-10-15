@@ -98,13 +98,15 @@ tags:
 * [8.6 生产级组件库快速装配指南 (30 模块)](08-AI-Agent-前端-UI-与动效开发指南.md#86-生产级组件库快速装配指南-30-模块)：全量 30 个生产模块索引与快速复用。
 * [8.7 智能体自检与质量门禁清单](08-AI-Agent-前端-UI-与动效开发指南.md#87-智能体自检与质量门禁清单)：Agent 代码交付自检表与 `typecheck` / `build` 命令门禁。
 
-### 🚀 [第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与架构演进报告](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)
-* [9.1 版本发布定位与核心工程边界廓清](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#91-版本发布定位与核心工程边界廓清)：v2.37337.1 二进制元数据、熔丝审计与 CLI 2.1.295 捆绑边界。
-* [9.2 核心界面拓扑演进与工作流重构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#92-核心界面拓扑演进与工作流重构-anthony-morris-评述与社区焦点)：模型用量感知、Worktree 本地环境收拢、侧边栏四态分组与“Pin as chapter”内部泄漏解析。
-* [9.3 通用桌面交互与 Electron 运行时升级](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#93-通用桌面交互与-electron-运行时升级)：Popout 多窗口弹射、Computer Use 防抢占、发送失败重试持久化、Windows 空格转义与新签名证书。
-* [9.4 Claude Code 桌面引擎与底座缺陷大清洗](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#94-claude-code-桌面引擎与底座缺陷大清洗-bug-sweeps)：文件面板自动保存、Windows OpenSSH 硬收敛与十大并发/隔离 Bug 修复。
-* [9.5 Cowork 协同看板与离线资产化底座](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#95-cowork-协同看板与离线资产化底座)：Chart.js/Grid.js/Mermaid 随包捆绑离线化、虚拟机禁用云端回退、定时任务二次编辑。
-* [9.6 企业托管配置 Breaking Changes 升级指南](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#96-企业托管配置-breaking-changes-升级指南-it-管理员必读)：isDesktopExtension* 破坏性键名迁移表与 OAuth 重新认证。
+### 🚀 [第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与 CDS 2.0 架构演进报告](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)
+* [9.0 CDS 2.0 规范总纲与三层演进血缘图谱](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#90-cds-20-规范总纲与三层演进血缘图谱-provenance--delta-matrix)：2.0 绝对新增、重构迭代与统一底座三层血缘界定。
+* [9.1 规范一：规范概览与全局设计契约演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#91-规范一规范概览与全局设计契约演进-overview--global-contracts)：1.x vs 2.0 对比、物理执行源隔离、环境不可变性与零丢失输入承诺。
+* [9.2 规范二：设计 Token 与原子物理量演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#92-规范二设计-token-与原子物理量演进-design-tokens--primitives)：5 阶时间 Token 矩阵 (60ms~450ms)、3 大 Cubic-Bezier 控制点与触控负边距补偿算法。
+* [9.3 规范三：组件全集与核心交互重构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#93-规范三组件全集与核心交互重构-components--patterns)：40 大 `data-cds` 原生命名空间、`ModelSelectorEffort` 5 阶调节器、离线消息队列与侧栏四态重构。
+* [9.4 规范四：动效物理引擎与微交互演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#94-规范四动效物理引擎与微交互演进-motion--micro-interactions)：47 项关键帧全景、原生 CSS `sibling-index()` 级联、View Transitions 转场、Scroll-Driven 遮罩与动效 Compositor 化解析。
+* [9.5 规范五：桌面底座与跨端运行架构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#95-规范五桌面底座与跨端运行架构-desktop-runtime--platform)：`PopoutWindow` 独立弹射架构、三大可视化库随包离线资产化、十大并发缺陷修复与 OpenSSH 路径硬锁定。
+* [9.6 规范六：企业托管与安全防御演进](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#96-规范六企业托管与安全防御演进-enterprise--managed-config)：6 大破坏性键名映射对照表与“静默降级为未托管”风险排查。
+* [9.7 附录：生产级参考实现代码库](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#97-附录生产级参考实现代码库-reference-implementation-codebase)：`ModelSelectorEffort`、`ChatComposerChin` 与 `CdsMotionEngine` 生产级代码。
 
 ---
 
