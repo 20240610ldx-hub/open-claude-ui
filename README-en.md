@@ -119,8 +119,8 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 ### 🤖 Part 8: AI Agent Frontend UI & Motion Guidelines
 * **[8.1~8.7 Agent Roles, Design Token Contracts & Spring Decision Tree](docs/08-AI-Agent-前端-UI-与动效开发指南.md)**: Standardized guidelines for AI Coding Agents to implement pixel-perfect CDS components.
 
-### 🚀 Part 9: Claude Desktop 2.0 (v2.37337.1) Comprehensive Reverse Engineering Analysis
-* **[9.0~9.5 Overview, Additions, Refactorings, Baseline Secrets & Reference Implementations](docs/09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)**: Industry-first architectural decompilation report for Claude Desktop 2.0.
+### 🚀 Claude Desktop 2.0 (v2.37337.1) Comprehensive Reverse Engineering Analysis
+* **[1~6 Overview, Additions, Refactorings, Baseline Secrets, Reference Implementations & Summary](docs/09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)**: Standalone decompilation report for Claude Desktop 2.0.
 
 ---
 
