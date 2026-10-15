@@ -389,3 +389,13 @@ This repository includes first-class development specifications tailored for mod
 ## 📜 License
 
 Distributed under the [MIT License](LICENSE). All decompiled research findings and code reproductions are intended solely for educational, research, and engineering exchange purposes.
+
+---
+
+## 📈 Star History
+
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=caho1/open-claude-ui&type=Date)](https://star-history.com/#caho1/open-claude-ui&Date)
+
+</div>

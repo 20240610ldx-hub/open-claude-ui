@@ -387,3 +387,13 @@ open docs/claude-components-storybook.html
 ## 📜 许可证 (License)
 
 本项目基于 [MIT License](LICENSE) 开源发布。所有反编译研究成果与代码复现仅供学习、研究与工程交流使用。
+
+---
+
+## 📈 Star History
+
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=caho1/open-claude-ui&type=Date)](https://star-history.com/#caho1/open-claude-ui&Date)
+
+</div>
