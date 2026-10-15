@@ -90,6 +90,13 @@ tags:
    - [8.5 交互防御与边缘场景守卫](#85-交互防御与边缘场景守卫)
    - [8.6 生产级组件库快速装配指南 (30 模块)](#86-生产级组件库快速装配指南-30-模块)
    - [8.7 智能体自检与质量门禁清单](#87-智能体自检与质量门禁清单)
+9. [第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与架构演进报告](#第九篇claude-desktop-20-v2373371-全量版本更新深度逆向分析与架构演进报告)
+   - [9.1 版本发布定位与核心工程边界廓清](#91-版本发布定位与核心工程边界廓清)
+   - [9.2 核心界面拓扑演进与工作流重构](#92-核心界面拓扑演进与工作流重构-anthony-morris-评述与社区焦点)
+   - [9.3 通用桌面交互与 Electron 运行时升级](#93-通用桌面交互与-electron-运行时升级)
+   - [9.4 Claude Code 桌面引擎与底座缺陷大清洗](#94-claude-code-桌面引擎与底座缺陷大清洗-bug-sweeps)
+   - [9.5 Cowork 协同看板与离线资产化底座](#95-cowork-协同看板与离线资产化底座)
+   - [9.6 企业托管配置 Breaking Changes 升级指南](#96-企业托管配置-breaking-changes-升级指南-it-管理员必读)
 
 ---
 
@@ -3129,4 +3136,71 @@ Agent 在完成任何前端代码修改或产物提交前，**必须逐项自检
 - [ ] 频繁跳动的指标已配置 `tabular-nums`；
 - [ ] 容器内二级控件遵循单闭合边框原则；
 - [ ] `npm run typecheck` 与 `npm run build` 0 报错通过。
+
+---
+
+## 第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与架构演进报告
+
+> **目标应用载体**：Anthropic 官方生产包 macOS `/Applications/Claude.app`  
+> **二进制元数据**：`@ant/desktop v2.37337.1`（Build: `2026-10-13T22:16:06Z`，开发者签名：`Developer ID Application: Anthropic PBC (Q6L2SF6YDW)`）  
+> **逆向工具栈**：**REA (Reverse Engineer Anything) v6.5.0** 全流程执行 Fuse 熔丝扫描、Mach-O 代码签名提取、AST 抽象语法树解构与 Electron ASAR 运行时逆向审计。
+
+### 9.1 版本发布定位与核心工程边界廓清
+
+在本次 2026-10-15 发布的 Claude 桌面端全量更新中，软件版本跃升至 **v2.37337.1**。
+
+通过 REA 提取 `/Applications/Claude.app/Contents/Resources/app.asar/package.json` 及 Electron 熔丝与代码签名，我们首先厘清本次发布的关键环境边界：
+- 桌面端内嵌版本：本次桌面端安装包捆绑集成的 Claude Code CLI 运行时严格保持在 **v2.1.295**（对应 SDK `0.3.295`）；
+- 独立 CLI 发布区分：社区同日讨论的 Claude Code CLI `v2.1.299` / `v2.1.300`（包含终端 `idle compaction` 空闲压缩、`/effort` 思考算力滑块、`mod` 扩展的 `virtualText` 虚拟文本注入等）为**命令行独立工具链的单独发布**，桌面端尚未升级该底层 CLI，切勿将终端独立特性误记为桌面端更新。
+
+### 9.2 核心界面拓扑演进与工作流重构
+
+#### 1. 模型选择器用量指标化与上下文移入新会话抽屉
+- 模型选择器旁由单纯的 Token/计费展示，升级为动态**用量（Usage）**监控器；
+- 上下文选择器被从聊天主界面剥离，移入“新会话初始化抽屉（New Session Drawer）”，仅允许在会话初始化阶段预设。
+
+#### 2. Worktree 宿主化：收拢至“保存的本地环境”
+- 彻底摒弃旧版“项目选择器上的单一 Worktree 开关”；
+- 全面收拢进 `LocalSessionEnvironment` / `LocalSessionPresets`，作为持久化“本地保存环境”（Saved Local Environments）的配置项（支持 `.worktreeinclude`, `.claude/worktrees`, `.mcp.json`, `CLAUDE.local.md` 隔离注入）。
+
+#### 3. 侧边栏四态分组与文件夹强行并入 Default 迁移逆向
+- 分组模式大幅精简为严格的 4 种：`None / Status / Date / Environment`；
+- 传统“按文件夹分组”被物理剔除，会话改由物理起源环境分流：`这台电脑 (This Computer) / Cloud / SSH / Slack`；
+- 原有的单会话文件夹在升级瞬间被无提示静默并入统一的 `Default` 作用域，且官方未提供回退开关。
+
+#### 4. “Pin as chapter” 界面泄漏的真实面目解密
+- 逆向取证发现该功能源于内部多智能体协作与长程任务切分工具 `mcp__ccd_session__mark_chapter`；
+- 用于在长程复杂任务中将一系列执行节点打标为“章节”（Chapter），UI 误将其暴露为“Pin as chapter”，官方已确认系漏出的内部 Bug 正紧急修补。
+
+### 9.3 通用桌面交互与 Electron 运行时升级
+
+1. **多窗口弹射架构 (Open in New Window / Popout)**：引入 `PopoutWindow` 状态机服务，允许将对话流独立弹射为独立窗口并排摆放，支持跨窗口独立搜索与控制；
+2. **后台 Computer Use 焦点防抢占与键盘输入保护**：自动化操作菜单在后台触发时毫秒级自动关闭，彻底根除打字时键盘输入被吞噬的焦点劫持恶疾；
+3. **发送失败消息的本地持久化账本与防丢重试**：消息发送失败后 IndexedDB 持久化保留，页面刷新或重启后提供原位快速重试；
+4. **Windows 路径空格转义与 PAC 动态热重载**：修复含空格路径下 npm/npx 启动失败问题，PAC 代理热重载无需重启应用；
+5. **Windows 代码签名证书轮换**：发布者证书续签更新，策略钉死旧证书指纹的企业管理员需手动添加新指纹。
+
+### 9.4 Claude Code 桌面引擎与底座缺陷大清洗
+
+1. **文件面板编辑器自动保存**：右侧代码面板引入 800ms 防抖自动保存机制，并支持随时关闭；
+2. **Windows OpenSSH 路径硬锁定**：物理锁死 `C:\Windows\System32\OpenSSH\ssh.exe`，禁止模糊检索 PATH 下可能存在的恶意脚本；
+3. **十大缺陷综合修复**：解决大仓库并发 Worktree 死锁、超大 Prompt 截断容灾、工具前置文本丢失、Mac 休眠断连同步、5 小时用量恢复后台自唤醒、Windows 崩溃伪报、Linux SSH Worktree 目录越界及 Haiku Auto 模式灰化修复。
+
+### 9.5 Cowork 协同看板与离线资产化底座
+
+1. **三大核心渲染库本地随包捆绑**：随包内置 `Chart.js@4.5.0`、`Grid.js@5.0.2`、`Mermaid@11.17.2`，断网与受限内网环境秒开渲染；
+2. **本机虚拟机禁用时平滑切流云端**：本地虚拟化关闭时，Cowork 协同任务自动切流至云端执行；
+3. **定时任务二次编辑与冷启动首字防丢**：Cron 任务执行后开放编辑，应用重载首字暂存入缓冲。
+
+### 9.6 企业托管配置 Breaking Changes 升级指南
+
+1. **键名破坏性升级**：
+   - `isDxtEnabled` → `isDesktopExtensionEnabled`
+   - `isDxtSignatureRequired` → `isDesktopExtensionSignatureRequired`
+   - `isDxtDirectoryEnabled` → `isDesktopExtensionDirectoryEnabled`
+   - `enduserAttribution` → `endUserAttribution`
+   - `trustBootstrapLocalExec` → `trustBootstrapDelivery`
+   - `inferenceGatewayHeaders` → `inferenceCustomHeaders`
+2. **“未托管状态”防范与 OAuth 重登**：旧策略键名完全移除兼容代码，未更新键名将被静默视为未托管；所有 OAuth MCP 连接器在升级后需重新授权登录一次。
+
 

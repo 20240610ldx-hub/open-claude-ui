@@ -116,6 +116,12 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 * **[7.2 Production Source Code Inventory](docs/07-工程配置与资产代码库总览.md#72-生产级工程源码清单)**: Full inventory of all 30 standalone production source files (11 atomic controls + 19 architecture modules).
 * **[7.3 Asset Specifications & System-Level Font/Audio Alternatives](docs/07-工程配置与资产代码库总览.md#73-资产规范与系统级字体音频替代方案)**: High-fidelity system font fallback stacks and procedural Web Audio synthesis specifications.
 
+### 🤖 Part 8: AI Agent Frontend UI & Motion Guidelines
+* **[8.1~8.7 Agent Roles, Design Token Contracts & Spring Decision Tree](docs/08-AI-Agent-前端-UI-与动效开发指南.md)**: Standardized guidelines for AI Coding Agents to implement pixel-perfect CDS components.
+
+### 🚀 Part 9: Claude Desktop 2.0 (v2.37337.1) Comprehensive Reverse Engineering Analysis
+* **[9.1~9.6 Topology Restructuring, Popout Multi-Window, 10 Critical Bug Sweeps & Managed Configuration Breaking Changes](docs/09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)**: Industry-first architectural decompilation report for Claude Desktop 2.0.
+
 ---
 
 ## 🔬 Decompiled Algorithms & Engineering Physics
