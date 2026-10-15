@@ -98,6 +98,14 @@ tags:
 * [8.6 生产级组件库快速装配指南 (30 模块)](08-AI-Agent-前端-UI-与动效开发指南.md#86-生产级组件库快速装配指南-30-模块)：全量 30 个生产模块索引与快速复用。
 * [8.7 智能体自检与质量门禁清单](08-AI-Agent-前端-UI-与动效开发指南.md#87-智能体自检与质量门禁清单)：Agent 代码交付自检表与 `typecheck` / `build` 命令门禁。
 
+### 🚀 [第九篇：Claude Desktop 2.0 (v2.37337.1) 全量版本更新深度逆向分析与架构演进报告](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md)
+* [9.1 版本发布定位与核心工程边界廓清](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#91-版本发布定位与核心工程边界廓清)：v2.37337.1 二进制元数据、熔丝审计与 CLI 2.1.295 捆绑边界。
+* [9.2 核心界面拓扑演进与工作流重构](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#92-核心界面拓扑演进与工作流重构-anthony-morris-评述与社区焦点)：模型用量感知、Worktree 本地环境收拢、侧边栏四态分组与“Pin as chapter”内部泄漏解析。
+* [9.3 通用桌面交互与 Electron 运行时升级](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#93-通用桌面交互与-electron-运行时升级)：Popout 多窗口弹射、Computer Use 防抢占、发送失败重试持久化、Windows 空格转义与新签名证书。
+* [9.4 Claude Code 桌面引擎与底座缺陷大清洗](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#94-claude-code-桌面引擎与底座缺陷大清洗-bug-sweeps)：文件面板自动保存、Windows OpenSSH 硬收敛与十大并发/隔离 Bug 修复。
+* [9.5 Cowork 协同看板与离线资产化底座](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#95-cowork-协同看板与离线资产化底座)：Chart.js/Grid.js/Mermaid 随包捆绑离线化、虚拟机禁用云端回退、定时任务二次编辑。
+* [9.6 企业托管配置 Breaking Changes 升级指南](09-Claude-Desktop-2.0-全量版本更新深度逆向分析.md#96-企业托管配置-breaking-changes-升级指南-it-管理员必读)：isDesktopExtension* 破坏性键名迁移表与 OAuth 重新认证。
+
 ---
 
 ## 🎨 交互式组件故事书体验
