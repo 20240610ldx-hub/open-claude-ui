@@ -274,6 +274,9 @@ open-claude-ui/
 | **System & Desktop** | `ContainerResponsiveBar.tsx` | `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing glyph breaks. |
 | **System & Desktop** | `useClaudeRovingFocus.ts` | W3C WAI-ARIA compliance: 1D & 2D arrow key grid navigation, Home/End boundary jumps, RTL mirroring. |
 | **System & Desktop** | `useRateLimitBackoff.ts` | 429/503 truncated exponential backoff (`t = min(t_max, t_base * 2^a) * (1 ± J)`), full jitter, circuit breaker. |
+| **CDS 2.0 Industrial Expansion** | `ModelSelectorEffort.tsx` | 5-tier reasoning effort dial (Low/Medium/High/Extra/Max), dynamic Thinking pulse, enterprise policy injection. |
+| **CDS 2.0 Industrial Expansion** | `ChatComposerChin.tsx` | 12px flattened composer toolbar, touch hit-box negative margin algorithm, offline queued retry banner. |
+| **CDS 2.0 Industrial Expansion** | `CdsMotionEngine.tsx` | Pure CSS compositor motion engine: Pill 1.32x overshoot spring, native chip cascade, Skeleton 105° sweep. |
 
 ---
 

@@ -273,6 +273,9 @@ open-claude-ui/
 | **系统与协作拓扑** | `ContainerResponsiveBar.tsx` | 基于 `@container` 的 4 阶流体压缩梯队 (>=576px / <480px / <384px / <320px)，杜绝单字折行。 |
 | **系统与协作拓扑** | `useClaudeRovingFocus.ts` | W3C WAI-ARIA 规范：方向键二维与一维网格漫游导航、Home/End 边界快速跳跃、RTL 翻转。 |
 | **系统与协作拓扑** | `useRateLimitBackoff.ts` | 429/503 截断指数退避（`t = min(t_max, t_base * 2^a) * (1 ± J)`）、全抖动与熔断。 |
+| **CDS 2.0 工业级扩展** | `ModelSelectorEffort.tsx` | 5 阶推理调节器（Low/Medium/High/Extra/Max）、Thinking 动态呼吸状态、企业策略注入。 |
+| **CDS 2.0 工业级扩展** | `ChatComposerChin.tsx` | 12px 扁平化圆角输入框底栏、触控负边距补偿算法、离线失败消息暂存重试横幅。 |
+| **CDS 2.0 工业级扩展** | `CdsMotionEngine.tsx` | 纯 CSS 动效引擎实机呈现：Pill 1.32x 过冲回弹、Chip 原生级联交错、Skeleton 105° 扫光。 |
 
 ---
 

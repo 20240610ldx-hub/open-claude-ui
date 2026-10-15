@@ -599,6 +599,8 @@ interface SidebarSessionRow {
 
 ### 9.4.1 模型选择与算力调节器
 
+> 📄 **独立工程源码**：[`code-examples/ModelSelectorEffort.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ModelSelectorEffort.tsx)（已集成至 `src/index.ts`）
+
 ```tsx
 import React, { useState } from 'react';
 
@@ -720,6 +722,8 @@ export const ModelSelectorEffort: React.FC<{
 
 ### 9.4.2 输入框底部工具栏
 
+> 📄 **独立工程源码**：[`code-examples/ChatComposerChin.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ChatComposerChin.tsx)（已集成至 `src/index.ts`）
+
 ```tsx
 import React from 'react';
 import { ModelSelectorEffort, EffortLevel } from './ModelSelectorEffort';
@@ -804,6 +808,8 @@ export const ChatComposerChin: React.FC<ChatComposerChinProps> = ({
 ---
 
 ### 9.4.3 动效引擎与微交互
+
+> 📄 **独立工程源码**：[`code-examples/CdsMotionEngine.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/CdsMotionEngine.tsx)（已集成至 `src/index.ts`）
 
 ```tsx
 import React, { useState } from 'react';
