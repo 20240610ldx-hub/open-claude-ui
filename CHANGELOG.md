@@ -95,6 +95,72 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Reverse engineered 3-stage authorization lifecycle (`pending_approval`, `running`, `success`/`error`) with real settle reasons: `user_denied`, `policy_denied`, `PERMISSIONS_ERROR`.
   - Extracted `structured_content` parameter inspection and session whitelist map (`bs`) with 330s automatic garbage collection.
 
+#### Chapter 4: Motion Physics, Shaders & Ambient Systems (`docs/v1/04-动效物理学、着色器与环境光影.md`)
+
+- **Native CSS Scroll-Driven Animations (`@supports (animation-timeline: scroll())`)**:
+  - Documented native CSS scroll-driven mask declared via `@supports (animation-timeline: scroll())` in `c6a992d55-sXiDGMFQ.css`, delegating scroll fade entirely to the browser Compositor thread with zero JS overhead.
+  - Configured 6 parallel animation timeline streams: `cds-scroll-fade-top`, `bottom`, `left`, `right`, `y-active`, `x-active` bound to `animation-timeline: scroll(self), scroll(self), scroll(self inline), scroll(self inline), scroll(self), scroll(self inline)`.
+  - Extracted exact 7-stop non-linear alpha sampling mask (`transparent`, `#0000000d` at .15, `#00000026` at .3, `#0000004d` at .45, `#00000080` at .6, `#000000b3` at .75, `#000000d9` at .87, `#000` at 1.0).
+- **Variable Font Kinetic Engine (`[data-cds-anim]`)**:
+  - Discovered CSS Houdini `@property --cds-anim` & `@property --cds-anim2` paired with `[data-cds-anim]` and variable font axes (`ANIM`, `ANM2`, `opsz`, `wght`) in `c6a992d55-sXiDGMFQ.css`.
+  - Extracted mechanical overshoot transition `--cds-anim-ease: cubic-bezier(.34, 1.3, .64, 1)` (+30% bounce) driving focus/hover icon micro-animations.
+- **Ambient Reasoning Shaders & Accurate Keyframe Durations**:
+  - Extracted exact keyframes from `c6a992d55-sXiDGMFQ.css`:
+    - `wl-glow` (1.8s ease-in-out) & `wl-halo` (2.2s ease-in-out) utilizing modern `color-mix(in srgb, var(--cds-fill-brand) 60%, transparent)` pulsing to 85%.
+    - `cds-shimmer-text-shine` (3s linear with asymmetric `cubic-bezier(.714, .121, .211, .888)`).
+    - `epitaxy-linear-sweep` (strictly **1.1s** `cubic-bezier(.45, 0, .55, 1)` translating `-100%` to `350%`, RTL variant `100%` to `-350%`, correcting previous 1.6s estimate).
+    - `epitaxy-check-draw` (0.18s `clip-path: inset(0 100% 0 0)` to `clip-path: inset(0)` at `--cds-ease-out`).
+
+#### Chapter 5: Audiovisual, Lightbox & Artifacts Experience (`docs/v1/05-视听多媒体与产物交互物理学.md`)
+
+- **AudioWorklet & SharedArrayBuffer RingBuffer (`audioSinkWorklet.js`)**:
+  - Extracted complete production implementation of `audioSinkWorklet.js` from `/Applications/Claude.app/Contents/Resources/ion-dist/audio/voice/`.
+  - Reverse engineered the lock-free atomic circular buffer (`RD=0`, `WR=1`, `UNDERRUNS=2`, `PLAYED=3`) running at ~375Hz (128 samples/quantum at 48kHz) with underrun counting gates and dry-gap stall guards.
+- **30% Comfortable Acoustic Standard & SFX Matrix**:
+  - Documented 4 official interaction sound effects (`enter_voice_mode`, `exit_voice_mode`, `disconnected`, `tool_approval_needed`) with strict 30% volume limit and hardware routing via `AudioContext.setSinkId()`.
+- **LiveMicActivityBars 6-Band Gamma Physics**:
+  - Extracted 512-point FFT AnalyserNode configuration (`smoothingTimeConstant = 0.5`, `minDecibels = -70`, `maxDecibels = -10`).
+  - Documented 6 speech bands (85Hz-4.8kHz), 8% noise gate (`Math.max(0, u - 0.08) / 0.92`), and 0.7-power non-linear Gamma energy compression (`Math.pow(gated, 0.7) * 1.5 * weight`) driving 4px-24px height.
+- **MediaLightboxViewer Pan/Zoom & 75vw Runway**:
+  - Extracted physical constants: `ae=2` max zoom, `oe=4px` gesture dead-zone, `se=0.01` wheel exponential factor, `v=1.05` snap threshold.
+  - Implemented cursor-anchored affine zoom equations keeping pointer coordinates fixed during zoom.
+  - Documented View Transitions FLIP morphing with 5-level DOM ancestor radius discovery and `object-fit: contain` inner inset calculation.
+  - Specified 75vw runway with $\pm 2$ virtual preloading and `.animate-lightbox-backdrop-in` (.2s) / `.animate-lightbox-content-in` (.25s).
+- **Artifacts SplitPane & Epitaxy Sandbox**:
+  - Implemented pointer stream shield (`data-pane-dragging="true"` with transparent `pointer-events: none` overlay on child iframes).
+  - Reverse engineered 50/50 double-click snap, 4px dead-zone with Escape cancellation, and 18% / 82% docking thresholds.
+  - Enforced strict null-origin sandbox isolation (excluding `allow-same-origin`) with native `event.userActivation` verified gating.
+- **StreamingDiffViewer & Production Diff Variables**:
+  - Extracted exact variables from `.epitaxy-root .epitaxy-diff` in `c6a992d55-sXiDGMFQ.css`: `--diffs-font-size`, `--diffs-line-height`, `--diffs-font-family`, `--diffs-header-font-family`, `--diffs-addition-color-override`, `--diffs-deletion-color-override`, `--diffs-modified-color-override`, `--diffs-gap-inline`, `--diffs-gap-block`.
+  - Implemented Shadow DOM isolation with CSS Grid row height locking (`gridRow = span ${v}`), incremental stream chunk feed, and 2.5s copy check decay state machine (`saved-check-decay`).
+
+#### Chapter 6: Desktop Host Architecture & Multi-Agent Topology (`docs/v1/06-系统级桌面架构与协作拓扑.md`)
+
+- **Host BrowserWindow + Transparent WebContentsView**:
+  - Deconstructed Electron dual-layer decoupled architecture from `index.chunk-CiiI592G.js`.
+  - Implemented native macOS traffic light inverse zoom compensation formula `Math.max(0, Math.round((pos + 6) * zoom - 6))` with baseline 16.5px and diameter 12px.
+  - Documented 8px dynamic window radius collapsing to 0px on maximize/fullscreen, and instant theme background coloring (`#151515` / `#fcfcfb`).
+- **Sidebar Topological Drag-and-Drop**:
+  - Implemented `pinnedOrder: string[]` optimistic mutation, 4px pointer drag dead-zone, -1.5° ghost elevation tilt, and 2px terracotta midpoint collision drop indicator.
+- **Cowork Multi-Agent Canvas**:
+  - Deconstructed task delegation state machine (`idle` $\to$ `running` $\to$ `waiting_review` $\to$ `completed`), shared artifacts pool, and cross-window `BroadcastChannel` synchronization.
+- **Streaming Scroll Pinning Physics**:
+  - Implemented 150ms user input cooldown window, 40px bottom tolerance, 35vh bottom padding cushion (`--chat-extra-space`), and `behavior: auto` instantaneous bottom alignment.
+- **4-Tier Container Query Compression**:
+  - Eliminated window media query squash defects via `@container` rules (>=576px full, <480px compact, <384px icon-only, <320px anti-overflow safe net with `cqw`).
+- **Roving Focus & Rate Limit Backoff**:
+  - Implemented W3C WAI-ARIA roving tabindex grid with RTL mirror flipping.
+  - Implemented 429/503 exponential backoff (`min(max(base, 5000) * 2^(n-1) * (1 ± J), 600000)`) with $\pm 15\%$ full jitter and 3-retry max ceiling before mandatory manual takeover.
+
+#### Chapter 7 & 8: Engineering Setup & AI Agent Guidelines (`docs/v1/07-工程配置与资产代码库总览.md`, `docs/v1/08-AI-Agent-前端-UI-与动效开发指南.md`)
+
+- **Complete 30-Module Production Asset Inventory**:
+  - Audited and updated the production asset inventory table covering all 30 standalone code examples in `code-examples/`.
+- **Aligned Tailwind Extension & Global CSS Tokens**:
+  - Synchronized `tailwind.config.js` and global CSS with the official 35-tier grayscale/orange color ramps and verified surfaces.
+- **Strict AI Agent Quality Gates**:
+  - Formulated strict rules for agentic code generation: single-stroke border discipline, WebKit 500ms IME post-composition guard, procedural Web Audio synthesis, and zero-error TypeScript build requirement.
+
 ---
 
 ## [1.0.1] - 2026-10-16

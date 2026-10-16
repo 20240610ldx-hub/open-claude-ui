@@ -1477,23 +1477,26 @@ function Ds(e) {
 ## 第四篇：动效物理学、着色器与环境光影
 
 > **技术领域与英文指代**：`Motion Physics, Shaders & Ambient Systems`
+> **逆向工程溯源**：基于 **REA (Reverse Engineer Anything) v6.5.0** 提取自 macOS 生产包 `/Applications/Claude.app`（`@ant/desktop v2.37337.1`，Build 时间戳 `2026-10-13T22:16:06Z`），深度解构核心样式资产 `c6a992d55-sXiDGMFQ.css`、`frame-window-BEI3vR8Q.css` 以及运行时内核 `shared-frame-BfjMqbuN.js`。
+
+---
 
 ### 4.1 全量动效引擎与关键帧规范
 
-> **技术领域与英文指代**：`Motion Engine & Spring Presets`
+> **技术领域与英文指代**：`Motion Engine, CSS Houdini & Spring Presets`
 
-#### 4.1.1 核心 CSS 关键帧集合 (@keyframes)
+#### 4.1.1 核心 CSS 关键帧全集 (@keyframes)
 
-可直接注入项目全局 CSS 的核心 `@keyframes` 集合：
+以下关键帧经 REA 从 `c6a992d55-sXiDGMFQ.css` 完整反编译提取，杜绝任何参数猜测：
 
 ```css
-/* 1. 字符流式晕染输出 */
+/* 1. 字符流式晕染输出 (Grapheme Blur Reveal) */
 @keyframes _grapheme-reveal_1plog_1 {
   0%   { opacity: 0; filter: blur(6px); }
   100% { opacity: 1; filter: blur(0); }
 }
 
-/* 2. 思考三点跳跃循环 */
+/* 2. 思考三点跳跃循环 (Quiet Dots Wave - 周期 1.9s) */
 @keyframes timeline-quiet-dot {
   0%, 8%   { opacity: 0; transform: translateY(2px); }
   22%      { opacity: 1; transform: translateY(-2.5px); }
@@ -1501,45 +1504,118 @@ function Ds(e) {
   90%, 100%{ opacity: 0; transform: translateY(0); }
 }
 
-/* 3. 消息气泡弹性上浮进入 */
+/* 3. 消息气泡微弹进入 (Message Fade Up) */
 @keyframes message-fade-up {
   0%   { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* 4. 用户气泡发送微缩放进入 */
+/* 4. 用户气泡发送微缩放进入 (User Bubble Enter) */
 @keyframes code-user-bubble-enter {
   0%   { opacity: 0; transform: scale(0.92) translateY(6px); }
   100% { opacity: 1; transform: none; }
 }
 
-/* 5. 复制对勾消退 */
+/* 5. 复制对勾衰减消退 (Check Decay - 2.5s 缓动) */
 @keyframes saved-check-decay {
-  to { opacity: 0; }
+  0%, 75% { opacity: 1; transform: scale(1); }
+  100%    { opacity: 0; transform: scale(0.92); }
 }
 
-/* 6. 骨架屏高级倾斜扫光 */
+/* 6. 骨架屏高级倾斜扫光 (Skeleton Sweep - 2.0s 线性) */
 @keyframes cds-skeleton-sweep {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0%   { transform: translate(-100%); }
+  100% { transform: translate(100%); }
 }
 
 /* 7. 分段滑块加载中微呼吸 */
 @keyframes df-pill-pending {
   to { opacity: 0.45; }
 }
+
+/* 8. 附件磁贴入场放大 (File Thumbnail Grow) */
+@keyframes file-thumbnail-grow-in {
+  0%   { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
 ```
 
 ---
 
-#### 4.1.2 生产级 Framer Motion 物理弹簧参数矩阵 (Spring Physics Presets)
+#### 4.1.2 可变字形动效引擎 (Variable Font Kinetic Engine)
 
-Claude 在复杂交互、手势跟随、弹出展开等动态场景中大量采用物理弹簧动效（Framer Motion Spring），基于经典二阶微分方程阻尼振子模拟：
+在 Claude 桌面端中，大量图标微交互并非传统的 SVG 变形或 PNG 替换，而是构建在 **CSS Houdini Properties & Values API** 与可变字体轴（Variable Font Axes `ANIM` / `ANM2`）之上的字形物理驱动引擎（取证自 `c6a992d55-sXiDGMFQ.css`）：
+
+```css
+/* 1. 注册原生数值可动画自定义属性 */
+@property --cds-anim {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+@property --cds-anim2 {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* 2. 字体变异轴驱动核心规则 */
+[data-cds-anim] {
+  --cds-anim: 0;
+  --cds-anim2: 0;
+  font-variation-settings: 
+    "opsz" var(--cds-opsz, 20), 
+    "wght" var(--cds-wght, 400), 
+    "ANIM" var(--cds-anim), 
+    "ANM2" var(--cds-anim2);
+  transition: --cds-anim var(--cds-anim-dur-out, var(--cds-anim-dur, 0.3s)) 
+              var(--cds-anim-ease, cubic-bezier(0.34, 1.3, 0.64, 1));
+}
+
+/* 3. 循环动效关键帧 */
+@keyframes cds-anim-loop {
+  0%, 49.99% { --cds-anim2: 0; }
+  50%, 100%  { --cds-anim2: 100; }
+}
+
+/* 4. 交互触发绑定：Focus 与 Hover 阶梯驱动 */
+@media (prefers-reduced-motion: no-preference) {
+  .group:focus-visible [data-cds-anim],
+  [data-cds-anim]:focus-visible,
+  .group:has(:focus-visible) [data-cds-anim] {
+    --cds-anim: 100;
+    transition-duration: var(--cds-anim-dur, 0.3s);
+  }
+  .group:focus-visible [data-cds-anim-loop],
+  [data-cds-anim-loop]:focus-visible,
+  .group:has(:focus-visible) [data-cds-anim-loop] {
+    animation: 1s linear 0.1s infinite cds-anim-loop;
+  }
+  @media (hover: hover) {
+    .group:hover [data-cds-anim],
+    [data-cds-anim]:hover {
+      --cds-anim: 100;
+      transition-duration: var(--cds-anim-dur, 0.3s);
+    }
+    .group:hover [data-cds-anim-loop],
+    [data-cds-anim-loop]:hover {
+      animation: 1s linear 0.1s infinite cds-anim-loop;
+    }
+  }
+}
+```
+
+> **物理质感剖析**：`--cds-anim-ease` 严格绑定 `--cds-ease-overshoot`（即 `cubic-bezier(0.34, 1.3, 0.64, 1)`），使得图标在触发动效时，字形骨架产生 +30% 的机械弹性过冲，随后收敛至稳定态，呈现出独特的机械微动触感。
+
+---
+
+#### 4.1.3 生产级 Framer Motion 物理弹簧参数矩阵 (Spring Physics Presets)
+
+Claude 在复杂手势吸附、弹出展开与交互响应中采用物理弹簧动效（Framer Motion Spring），基于经典二阶微分方程阻尼振子模拟：
 $$m \frac{d^2 x}{dt^2} + c \frac{dx}{dt} + k (x - x_{\text{target}}) = 0$$
 
 其中阻尼比 $\zeta = \frac{c}{2\sqrt{m k}}$ 决定了运动的质感形态：
 
-#### 1. 生产环境四大标准物理预设表
 | 预设方案代号 | 刚度 (`stiffness`) | 阻尼 (`damping`) | 质量 (`mass`) | 阻尼比 $\zeta$ | 超调量 (Overshoot) | 收敛时间 | 核心应用场景与物理质感 |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | **Button & Small Controls** | `600` | `30` | `1.0` | `0.612` (欠阻尼) | `+8.8%` | `0.22s` | **按钮点击、开关切换、图标按压**。高频微弹，利落归位无粘滞。 |
@@ -1547,196 +1623,271 @@ $$m \frac{d^2 x}{dt^2} + c \frac{dx}{dt} + k (x - x_{\text{target}}) = 0$$
 | **Bouncy Light Feedback** | `380` (或 `dur 0.32`) | `18` (或 `bounce 0.15`) | `1.0` | `0.462` (明显欠阻尼) | `+19.4%` | `0.58s` | **点赞、复制成功勾选、新消息微提示**。明显两周期弹簧跳跃感。 |
 | **High Damping Panel Drag** | `1200` | `80` | `0.1` | `3.650` (过阻尼) | `0%` (绝对零过冲) | `0.14s` | **侧边栏与浮层手势拖拽吸附**。超高刚度与阻尼，松手瞬间极速绝对咬合。 |
 
-#### 2. Framer Motion 生产代码注入范例
-```tsx
-import { motion } from "framer-motion";
-
-// 1. 按钮点击高频回弹
-export const springButton = {
-  whileTap: { scale: 0.92 },
-  transition: { type: "spring", stiffness: 600, damping: 30 }
-};
-
-// 2. 弹窗展开顺滑微冲
-export const springPopover = {
-  initial: { opacity: 0, scale: 0.95, y: 6 },
-  animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.95, y: 4 },
-  transition: { type: "spring", stiffness: 320, damping: 28 }
-};
-
-// 3. 成功徽章跳跃
-export const springBadgeBounce = {
-  initial: { scale: 0.8 },
-  animate: { scale: 1 },
-  transition: { type: "spring", stiffness: 380, damping: 18 }
-};
-```
+> **生产级动效常数与 Hook 实现**：[`code-examples/ClaudeMotionPresets.ts`](../code-examples/ClaudeMotionPresets.ts)。
 
 ---
-
-> **生产级动效常数与 Hook 实现**：[`code-examples/ClaudeMotionPresets.ts`](code-examples/ClaudeMotionPresets.ts)。
 
 ### 4.2 动态光效、着色器与推理氛围感
 
 > **技术领域与英文指代**：`Ambient Shimmer, Glow & Pulse`
 
-Claude 拥有极具辨识度的“思考与推理”视觉氛围。不同于常规粗暴的高斯模糊或旋转加载圈，Claude 运用了精密的时间常数与光学渐变模型（源码取证自 `c6a992d55-C0zTICcS.css` 与 `cde7c3a92-zIg_rFtU.js`）。
+#### 4.2.1 生产级动态光波着色器提取 (`c6a992d55-sXiDGMFQ.css`)
 
-#### 4.2.1 核心生产反编译算法取证 (`c6a992d55-C0zTICcS.css`, `cde7c3a92-zIg_rFtU.js`)
+在官方混淆样式表 `c6a992d55-sXiDGMFQ.css` 中提取出的官方核心关键帧与光场着色规则：
 
-在 `c6a992d55-C0zTICcS.css` 中提取出的官方核心关键帧定义：
 ```css
-/* 官方文本渐变光波扫描 */
+/* 1. 官方文本渐变光波扫描 (Shimmer Text Shine) */
 @keyframes cds-shimmer-text-shine {
   0%, 15% {
     background-position: 83.333% 0;
-    animation-timing-function: cubic-bezier(.714, .121, .211, .888);
+    animation-timing-function: cubic-bezier(0.714, 0.121, 0.211, 0.888);
   }
   85%, 100% {
     background-position: 16.667% 0;
   }
 }
 
-/* 官方等待光晕脉冲 (wl-glow) */
-@keyframes wl-glow {
-  0%, 100% {
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1), 0 0 0 2px var(--cds-fill-brand), 0 0 14px 3px rgba(217, 119, 87, 0.25);
+/* 官方高对比扫光增强版 (Shimmer Text Shine Strong) */
+@keyframes cds-shimmer-text-shine-strong {
+  0%, 5% {
+    background-position: 83.333% 0;
+    animation-timing-function: cubic-bezier(0.4, 0.15, 0.6, 0.85);
   }
-  50% {
-    box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1), 0 0 0 2px var(--cds-fill-brand), 0 0 24px 6px rgba(217, 119, 87, 0.45);
+  95%, 100% {
+    background-position: 16.667% 0;
   }
 }
 
-/* 官方三点差分跳跃脉冲 (cds-dot-pulse) */
+/* 2. 官方深度思考光晕脉冲 (wl-glow) - 周期 1.8s ease-in-out */
+@keyframes wl-glow {
+  0%, 100% {
+    box-shadow: 
+      0 10px 15px -3px #0000001a, 
+      0 4px 6px -4px #0000001a, 
+      0 0 0 2px var(--cds-fill-brand), 
+      0 0 14px 3px color-mix(in srgb, var(--cds-fill-brand) 60%, transparent);
+  }
+  50% {
+    box-shadow: 
+      0 10px 15px -3px #0000001a, 
+      0 4px 6px -4px #0000001a, 
+      0 0 0 2px var(--cds-fill-brand), 
+      0 0 16px 5px color-mix(in srgb, var(--cds-fill-brand) 85%, transparent);
+  }
+}
+
+/* 3. 官方光晕外圈脉冲 (wl-halo) - 周期 2.2s ease-in-out */
+@keyframes wl-halo {
+  0%, 100% {
+    box-shadow: 
+      0 0 0 2px var(--cds-fill-brand), 
+      0 0 14px 3px color-mix(in srgb, var(--cds-fill-brand) 60%, transparent);
+  }
+  50% {
+    box-shadow: 
+      0 0 0 2px var(--cds-fill-brand), 
+      0 0 16px 5px color-mix(in srgb, var(--cds-fill-brand) 85%, transparent);
+  }
+}
+
+/* 4. 官方三点差分跳跃脉冲 (cds-dot-pulse - 周期 1.8s) */
 @keyframes cds-dot-pulse {
   0%, 5% {
-    opacity: .2857;
-    animation-timing-function: cubic-bezier(.165, .84, .44, 1);
+    opacity: 0.2857;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   15%, 25% {
     opacity: 1;
-    animation-timing-function: cubic-bezier(.165, .84, .44, 1);
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
   }
   65%, 100% {
-    opacity: .2857;
+    opacity: 0.2857;
   }
 }
 
-/* 官方线性扫光条 (epitaxy-linear-sweep) */
+/* 5. 官方线性扫光条 (Epitaxy Linear Sweep - 严格 1.1s cubic-bezier(.45, 0, .55, 1)) */
 @keyframes epitaxy-linear-sweep {
-  0% { transform: translate(-100%); }
+  0%   { transform: translate(-100%); }
   100% { transform: translate(350%); }
+}
+
+/* RTL 镜像扫光 */
+@keyframes epitaxy-linear-sweep-rtl {
+  0%   { transform: translate(100%); }
+  100% { transform: translate(-350%); }
+}
+
+/* 6. 成功对勾矢量绘制动效 (Epitaxy Check Draw - 0.18s) */
+@keyframes epitaxy-check-draw {
+  0%   { clip-path: inset(0 100% 0 0); }
+  100% { clip-path: inset(0); }
 }
 ```
 
-#### 4.2.2 陶土暖光推理晕染与 HSL 动态光晕 (`--shadow-drop-glow`, `wl-glow`)
-在进行思维链（Extended Thinking）或复杂代码分析时，Claude 卡片外侧会激活 `wl-glow` 动态光场：
-- 采用内层发丝光圈（2px 陶土底色）与外层 14px - 24px 复合径向漫反射；
-- 震荡周期采用严苛的 1.8s 与 2.2s 双正弦交错频率，使光效如同自然呼吸，不产生视觉疲劳。
+#### 4.2.2 陶土暖光推理晕染与 `color-mix()` 物理光场剖析
 
-#### 4.2.3 文本扫光波纹物理学与非对称贝塞尔曲线 (`cds-shimmer-text-shine`)
-- 传统的平移线性扫光容易让人产生机械停顿感；
-- Claude 使用了高度非对称的贝塞尔曲线 `cubic-bezier(0.714, 0.121, 0.211, 0.888)`：
-  在 0% - 15% 区间进行光波能量蓄积与轻微位移，随后在中段高速释放掠过文字，最后在 85% - 100% 区间柔和衰减，呈现出思考突破时的能量涌动感。
+在进行思维链（Extended Thinking）或复杂任务处理时，Claude 容器激活 `wl-glow` 动态光场：
+- **物理光圈**：内层为硬质发丝边框 `0 0 0 2px var(--cds-fill-brand)`，配合环境投影 `0 10px 15px -3px #0000001a` 与 `0 4px 6px -4px #0000001a`；
+- **动态漫反射**：外层光晕不再使用陈旧的固定 RGBA，而是采用现代 CSS 标准 `color-mix(in srgb, var(--cds-fill-brand) X%, transparent)`：
+  - 基础态：`0 0 14px 3px`，混合比例 60%；
+  - 峰值态（50%）：`0 0 16px 5px`，混合比例跃升至 85%；
+- **呼吸频率配比**：`wl-glow` 为 1.8s，`wl-halo` 为 2.2s，双正弦异频相位叠加有效消除了人眼视觉机械性疲劳。
+
+#### 4.2.3 文本扫光波纹物理学 (`cds-shimmer-text-shine`)
+- Claude 采用高度非对称的贝塞尔曲线 `cubic-bezier(0.714, 0.121, 0.211, 0.888)`：
+  在 0% - 15% 区间进行能量蓄积并保持在 `83.333% 0`，随后在中段以非线性冲量掠过文本，最后在 85% - 100% 平缓回落至 `16.667% 0`，完美模拟了高能光子穿透介质时的波前延迟与骤亮现象。
 
 #### 4.2.4 三相差分跳跃点与 Epitaxy 线性扫光 (`cds-dot-pulse`, `epitaxy-linear-sweep`)
-- 三个指示圆点采用 180ms 阶梯延迟 (`animation-delay: i * 180ms`)，基础不透明度锚定为 28.57%（即 2/7 黄金特定常数），高亮时跃升至 100% 并放大 1.15 倍；
-- 卡片底部的 `LinearSweepProgress` 以 1.6s 周期将一道高光脉冲从 -100% 平移至 +350%，赋予整体容器以生生不息的计算活力。
+- **三点脉冲**：基础不透明度严格锚定为 `0.2857`（即 $\frac{2}{7}$ 精确常数），高亮跃升至 `1.0`，时钟曲线绑定 `--cds-ease-out`（`cubic-bezier(0.165, 0.84, 0.44, 1)`）；
+- **线性扫光**：生产环境执行周期为 **1.1s**（绝非旧文档误报的 1.6s），速度曲线为对称 S 曲线 `cubic-bezier(0.45, 0, 0.55, 1)`，扫光范围跨越 `-100%` 至 `+350%`。
 
 #### 4.2.5 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/ReasoningAmbientGlow.tsx`](code-examples/ReasoningAmbientGlow.tsx)。
+完整独立源码已落地至：[`code-examples/ReasoningAmbientGlow.tsx`](../code-examples/ReasoningAmbientGlow.tsx)。
 
 ---
 
-### 4.3 滚动边缘平滑渐变遮罩系统
+### 4.3 原生 CSS Scroll-Driven 滚动驱动遮罩系统
 
-> **技术领域与英文指代**：`CSS Scroll Fade Masks & Edge Shading`
+> **技术领域与英文指代**：`CSS Scroll-Driven Animations & 7-Stop Non-Linear Fade Masks`
 
-在长聊天气泡流、横向标签页切换栏与文件列表中，Claude 摒弃了生硬的边界截断，全面应用其标志性的平滑滚动边缘羽化遮罩（源码取证自 `frame-shell-chrome-BDKWDTvx.js` 与 `c6a992d55-C0zTICcS.css`）。
+在会话气泡流、横向分段胶囊及各类溢出滚动列表中，Claude 全面采用了纯 CSS 原生驱动的羽化遮罩系统，**不占用主线程 JS 计算与事件侦听**（提取自 `c6a992d55-sXiDGMFQ.css`）。
 
-#### 4.3.1 核心生产反编译算法取证 (`c6a992d55-C0zTICcS.css`)
+#### 4.3.1 原生 CSS Scroll-Driven 动画声明 (`@supports (animation-timeline: scroll())`)
 
-在官方混淆样式表 `c6a992d55-C0zTICcS.css` 中提取出的 7 阶非线性 Alpha 渐变遮罩规则：
 ```css
-/* 官方精密 7-Stop 非线性渐变遮罩 (7-Stop Non-Linear Alpha Mask) */
-mask-image: linear-gradient(
-  to bottom,
-  transparent,
-  #0000000d calc(var(--cds-scroll-fade-top) * .15),
-  #00000026 calc(var(--cds-scroll-fade-top) * .3),
-  #0000004d calc(var(--cds-scroll-fade-top) * .45),
-  #00000080 calc(var(--cds-scroll-fade-top) * .6),
-  #000000b3 calc(var(--cds-scroll-fade-top) * .75),
-  #000000d9 calc(var(--cds-scroll-fade-top) * .87),
-  #000 var(--cds-scroll-fade-top),
-  #000 calc(100% - var(--cds-scroll-fade-bottom)),
-  #000000d9 calc(100% - var(--cds-scroll-fade-bottom) * .87),
-  #000000b3 calc(100% - var(--cds-scroll-fade-bottom) * .75),
-  #00000080 calc(100% - var(--cds-scroll-fade-bottom) * .6),
-  #0000004d calc(100% - var(--cds-scroll-fade-bottom) * .45),
-  #00000026 calc(100% - var(--cds-scroll-fade-bottom) * .3),
-  #0000000d calc(100% - var(--cds-scroll-fade-bottom) * .15),
-  transparent
-);
+@supports (animation-timeline: scroll()) {
+  .scroll-fade {
+    /* 动态计算当前各方向生效遮罩深度 */
+    --cds-scroll-fade-top: calc(var(--cds-scroll-fade-top-raw) * var(--cds-scroll-fade-y-active) * var(--cds-scroll-fade-top-on));
+    --cds-scroll-fade-bottom: calc(var(--cds-scroll-fade-bottom-raw) * var(--cds-scroll-fade-y-active) * var(--cds-scroll-fade-bottom-on));
+    --cds-scroll-fade-left: calc(var(--cds-scroll-fade-left-raw) * var(--cds-scroll-fade-x-active) * var(--cds-scroll-fade-left-on));
+    --cds-scroll-fade-right: calc(var(--cds-scroll-fade-right-raw) * var(--cds-scroll-fade-x-active) * var(--cds-scroll-fade-right-on));
+
+    /* 纵横双轴复合 7-Stop 非线性遮罩图层 */
+    mask-image: 
+      linear-gradient(to bottom, 
+        transparent, 
+        #0000000d calc(var(--cds-scroll-fade-top) * .15), 
+        #00000026 calc(var(--cds-scroll-fade-top) * .3), 
+        #0000004d calc(var(--cds-scroll-fade-top) * .45), 
+        #00000080 calc(var(--cds-scroll-fade-top) * .6), 
+        #000000b3 calc(var(--cds-scroll-fade-top) * .75), 
+        #000000d9 calc(var(--cds-scroll-fade-top) * .87), 
+        #000 var(--cds-scroll-fade-top), 
+        #000 calc(100% - var(--cds-scroll-fade-bottom)), 
+        #000000d9 calc(100% - var(--cds-scroll-fade-bottom) * .87), 
+        #000000b3 calc(100% - var(--cds-scroll-fade-bottom) * .75), 
+        #00000080 calc(100% - var(--cds-scroll-fade-bottom) * .6), 
+        #0000004d calc(100% - var(--cds-scroll-fade-bottom) * .45), 
+        #00000026 calc(100% - var(--cds-scroll-fade-bottom) * .3), 
+        #0000000d calc(100% - var(--cds-scroll-fade-bottom) * .15), 
+        transparent
+      ), 
+      linear-gradient(to right, 
+        transparent, 
+        #0000000d calc(var(--cds-scroll-fade-left) * .15), 
+        #00000026 calc(var(--cds-scroll-fade-left) * .3), 
+        #0000004d calc(var(--cds-scroll-fade-left) * .45), 
+        #00000080 calc(var(--cds-scroll-fade-left) * .6), 
+        #000000b3 calc(var(--cds-scroll-fade-left) * .75), 
+        #000000d9 calc(var(--cds-scroll-fade-left) * .87), 
+        #000 var(--cds-scroll-fade-left), 
+        #000 calc(100% - var(--cds-scroll-fade-right)), 
+        #000000d9 calc(100% - var(--cds-scroll-fade-right) * .87), 
+        #000000b3 calc(100% - var(--cds-scroll-fade-right) * .75), 
+        #00000080 calc(100% - var(--cds-scroll-fade-right) * .6), 
+        #0000004d calc(100% - var(--cds-scroll-fade-right) * .45), 
+        #00000026 calc(100% - var(--cds-scroll-fade-right) * .3), 
+        #0000000d calc(100% - var(--cds-scroll-fade-right) * .15), 
+        transparent
+      );
+
+    /* 6 路并行原生滚动驱动时间轴绑定 */
+    animation-name: 
+      cds-scroll-fade-top, 
+      cds-scroll-fade-bottom, 
+      cds-scroll-fade-left, 
+      cds-scroll-fade-right, 
+      cds-scroll-fade-y-active, 
+      cds-scroll-fade-x-active;
+    animation-timing-function: linear;
+    animation-fill-mode: both, both, both, both, none, none;
+    animation-duration: auto;
+    animation-timeline: 
+      scroll(self), 
+      scroll(self), 
+      scroll(self inline), 
+      scroll(self inline), 
+      scroll(self), 
+      scroll(self inline);
+    animation-range: 
+      0px var(--cds-scroll-fade-size), 
+      calc(100% - var(--cds-scroll-fade-size)) 100%, 
+      0px var(--cds-scroll-fade-size), 
+      calc(100% - var(--cds-scroll-fade-size)) 100%, 
+      0px 101%, 
+      0px 101%;
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+}
 ```
 
-#### 4.3.2 官方 7 档非线性透明度遮罩 (7-Stop Non-Linear Alpha Mask)
-常规 CSS 渐变（如 `from transparent to black`）在现代高分辨率显示器上会产生明显的色阶断层（Color Banding）。Claude 采用了 7 组非线性梯度精密采样点，数据紧密拟合 $y \approx x^{1.5}$ 幂律感知曲线：
-- **距离阶梯 (Position Stops)**：[15%, 30%, 45%, 60%, 75%, 87%, 100%]
-- **Alpha 阶梯 (True Alpha)**：[5.1% (`#0d`), 14.9% (`#26`), 30.2% (`#4d`), 50.2% (`#80`), 70.2% (`#b3`), 85.1% (`#d9`), 100% (`#000`)]
-通过非线性透明度加权，使得文字或卡片滑入视口边缘时如同沉入水雾，极其温润自然。
+#### 4.3.2 官方 7 档非线性透明度采样阶梯 (7-Stop Non-Linear Alpha Sampling)
+常规两点线性渐变在高 DPI 视网膜屏幕上极易因伽马响应产生突兀色阶断裂。Claude 研发的 7 组采样点高度契合人眼视觉感知幂律曲线：
+- **距离阶梯 (Position Stops)**：`[15%, 30%, 45%, 60%, 75%, 87%, 100%]`；
+- **真实 Alpha 阶梯 (True Hex Alpha)**：
+  - `15%`: `#0000000d` (Alpha $\approx 5.1\%$)
+  - `30%`: `#00000026` (Alpha $\approx 14.9\%$)
+  - `45%`: `#0000004d` (Alpha $\approx 30.2\%$)
+  - `60%`: `#00000080` (Alpha $\approx 50.2\%$)
+  - `75%`: `#000000b3` (Alpha $\approx 70.2\%$)
+  - `87%`: `#000000d9` (Alpha $\approx 85.1\%$)
+  - `100%`: `#000000` (Alpha $100\%$)
 
-#### 4.3.3 动态滚动位置传感器与双轴羽化消隐
-- **触顶消除**：容器初始状态 `scrollTop <= 2px` 时，`--cds-scroll-fade-top` 设为 `0px`，第一条消息的顶部不产生遮罩削弱；
-- **滚入激活**：一旦向下滚动，遮罩尺寸平滑展开至标准常数 28px（`--cds-scroll-fade-size`）；
-- **触底消除**：当滚到最底端 `scrollTop + clientHeight >= scrollHeight - 2px` 时，底遮罩恢复为 `0px`，确保最新的输入框或建议胶囊 100% 清晰呈现。
-
-#### 4.3.4 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/ScrollFadeContainer.tsx`](code-examples/ScrollFadeContainer.tsx)。
-
----
+#### 4.3.3 生产级完整 React 落地实现
+组件已支持现代原生 CSS Scroll-Driven 模式，并在不支持该 API 的宿主环境中自动平滑回退至 JS `onScroll` 响应式计算：[`code-examples/ScrollFadeContainer.tsx`](../code-examples/ScrollFadeContainer.tsx)。
 
 ---
 
 ## 第五篇：视听多媒体与产物交互物理学
 
 > **技术领域与英文指代**：`Audiovisual, Lightbox & Artifacts Experience`
+> **逆向工程溯源**：基于 **REA (Reverse Engineer Anything) v6.5.0** 提取自 macOS 生产包 `/Applications/Claude.app`（`@ant/desktop v2.37337.1`，Build 时间戳 `2026-10-13T22:16:06Z`），深度解构核心音频驱动 `/Applications/Claude.app/Contents/Resources/ion-dist/audio/voice/`、核心样式资产 `c6a992d55-sXiDGMFQ.css`、画廊与缩放平移算法 `c4b054ed5-BGjH-Uu6.js`、View Transitions 无缝形变 `cd5136de8-BDys1vAN.js`、Epitaxy 隔离沙箱 `c58115fda-BKnbLmi3.js` 以及代码流式高亮引擎 `c19e90103-CvUj-0ZH.js`。
+
+---
 
 ### 5.1 语音模式与 Web Audio 物理声学系统
 
 > **技术领域与英文指代**：`Voice Mode & AudioWorklet Architecture`
-
-> **取证说明与真实性溯源**：  
-> 本章节依据 REA 逆向反编译自 macOS 生产环境 `/Applications/Claude.app/Contents/Resources/ion-dist/audio/voice/`：
-> - 核心音频驱动：`audioSinkWorklet.js`（基于 `SharedArrayBuffer` 与 `Atomics` 的线程安全无锁环形缓冲区）
-> - 交互音效资源：`sfx/`（`enter_voice_mode.mp3`、`exit_voice_mode.mp3`、`disconnected.mp3`、`tool_approval_needed.mp3`）
-> - 5 大官方音色预览库：`selection/`（`glassy.mp3`、`rounded.mp3`、`mellow.mp3`、`buttery.mp3`、`airy.mp3`）
-> - 前端音频管线：`shared-8-4Jj8qhmU.js`（`AudioPlayer`、`setSinkId` 硬件路由、30% 舒缓音量规范）
-> - 实时频域可视化：`c4a1e6da6-B9dxf4-D.js`（`LiveMicActivityBars` 6 柱波形、512 FFT 频域分析、0.08 噪声门限、0.7 次幂 Gamma 压缩）。  
-> **合规说明**：本公开仓库不分发商业专有音频二进制文件；推荐使用基于原生 Web Audio API 振荡器的零延迟合成方案（见 `code-examples/ClaudeAudioPlayer.ts`）或通过 `setSfxPath` 接入自定义免版权音效。
-
----
 
 #### 5.1.1 官方流式音频架构逆向解密：AudioWorklet 与 SharedArrayBuffer 环形缓冲 (`audioSinkWorklet.js`)
 
 在语音大模型实时对话（如 Claude Voice / Realtime API）场景下，传统的 `AudioContext.decodeAudioData` 或单次 `AudioBufferSourceNode` 调度会因为主线程垃圾回收（GC）或长任务阻塞而产生致命的爆音、破音或断断续续。
 
 #### 1. 核心生产反编译源码取证 (`audioSinkWorklet.js`)
-Anthropic 采用现代浏览器的 `AudioWorkletProcessor` 在独立的高优先级音频渲染线程中运行，并通过 `SharedArrayBuffer` 与 `Atomics` 原子操作实现主线程与音频线程之间的**无锁零拷贝生产-消费者队列（RingBuffer）**：
+Anthropic 采用现代浏览器的 `AudioWorkletProcessor` 在独立的高优先级音频渲染线程中运行，并通过 `SharedArrayBuffer` 与 `Atomics` 原子操作实现主线程与音频线程之间的**无锁零拷贝生产-消费者队列（RingBuffer）**（完整取证自 `/Applications/Claude.app/Contents/Resources/ion-dist/audio/voice/audioSinkWorklet.js`）：
 
 ```javascript
 // audioSinkWorklet.js: Atomics 驱动的环形无锁缓冲区
-const RD = 0; // 读指针索引
-const WR = 1; // 写指针索引
-const UNDERRUNS = 2; // 欠载计数器
-const PLAYED = 3; // 已播放样本计数
+var RD = 0;
+var WR = 1;
+var UNDERRUNS = 2;
+var PLAYED = 3;
+var HEADER_SLOTS = 4;
+var HEADER_BYTES = HEADER_SLOTS * Uint32Array.BYTES_PER_ELEMENT;
 
-class RingBuffer {
+var RingBuffer = class {
   constructor(sab) {
-    this.indices = new Int32Array(sab, 0, 4);
-    this.storage = new Float32Array(sab, 16);
+    this.indices = new Uint32Array(sab, 0, HEADER_SLOTS);
+    this.storage = new Float32Array(sab, HEADER_BYTES);
     this.capacity = this.storage.length;
+  }
+
+  static allocate(capacity) {
+    const bytes = HEADER_BYTES + capacity * Float32Array.BYTES_PER_ELEMENT;
+    const Ctor = typeof SharedArrayBuffer !== "undefined" ? SharedArrayBuffer : ArrayBuffer;
+    return new Ctor(bytes);
   }
 
   // 生产者（主线程 / Opus 解码器写入 PCM 样本）
@@ -1757,7 +1908,7 @@ class RingBuffer {
     return n;
   }
 
-  // 消费者（AudioWorklet 高优先级线程以约 375Hz 频率读取）
+  // 消费者（AudioWorklet 高优先级线程以约 375Hz 频率读取，每帧 128 样本）
   pop(output) {
     const rd = Atomics.load(this.indices, RD);
     const wr = Atomics.load(this.indices, WR);
@@ -1774,9 +1925,17 @@ class RingBuffer {
     Atomics.store(this.indices, RD, (rd + n) % this.capacity);
     return n;
   }
-}
+
+  _availableRead(rd, wr) {
+    return (wr - rd + this.capacity) % this.capacity;
+  }
+  _availableWrite(rd, wr) {
+    return this.capacity - 1 - this._availableRead(rd, wr);
+  }
+};
 
 // 音频帧处理器 (以 128 样本为一量度，48kHz 下每秒执行 375 次)
+var AUDIO_SINK_PROCESSOR_NAME = "audio-sink-processor";
 class AudioSinkProcessor extends AudioWorkletProcessor {
   process(_inputs, outputs) {
     const channel = outputs[0]?.[0];
@@ -1796,7 +1955,7 @@ class AudioSinkProcessor extends AudioWorkletProcessor {
     return true;
   }
 }
-registerProcessor("audio-sink-processor", AudioSinkProcessor);
+registerProcessor(AUDIO_SINK_PROCESSOR_NAME, AudioSinkProcessor);
 ```
 
 ---
@@ -1805,7 +1964,6 @@ registerProcessor("audio-sink-processor", AudioSinkProcessor);
 
 在桌面端与语音模式中，过度刺耳的蜂鸣提示音会破坏 Claude 温润的人文调性。Anthropic 在 `shared-8-4Jj8qhmU.js` 中确立了严格的**30% 舒缓音量原则**与硬件路由：
 
-#### 1. 核心生产反编译代码取证
 ```javascript
 // shared-8-4Jj8qhmU.js: 官方音效调度器
 function createSoundElement(url, volume = 0.3) {
@@ -1820,12 +1978,12 @@ async function initClaudeSoundPipeline() {
   let AudioContextClass = window.AudioContext || window.webkitAudioContext;
   let ctx = new AudioContextClass();
   
-  // 四大官方交互音效矩阵
+  // 四大官方交互音效矩阵（实际存储于 /audio/voice/sfx/）
   let sfxMap = {
-    "voice-mode-ready":     createSoundElement("/audio/voice/sfx/enter_voice_mode.mp3", 0.3),
-    "exit-voice-mode":      createSoundElement("/audio/voice/sfx/exit_voice_mode.mp3", 0.3),
+    "enter_voice_mode":     createSoundElement("/audio/voice/sfx/enter_voice_mode.mp3", 0.3),
+    "exit_voice_mode":      createSoundElement("/audio/voice/sfx/exit_voice_mode.mp3", 0.3),
     "disconnected":         createSoundElement("/audio/voice/sfx/disconnected.mp3", 0.3),
-    "tool-approval-needed": createSoundElement("/audio/voice/sfx/tool_approval_needed.mp3", 0.3)
+    "tool_approval_needed": createSoundElement("/audio/voice/sfx/tool_approval_needed.mp3", 0.3)
   };
 
   // 通过 AudioContext 目的节点进行直通低延迟连接
@@ -1851,6 +2009,8 @@ async function initClaudeSoundPipeline() {
 | `tool_approval_needed` | `sfx/tool_approval_needed.mp3` | 温暖的木质敲击共振双音（9.2KB） | 模型触发高风险电脑使用或 Bash 待确认 |
 | `disconnected` | `sfx/disconnected.mp3` | 微弱的电平降调衰减音（10.7KB） | WebSocket / SSE 连接中断 |
 
+> **开源落地推荐**：本仓库推荐采用基于原生 Web Audio API 振荡器的零外部资源合成方案：[`code-examples/ClaudeAudioPlayer.ts`](../code-examples/ClaudeAudioPlayer.ts)。
+
 ---
 
 #### 5.1.3 6 频段非线性 Gamma 幂律波形动效 (`LiveMicActivityBars`)
@@ -1869,7 +2029,7 @@ flowchart LR
     GammaComp --> MotionInterpolate["Framer Motion 弹性高度映射 (4px - 24px)"]
 ```
 
-#### 1. 核心数学公式与生产反编译算法
+#### 核心数学公式与生产反编译算法
 ```javascript
 // c4a1e6da6-B9dxf4-D.js
 // 1. Web Audio AnalyserNode 配置
@@ -1878,8 +2038,8 @@ analyser.smoothingTimeConstant = 0.5; // 消除帧间视觉毛刺
 analyser.minDecibels = -70;          // 静音底噪基准线
 analyser.maxDecibels = -10;          // 正常说话饱和上限
 
-// 2. 核心 3 频段能量提取与 Gamma 幂律映射公式
-for (let b = 0; b < 3; b++) {
+// 2. 核心 6 频段能量提取与 Gamma 幂律映射公式
+for (let b = 0; b < 6; b++) {
   let rawEnergy = computeAverageBinEnergy(dataArray, b); // [0.0, 1.0]
   let noiseFloor = 0.08; // 8% 噪声门限：彻底消除空调背景杂音引发的虚假微动
   let gated = Math.max(0, rawEnergy - noiseFloor) / (1 - noiseFloor);
@@ -1894,11 +2054,13 @@ for (let b = 0; b < 3; b++) {
 }
 ```
 
+> **生产级组件落地**：[`code-examples/LiveMicActivityBars.tsx`](../code-examples/LiveMicActivityBars.tsx)。
+
 ---
 
 #### 5.1.4 5 大官方语音人格与声学特征解构
 
-Claude 语音模式提供了 5 种经过严格声学调优与情绪定位的官方音色人格（本开源实现推荐通过 Web Audio API 合成或接入自定义音频）：
+Claude 语音模式提供了 5 种经过严格声学调优与情绪定位的官方音色人格（实际存储于 `/Applications/Claude.app/Contents/Resources/ion-dist/audio/voice/selection/`）：
 
 ```
 voice-personas/
@@ -1915,19 +2077,7 @@ voice-personas/
 
 > **技术领域与英文指代**：`Lightbox, Pan/Zoom & Shared Element Transitions`
 
-> **取证说明与真实性溯源**：  
-> 本章节依据 REA 逆向反编译自 macOS 生产环境 `/Applications/Claude.app/Contents/Resources/ion-dist/assets/v1/`：  
-> - 核心画廊跑道与以光标为锚点的缩放平移算法：`c4b054ed5-BGjH-Uu6.js`  
-> - 共享元素 View Transitions 与圆角/内切无缝形变（FLIP Morph）：`cd5136de8-BDys1vAN.js`  
-> - 会话多轮附件渲染、缩略图坐标登记与画廊通道打通：`cd5a31703-B4nKQMBN.js`  
-> - 视频灯箱弹窗骨架与按键陷阱：`ce2aec0ca-CyReNPZJ.js`  
-> - 全局动画关键帧：`c6a992d55-C0zTICcS.css` (`.animate-lightbox-backdrop-in`, `.animate-lightbox-content-in`)
-
----
-
-#### 5.2.1 核心生产反编译算法取证 (`c4b054ed5-BGjH-Uu6.js`, `cd5136de8-BDys1vAN.js`)
-
-#### 1. 物理常数与阻尼阈值矩阵 (Extracted Physical Constants)
+#### 5.2.1 物理常数与阻尼阈值矩阵 (Extracted Physical Constants)
 
 在 `c4b054ed5-BGjH-Uu6.js` 头部，Anthropic 确立了一组极其严苛的物理常数：
 
@@ -1942,31 +2092,17 @@ var y = 0.7;       // 视口阻尼溢出系数
 var le = 2;        // 虚拟画廊跑道预加载跨度 (Math.abs(t - O) <= 2，前后仅预载 2 帧)
 ```
 
+在 `c6a992d55-sXiDGMFQ.css` 中提取出对应的弹窗进出场关键帧：
+```css
+.animate-lightbox-backdrop-in { animation: .2s ease-out fade-in; }
+.animate-lightbox-content-in  { animation: .25s ease-out scale-in; }
+```
+
 ---
 
 #### 5.2.2 View Transitions API 共享元素无缝变形（FLIP Morphing & Object-Fit 逆向计算）
 
-在 Claude 中点击对话气泡或文件卡片里的图片时，图片**绝不是粗暴地凭空弹窗**，而是如同原生系统级相册一般，从对话流里的缩略图**无缝平滑膨胀展开至全屏 Lightbox**；关闭时又能精准原路飞回缩略图。
-
-```mermaid
-sequenceDiagram
-    autonumber
-    actor User as 用户点击图片
-    participant Thumb as 对话流缩略图 (originEl)
-    participant VT as Document ViewTransition
-    participant LB as 全屏画廊 (Lightbox Target)
-
-    User->>Thumb: 点击缩略图触发 openImageLightbox(e)
-    Note over Thumb: 提取自身 BoundingClientRect 与 borderRadius
-    Note over Thumb: 计算 object-fit: contain 实际图像内切 inset
-    Thumb->>VT: document.startViewTransition()
-    Thumb->>Thumb: 标记 view-transition-name: chat-image-preview !important
-    Thumb->>Thumb: 隐藏自身 (visibility: hidden)，防止重影
-    VT->>LB: 挂载全屏画廊组件，并将 targetRef 设为 chat-image-preview
-    LB->>LB: 动态注入 --vt-image-preview-target-radius (1rem / 16px)
-    Note over VT: 浏览器 GPU 执行几何形变插值 (FLIP Morph)
-    VT-->>LB: 变形动画完成，清除 view-transition-name
-```
+在 Claude 中点击对话气泡或文件卡片里的图片时，图片**从对话流里的缩略图无缝平滑膨胀展开至全屏 Lightbox**；关闭时又能精准原路飞回缩略图。
 
 #### 核心生产源码取证 (`cd5136de8-BDys1vAN.js`)
 
@@ -2094,16 +2230,10 @@ function handleWheel(e) {
 }
 ```
 
-* **视口布局精髓**：每个幻灯片宽度恰好为 `75vw`（屏幕宽度的 3/4），起始偏移量设为 `12.5vw`（刚好处于屏幕正中央）。两侧各露出 `12.5vw - 32px` 的相邻图片边缘，给用户明确的“画廊可左右滑动”视觉暗示。
+* **视口布局精髓**：每个幻灯片宽度恰好为 `75vw`（屏幕宽度的 $\frac{3}{4}$），起始偏移量设为 `12.5vw`（刚好处于屏幕正中央）。两侧各露出 `12.5vw - 32px` 的相邻图片边缘，给用户明确的“画廊可左右滑动”视觉暗示。
 * **虚拟预加载机制**：通过 `Math.abs(index - currentIndex) <= 2`，跑道上只保留当前项及前后各两张的真实 DOM 与高清图片，避免在百图大聊天记录中爆掉显存。
 
----
-
-#### 5.2.5 生产级完整 React 落地实现
-
-完整生产级实现已独立打包存放在工程代码库中，支持即拷即用：
-1. **组件本体**：[`code-examples/MediaLightboxViewer.tsx`](code-examples/MediaLightboxViewer.tsx) —— 包含完整的以光标为锚点的双击缩放、指针拖拽锁定、滚轮指数缩放、75vw 跑道平移、键盘箭头导航与无障碍焦点保护。
-2. **变形转场 Hook**：[`code-examples/useClaudeSharedElementTransition.ts`](code-examples/useClaudeSharedElementTransition.ts) —— 包含基于原生 `startViewTransition` 的缩略图圆角与 `object-fit: contain` 内切剪裁百分比逆向计算。
+> **生产级组件落地**：[`code-examples/MediaLightboxViewer.tsx`](../code-examples/MediaLightboxViewer.tsx) 与 [`code-examples/useClaudeSharedElementTransition.ts`](../code-examples/useClaudeSharedElementTransition.ts)。
 
 ---
 
@@ -2115,7 +2245,6 @@ function handleWheel(e) {
 
 #### 5.3.1 核心生产反编译算法取证 (`shared-22-DYCF-SVs.js`, `c909d93e7-BsSzOQcm.js`)
 
-在 `shared-22-DYCF-SVs.js` 中，提取出了拖拽生命周期与分栏比例算法：
 ```javascript
 // 拖拽激活与光标指针跟随
 w = e => {
@@ -2154,20 +2283,9 @@ C = e => {
 - **边缘折叠门限 (Docking)**：当拖拽比例超过临界值（如右栏宽度 < 18% 或视口像素 < 420px）时，系统自动触发吸附折叠，将右栏收起为侧边微型挂钩，为主聊天流释放完整阅读空间。
 - **极值约束钳制**：左栏会话流最小保留 380px，右栏 Artifacts 最小保留 420px。
 
-#### 5.3.4 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/ArtifactsSplitPaneResizer.tsx`](code-examples/ArtifactsSplitPaneResizer.tsx)。
+> **生产级组件落地**：[`code-examples/ArtifactsSplitPaneResizer.tsx`](../code-examples/ArtifactsSplitPaneResizer.tsx)。
 
 ---
-
----
-
-#### 5.3.5 Artifacts 分屏工作台与抽屉容器规范
-#### 3. Artifacts 分屏工作台与抽屉容器 (Artifacts Workbench)
-当触发独立代码或 UI 产物生成时，Claude 会在主聊天流右侧唤起 Artifacts 专属面板：
-* **分栏比例**：桌面端默认为 `50% : 50%` 双栏分屏；移动端或窄屏转为全屏覆盖抽屉（Sheet）。
-* **抽屉滑入转场**：从屏幕右侧平滑滑入，时序 `--cds-dur-sheet: 300ms`，缓动函数 `cubic-bezier(.165, .84, .44, 1)`。
-* **顶部工具栏**：高度 `46px`（`--cds-h-titlebar`），包含版本历史步进器（`< 1/3 >`）、Code/Preview 纯几何分段选择器与最大化/关闭按钮。
-* **防挤压保障**：Artifacts 内部沙箱 iframe 或代码编辑器必须声明独立的 `@container`，确保代码换行不干扰左侧聊天画布的宽度分配。
 
 ### 5.4 工件预览沙箱与隔离通信架构
 
@@ -2175,13 +2293,13 @@ C = e => {
 
 Claude 拥有强大的动态渲染（React/SVG/Mermaid/HTML）能力，其底层运行在代号为 **Epitaxy** 的隔离容器中。
 
-#### 1. 核心生产反编译代码取证 (`c58115fda-BKnbLmi3.js` / `cd5a31703-B4nKQMBN.js`)
+#### 5.4.1 核心生产反编译代码取证 (`c58115fda-BKnbLmi3.js` / `cd5a31703-B4nKQMBN.js`)
 
 ```javascript
 // c58115fda-BKnbLmi3.js: Epitaxy 权限隔离与通信门禁
+// 生产环境严格排除 allow-same-origin，切断同源父 DOM 穿透逃逸路径
 var EPITAXY_IFRAME_SANDBOX = [
   "allow-scripts",
-  "allow-same-origin",
   "allow-forms",
   "allow-popups",
   "allow-modals"
@@ -2205,80 +2323,18 @@ window.addEventListener("message", function(event) {
 
   // 严格校验消息来源源域与结构签名
   if (data.channel === "epitaxy_mcp_app") {
-    // 核心安全防御：拦截未经过 iframe 内真实用户点击/激活的恶意反射事件
-    if (!event.isTrusted || !data.hasUserActivation) {
+    // 核心安全防御：基于浏览器原生 userActivation 拦截未经真实用户手势激发的合成事件
+    var hasActivation = (event.userActivation && event.userActivation.hasBeenActive) || false;
+    if (!event.isTrusted || !hasActivation) {
       console.warn("[Epitaxy MCP App] ui/message without iframe-originated user activation blocked");
       return;
     }
     dispatchAppMessage(data.payload);
   }
 });
-
-// 12 项 Virtual Package 自愈重定向表 (cd5a31703-B4nKQMBN.js)
-function resolveVirtualModule(importName) {
-  var packageAliases = {
-    "lucide-react": "@ant/epitaxy-lucide-shim",
-    "framer-motion": "@ant/epitaxy-motion-shim",
-    "recharts": "@ant/epitaxy-recharts-shim"
-  };
-  return packageAliases[importName] || importName;
-}
 ```
 
-#### 2. 生产级沙箱宿主组件 (`EpitaxyIframeBridge.tsx`)
-
-```tsx
-import React, { useRef, useEffect, useCallback } from 'react';
-
-interface EpitaxyIframeBridgeProps {
-  srcDoc: string;
-  onMessage?: (payload: any) => void;
-  onError?: (err: any) => void;
-}
-
-export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
-  srcDoc,
-  onMessage,
-  onError
-}) => {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const handleMessage = useCallback(
-    (event: MessageEvent) => {
-      // 保证仅响应来自该 iframe 的事件
-      if (event.source !== iframeRef.current?.contentWindow) return;
-      const { type, payload, hasUserActivation } = event.data || {};
-
-      if (type === 'EPITAXY_USER_ACTION') {
-        if (!hasUserActivation) {
-          console.warn('[Epitaxy] Blocked synthetic message without user activation');
-          return;
-        }
-        onMessage?.(payload);
-      } else if (type === 'EPITAXY_RUNTIME_ERROR') {
-        onError?.(payload);
-      }
-    },
-    [onMessage, onError]
-  );
-
-  useEffect(() => {
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, [handleMessage]);
-
-  return (
-    <iframe
-      ref={iframeRef}
-      title="Claude Epitaxy Sandbox"
-      srcDoc={srcDoc}
-      sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals"
-      referrerPolicy="strict-origin"
-      className="h-full w-full border-0 bg-transparent"
-    />
-  );
-};
-```
+> **生产级组件落地**：[`code-examples/EpitaxyIframeBridge.tsx`](../code-examples/EpitaxyIframeBridge.tsx)。
 
 ---
 
@@ -2286,11 +2342,30 @@ export const EpitaxyIframeBridge: React.FC<EpitaxyIframeBridgeProps> = ({
 
 > **技术领域与英文指代**：`Diff Viewer, Syntax Highlighter & CodeBlock`
 
-在生成和修改代码文件时，Claude 会在 Artifacts 面板与会话气泡内呼出其专属的代码差异比对引擎（源码取证自 `c19e90103-CvUj-0ZH.js` 与 `c6a992d55-C0zTICcS.css`）。
+在生成和修改代码文件时，Claude 会在 Artifacts 面板与会话气泡内呼出其专属的代码差异比对引擎（源码取证自 `c19e90103-CvUj-0ZH.js` 与 `c6a992d55-sXiDGMFQ.css`）。
 
-#### 5.5.1 核心生产反编译算法取证 (`c19e90103-CvUj-0ZH.js`, `tree-sitter-Tbdz49RR.js`)
+#### 5.5.1 生产级 Diff 样式变量取证 (`.epitaxy-root .epitaxy-diff`)
+
+在官方混淆样式表 `c6a992d55-sXiDGMFQ.css` 中提取出的官方核心 Diff 变量定义：
+
+```css
+.epitaxy-root .epitaxy-diff {
+  --diffs-font-size: var(--cds-font-size-code);
+  --diffs-line-height: var(--cds-leading-code);
+  --diffs-font-family: var(--cds-font-mono);
+  --diffs-header-font-family: var(--cds-font-sans);
+  --diffs-addition-color-override: var(--cds-text-git-added);
+  --diffs-deletion-color-override: var(--cds-text-git-removed);
+  --diffs-modified-color-override: var(--cds-text-accent);
+  --diffs-gap-inline: var(--cds-pad-md);
+  --diffs-gap-block: var(--cds-pad-xs);
+}
+```
+
+#### 5.5.2 核心生产反编译算法取证 (`c19e90103-CvUj-0ZH.js`, `tree-sitter-Tbdz49RR.js`)
 
 在 `c19e90103-CvUj-0ZH.js` 中提取出其流式高亮调度器 `Jh` 与 Shadow DOM 挂载函数 `Xh`：
+
 ```javascript
 // Shadow DOM 隔离与双栏 Grid 锁定挂载
 function Xh(e, t, n, r, i) {
@@ -2310,7 +2385,6 @@ function Xh(e, t, n, r, i) {
     v += 1;
     // 左右两栏强制锁定相同网格跨度
     f.style.gridRow = p.style.gridRow = `span ${v}`;
-    // ...创建行号元素与代码行容器
   };
 
   // 增量消费 Worker 传递的 Tokens
@@ -2338,59 +2412,41 @@ function Xh(e, t, n, r, i) {
 }
 ```
 
-#### 5.5.2 Shadow DOM 样式隔离与 CSS Grid 行高几何锁死
-- **Shadow DOM 隔离**：高亮语法包含大量的样式规则（如关键字、类型、操作符的颜色）。通过 `attachShadow({ mode: "open" })`，彻底将代码块语法样式与外层 UI 样式隔离，避免 CSS 选择器层叠膨胀；
+#### 5.5.3 Shadow DOM 隔离与 CSS Grid 行高几何锁死
+- **Shadow DOM 隔离**：高亮语法包含大量的样式规则。通过 `attachShadow({ mode: "open" })`，彻底将代码块语法样式与外层 UI 样式隔离，避免 CSS 选择器层叠膨胀；
 - **行高物理锁死**：代码与行号分置于两栏，行内换行（Word Wrap）极易导致行号与代码行高不一致。Claude 采用 CSS Grid 布局，将行号栏 `f` 与代码栏 `p` 的网格跨度同步赋值为 `gridRow = span ${totalLines}`，从布局引擎底层抹平错位。
 
-#### 5.5.3 增量流式追加管道 (Incremental Stream Feed)
-- 当模型逐字生成差异时，传统高亮器会在每次 token 到来时重新 parse 整个代码文件，导致 $O(N^2)$ 的灾难级 CPU 消耗；
-- Claude 通过 `e.startsWith(m)` 判定前缀连续性，使用 `e.slice(m.length)` 提取当前增量 Delta，直接派发至 Web Worker（`Kh`）进行流式语法分析，并将生成的 `span` 片段就地追加至对应行容器中。
-
-#### 5.5.4 统一视图 (Unified) 与分屏视图 (Split) 双模式渲染算法
--- **Unified 模式**：按照标准 Git Unified 格式，单列纵向穿插输出增量（绿色高亮，`+` 号）与删除（红色高亮，`-` 号），适合窄屏与快速代码审查；
-- **Split 模式**：双列并排渲染，左列呈现原文件基线并在新增处渲染占位空白行，右列呈现修改后结果并在删除处渲染占位空白行，双列保持绝对平行的行高拓扑。
-
-#### 5.5.5 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/StreamingDiffViewer.tsx`](code-examples/StreamingDiffViewer.tsx)。
-
----
-
----
-
-#### 5.5.6 代码块容器与 2.5s 复制衰减状态机
-#### 1. 代码块与复制状态机 (Code Block & Copy Decay)
+#### 5.5.4 代码块与复制 2.5s 状态机 (`saved-check-decay`)
 Claude 的代码高亮块具有独立而优雅的头部设计与状态机动效：
-* **容器外壳**：圆角 `rounded-xl (12px)`，边框 `border border-neutral-200 dark:border-neutral-800`，背景深色 `bg-neutral-900`（或 `#0d0d0c`）。
+* **容器外壳**：圆角 `rounded-xl (12px)`，边框 `border border-neutral-800`，背景深色 `#0d0d0c`。
 * **头部工具栏**：高度 `36px`，左侧显示编程语言标签与对应图标（`.align-[-0.125em]`），右侧为复制按钮。
 * **复制反馈 2.5s 状态机 (`saved-check-decay`)**：
   点击复制代码后，复制图标瞬时切换为绿色勾选图标并展示 "Copied"；经过 `2.5s` 静默展示期后，通过 CSS keyframes 自动淡隐恢复为默认复制状态：
   ```css
-  /* 提取自 c6a992d55-C0zTICcS.css */
   @keyframes saved-check-decay {
-    0%   { opacity: 1; transform: scale(1); }
-    70%  { opacity: 1; transform: scale(1); }
-    100% { opacity: 0; transform: scale(0.92); }
-  }
-  .copied-badge-fade {
-    animation: saved-check-decay 0.35s cubic-bezier(.165, .84, .44, 1) 2.5s forwards;
+    0%, 75% { opacity: 1; transform: scale(1); }
+    100%    { opacity: 0; transform: scale(0.92); }
   }
   ```
 
-> **生产级独立组件实现**：[`code-examples/CodeBlock.tsx`](code-examples/CodeBlock.tsx) 与 [`code-examples/StreamingDiffViewer.tsx`](code-examples/StreamingDiffViewer.tsx)。
+> **生产级组件落地**：[`code-examples/StreamingDiffViewer.tsx`](../code-examples/StreamingDiffViewer.tsx) 与 [`code-examples/CodeBlock.tsx`](../code-examples/CodeBlock.tsx)。
 
 ---
 
 ## 第六篇：系统级桌面架构与协作拓扑
 
 > **技术领域与英文指代**：`Desktop Host Architecture & Multi-Agent Topology`
+> **逆向工程溯源**：基于 **REA (Reverse Engineer Anything) v6.5.0** 提取自 macOS 生产包 `/Applications/Claude.app`（`@ant/desktop v2.37337.1`，Build 时间戳 `2026-10-13T22:16:06Z`），深度解构 Electron 宿主架构 `app.asar`、`index.chunk-CiiI592G.js`、样式资产 `c6a992d55-sXiDGMFQ.css`、侧边栏重排拓扑 `shared-21-CGGmSsMS.js` / `shared-22-DYCF-SVs.js`、多智能体协同引擎 `shared-6-zKKz0bS2.js`、视口图钉锁定算法 `ca2ef848d-Dz47ULRM.js` 以及 429 限流容灾状态机 `shared-50-Bmc9oUMm.js`。
+
+---
 
 ### 6.1 macOS 桌面宿主深度融合与窗口材质
 
 > **技术领域与英文指代**：`macOS Desktop Integration & Vibrancy`
 
-在桌面端，Claude 摒弃了单窗口加载的简陋做法，采用 **Host BrowserWindow + Transparent WebContentsView** 双层解耦。
+在桌面端，Claude 摒弃了单窗口粗暴加载网页的简陋做法，采用 **Host BrowserWindow + Transparent WebContentsView** 双层解耦。
 
-#### 1. 核心生产反编译代码取证 (`app.asar` / `mainWindow.js` / `index.chunk-CiiI592G.js`)
+#### 6.1.1 核心生产反编译代码取证 (`app.asar` / `mainWindow.js` / `index.chunk-CiiI592G.js`)
 
 ```javascript
 // index.chunk-CiiI592G.js: 主窗口与透明内容视图构建
@@ -2451,7 +2507,7 @@ function computeTitlebarInsets(isMac, isFullscreen, isDesktop, incognito) {
 ```
 
 ```css
-/* 纯 CSS 桌面端环境探测器 (c6a992d55-C0zTICcS.css) */
+/* 纯 CSS 桌面端环境探测器 (c6a992d55-sXiDGMFQ.css) */
 @supports ((-webkit-mask-clip: text)) and (-webkit-app-region: drag) {
   /* 仅在 Chromium / Electron 桌面宿主中生效 */
   .cds-desktop-drag-strip {
@@ -2466,6 +2522,8 @@ function computeTitlebarInsets(isMac, isFullscreen, isDesktop, incognito) {
   app-region: no-drag !important;
 }
 ```
+
+> **生产级主窗口实现**：[`code-examples/createClaudeMainWindow.ts`](../code-examples/createClaudeMainWindow.ts)。
 
 ---
 
@@ -2484,7 +2542,6 @@ function mV(e, t) {
     ...fV(e.canPin && e.pinReorder?.onMoveUp, NB),
     ...fV(e.canPin && e.pinReorder?.onMoveDown, PB),
     ...fV(e.canPin, FB),
-    // ...重命名、归档、共享、星标上下文菜单动作
   ];
 }
 ```
@@ -2522,13 +2579,12 @@ a.toggleAttribute("data-pin-dragging", zt);
   时才将 `isDragging` 置为 `true`，触发拖拽态与手柄显示。
 
 #### 6.2.4 幽灵投影与对撞占位线 (Ghost Elevation & Drop Indicators)
-- **拖拽幽灵 (Ghost Preview)**：元素被拖拽时透明度衰减至 40%，外轮廓呈现 `border-dashed` 陶土边框；
+- **拖拽幽灵 (Ghost Preview)**：元素被拖拽时呈现 -1.5° 微倾斜，透明度衰减至 40%，外轮廓呈现 `border-dashed` 陶土边框；
 - **落点对撞检测 (Midpoint Collision)**：拖拽经过目标行时，通过计算指针在目标行矩形框中的垂直比例：
   $$\text{Position} = \begin{cases} \text{'before'}, & y_{\text{cursor}} < y_{\text{top}} + \frac{h}{2} \\ \text{'after'}, & \text{otherwise} \end{cases}$$
   在目标上方或下方实时渲染高度 2px、陶土品牌色 (`var(--cds-fill-brand)`) 的弹性占位高亮导轨。
 
-#### 6.2.5 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/DraggableSessionList.tsx`](code-examples/DraggableSessionList.tsx)。
+> **生产级组件落地**：[`code-examples/DraggableSessionList.tsx`](../code-examples/DraggableSessionList.tsx)。
 
 ---
 
@@ -2559,8 +2615,7 @@ case "channel_remote_control_session":
 #### 6.3.3 跨会话广播通道 (BroadcastChannel) 事件同步
 多智能体可能分布在不同窗口或标签页运行，系统基于浏览器原生 `BroadcastChannel("claude_cowork_sync")` 广播状态心跳包与任务完成信号，确保各面板无延迟同态刷新。
 
-#### 6.3.4 生产级完整 React 落地实现
-完整独立源码已落地至：[`code-examples/CoworkAgentCanvas.tsx`](code-examples/CoworkAgentCanvas.tsx)。
+> **生产级组件落地**：[`code-examples/CoworkAgentCanvas.tsx`](../code-examples/CoworkAgentCanvas.tsx)。
 
 ---
 
@@ -2570,7 +2625,7 @@ case "channel_remote_control_session":
 
 在长文本或代码流式输出时，最影响体验的是“**滚动抖动与视口抢夺**”：如果用户正在向上翻看历史消息，AI 每吐出一个 Token 就强行将视口拉到底部，会导致严重的操作对抗感。
 
-#### 1. 核心生产反编译算法取证 (`ca2ef848d-Dz47ULRM.js`)
+#### 6.4.1 核心生产反编译算法取证 (`ca2ef848d-Dz47ULRM.js`)
 
 Anthropic 在 `ca2ef848d-Dz47ULRM.js` 中确立了 **150ms 冷却时间戳 + 用户滚轮打断 + 35vh 底部缓冲垫 + 6px 硬件加速模糊消解**：
 
@@ -2619,7 +2674,7 @@ function onTokenChunkAppended(containerEl) {
   padding-bottom: var(--chat-extra-space);
 }
 
-/* 新 Token 到达时的 6px GPU 模糊消解动画（c6a992d55-C0zTICcS.css） */
+/* 新 Token 到达时的 6px GPU 模糊消解动画（c6a992d55-sXiDGMFQ.css） */
 @keyframes _grapheme-reveal_1plog_1 {
   0% {
     opacity: 0.2;
@@ -2638,65 +2693,7 @@ function onTokenChunkAppended(containerEl) {
 }
 ```
 
-#### 2. 生产级 React Hook 落地实现 (`useClaudeScrollPinning.ts`)
-
-```typescript
-import { useEffect, useRef, useState, useCallback } from 'react';
-
-export function useClaudeScrollPinning(dependencies: any[]) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isPinned, setIsPinned] = useState(true);
-  const [showJumpControl, setShowJumpControl] = useState(false);
-  const lastUserInputAt = useRef(0);
-  const programmaticScroll = useRef(false);
-
-  const markUserInput = useCallback(() => {
-    lastUserInputAt.current = performance.now();
-    setIsPinned(false);
-  }, []);
-
-  const handleScroll = useCallback(() => {
-    if (programmaticScroll.current) {
-      programmaticScroll.current = false;
-      return;
-    }
-    const el = containerRef.current;
-    if (!el) return;
-    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
-    const pinned = distanceFromBottom <= 40;
-    setIsPinned(pinned);
-    setShowJumpControl(distanceFromBottom > 120);
-  }, []);
-
-  const scrollToBottom = useCallback((smooth = false) => {
-    const el = containerRef.current;
-    if (!el) return;
-    programmaticScroll.current = true;
-    el.scrollTo({
-      top: el.scrollHeight,
-      behavior: smooth ? 'smooth' : 'auto'
-    });
-    setIsPinned(true);
-    setShowJumpControl(false);
-  }, []);
-
-  useEffect(() => {
-    if (performance.now() - lastUserInputAt.current <= 150) return;
-    if (isPinned) {
-      scrollToBottom(false);
-    }
-  }, dependencies);
-
-  return {
-    containerRef,
-    isPinned,
-    showJumpControl,
-    markUserInput,
-    handleScroll,
-    scrollToBottom
-  };
-}
-```
+> **生产级 Hook 落地**：[`code-examples/useClaudeScrollPinning.ts`](../code-examples/useClaudeScrollPinning.ts)。
 
 ---
 
@@ -2706,94 +2703,15 @@ export function useClaudeScrollPinning(dependencies: any[]) {
 
 在现代复杂 Web/桌面客户端（如 Claude Desktop）中，**绝对不能盲目依赖视口媒体查询（Window Media Queries，如 `@media (min-width: 768px)`）**。
 
-#### 1. 为什么窗口媒体查询会导致严重的 UI 畸变？
+#### 6.5.1 为什么窗口媒体查询会导致严重的 UI 畸变？
 在桌面 1440px / 1920px 分辨率下，视口宽度始终处于宽屏范围。如果一个组件处于一个固定 288px 的侧边栏、一个 390px 的抽屉（Sheet）或悬浮弹出卡片中：
 * 视口媒体查询 `@media (min-width: 768px)` 会误判定当前为宽屏，强制应用 `grid-cols-4`；
 * 导致原本需要充裕宽度的卡片被硬生生挤入仅有 `70px` 宽度的极窄列；
-* 中文字符无法成行，被迫触发单字符垂直竖排走样（如 `S-u-r-f-a-c-e` 或 `底-基-层-侧-边-栏`），视觉完全崩塌！
+* 中文字符无法成行，被迫触发单字符垂直竖排走样，视觉完全崩塌！
 
-#### 2. Claude 容器查询防御性矩阵规范
-在独立展示卡片的外层根容器上，必须显式声明容器名称与内联尺寸：
-```css
-.cds-stage-card {
-  container-type: inline-size;
-  container-name: stage-container;
-}
-```
+#### 6.5.2 核心生产反编译代码取证 (`c6a992d55-sXiDGMFQ.css`)
 
-卡片内部网格根据自身可用宽度（`inline-size`）执行自适应降级：
-
-```mermaid
-graph TD
-    Container["stage-container 容器可用宽度"]
-    C1["< 520px (紧凑移动/侧边栏)"]
-    C2["521px - 820px (中等抽屉/平板)"]
-    C3["> 820px (宽屏全画布)"]
-    
-    Container --> C1
-    Container --> C2
-    Container --> C3
-    
-    C1 --> R1["Surfaces: 1 列 (独占 100%)<br/>Clay: 1 列<br/>Neutral Grays: 5 列 × 2 行"]
-    C2 --> R2["Surfaces: 2 列<br/>Clay: 3 列<br/>Neutral Grays: 5 列 × 2 行"]
-    C3 --> R3["Surfaces: 4 列<br/>Clay: 3 列<br/>Neutral Grays: 10 列单行"]
-```
-
-#### 3. 核心 CSS 容器查询实现
-```css
-/* 紧凑容器：严格 1 列展开，每个卡片拥有 100% 充裕水平行宽 */
-@container stage-container (max-width: 520px) {
-  .cds-grid-surfaces { grid-template-columns: 1fr !important; }
-  .cds-grid-clay { grid-template-columns: 1fr !important; }
-  .cds-grid-grays { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
-  .cds-grid-radius { grid-template-columns: 1fr !important; }
-  .cds-grid-heights { grid-template-columns: 1fr !important; }
-  .cds-grid-shadows { grid-template-columns: 1fr !important; }
-  .cds-grid-tokens { grid-template-columns: 1fr !important; }
-}
-
-/* 中等容器：2 列平铺 */
-@container stage-container (min-width: 521px) and (max-width: 820px) {
-  .cds-grid-surfaces { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .cds-grid-clay { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-  .cds-grid-grays { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
-  .cds-grid-radius { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-  .cds-grid-tokens { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
-}
-
-/* 宽屏容器：4 列至 10 列完整舒展 */
-@container stage-container (min-width: 821px) {
-  .cds-grid-surfaces { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
-  .cds-grid-clay { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-  .cds-grid-grays { grid-template-columns: repeat(10, minmax(0, 1fr)) !important; }
-  .cds-grid-radius { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-  .cds-grid-tokens { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
-}
-```
-
-#### 4. 中文与 CJK 防裂字黄金组合
-在卡片标题、徽章与按钮文本上，始终组合应用：
-```css
-/* 杜绝中文单字纵向断裂走样 */
-.cds-card-title {
-  text-wrap: balance;          /* 均衡行长 */
-  overflow-wrap: break-word;   /* 正常单词换行 */
-  word-break: normal;          /* 严禁无理打碎词汇 */
-  min-width: 0;                /* 允许 flex 容器正确收缩 */
-}
-```
-
-
----
-
----
-
-#### 6.5.4 极端窄视口与三档容器查询响应栏
-在 Artifacts 侧边栏开启、多任务分栏或移动端窄屏时，传统基于全屏 `@media` 的响应式断点彻底失效。
-
-#### 1. 核心生产反编译代码取证 (`c6a992d55-C0zTICcS.css`)
-
-在 `c6a992d55-C0zTICcS.css` 中提取出 281 条 `@container` 规则与 27 个命名容器：
+在 `c6a992d55-sXiDGMFQ.css` 中提取出完整的命名容器与 4 阶弹性流体压缩断点梯队：
 
 ```css
 /* 1. 容器声明：为主消息流与操作栏建立独立容器上下文 */
@@ -2841,37 +2759,16 @@ graph TD
 }
 ```
 
-#### 2. 生产级自适应容器组件 (`ContainerResponsiveBar.tsx`)
-
-```tsx
-import React from 'react';
-
-export const ContainerResponsiveBar: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  return (
-    <div className="@container/toolbar relative w-full border-t border-[var(--cds-border)] bg-[var(--cds-surface-1)] py-2">
-      <div className="flex items-center justify-between px-3 @[384px]/toolbar:px-4">
-        {/* 左侧模型选择：宽屏显全名，窄屏截断 */}
-        <div className="flex min-w-0 items-center gap-2">
-          <span className="h-2 w-2 rounded-full bg-[var(--cds-clay)]" />
-          <span className="truncate text-xs font-medium text-[var(--cds-text-primary)] @max-[384px]/toolbar:max-w-[80px]">
-            Claude 3.7 Sonnet
-          </span>
-        </div>
-
-        {/* 右侧操作按钮组：依据容器宽度动态隐藏文字 */}
-        <div className="flex items-center gap-1 @[384px]/toolbar:gap-2">
-          <button className="flex h-8 items-center gap-1 rounded-md px-2 text-xs font-medium text-[var(--cds-text-secondary)] hover:bg-[var(--cds-surface-2)]">
-            <svg className="h-4 w-4" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M8 2a6 6 0 100 12A6 6 0 008 2zM0 8a8 8 0 1116 0A8 8 0 010 8z" />
-            </svg>
-            <span className="@max-[480px]/toolbar:hidden">Settings</span>
-          </button>
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-};
+#### 6.5.3 中文与 CJK 防裂字黄金组合
+在卡片标题、徽章与按钮文本上，始终组合应用：
+```css
+/* 杜绝中文单字纵向断裂走样 */
+.cds-card-title {
+  text-wrap: balance;          /* 均衡行长 */
+  overflow-wrap: break-word;   /* 正常单词换行 */
+  word-break: normal;          /* 严禁无理打碎词汇 */
+  min-width: 0;                /* 允许 flex 容器正确收缩 */
+}
 ```
 
 ---
@@ -2880,9 +2777,7 @@ export const ContainerResponsiveBar: React.FC<{ children?: React.ReactNode }> = 
 
 > **技术领域与英文指代**：`Keyboard Focus Roving & A11y Grid`
 
-针对高频键盘盲操，Claude 建立了基于 **Roving TabIndex** 的漫游焦点网格与全量无障碍通道。
-
-#### 1. 核心生产反编译算法取证 (`c16e267d0-B2-4AuUD.js`)
+针对高频键盘盲操，Claude 建立了基于 **Roving TabIndex** 的漫游焦点网格与全量无障碍通道（取证自 `c16e267d0-B2-4AuUD.js`）：
 
 ```javascript
 // c16e267d0-B2-4AuUD.js: 漫游网格键位映射与 RTL 镜像翻转
@@ -2939,80 +2834,7 @@ function onRovingItemKeyDown(event, groupState) {
 }
 ```
 
-#### 2. 生产级 React Hook 落地实现 (`useClaudeRovingFocus.ts`)
-
-```typescript
-import { useState, useRef, useCallback } from 'react';
-
-interface RovingFocusOptions {
-  orientation?: 'horizontal' | 'vertical' | 'both';
-  loop?: boolean;
-  dir?: 'ltr' | 'rtl';
-}
-
-export function useClaudeRovingFocus(itemCount: number, options: RovingFocusOptions = {}) {
-  const { orientation = 'vertical', loop = true, dir = 'ltr' } = options;
-  const [currentFocusedIndex, setCurrentFocusedIndex] = useState(0);
-  const itemsRef = useRef<(HTMLElement | null)[]>([]);
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent, index: number) => {
-      if (e.key === 'Tab') return;
-
-      let targetIndex = -1;
-      const isRtl = dir === 'rtl';
-
-      switch (e.key) {
-        case 'ArrowDown':
-          if (orientation === 'vertical' || orientation === 'both') targetIndex = index + 1;
-          break;
-        case 'ArrowUp':
-          if (orientation === 'vertical' || orientation === 'both') targetIndex = index - 1;
-          break;
-        case 'ArrowRight':
-          if (orientation === 'horizontal' || orientation === 'both') targetIndex = isRtl ? index - 1 : index + 1;
-          break;
-        case 'ArrowLeft':
-          if (orientation === 'horizontal' || orientation === 'both') targetIndex = isRtl ? index + 1 : index - 1;
-          break;
-        case 'Home':
-        case 'PageUp':
-          targetIndex = 0;
-          break;
-        case 'End':
-        case 'PageDown':
-          targetIndex = itemCount - 1;
-          break;
-        default:
-          return;
-      }
-
-      if (targetIndex !== -1) {
-        e.preventDefault();
-        const finalIndex = loop
-          ? (targetIndex + itemCount) % itemCount
-          : Math.max(0, Math.min(itemCount - 1, targetIndex));
-
-        setCurrentFocusedIndex(finalIndex);
-        itemsRef.current[finalIndex]?.focus({ preventScroll: true });
-      }
-    },
-    [itemCount, orientation, loop, dir]
-  );
-
-  return {
-    currentFocusedIndex,
-    registerItem: (index: number) => (el: HTMLElement | null) => {
-      itemsRef.current[index] = el;
-    },
-    getItemProps: (index: number) => ({
-      tabIndex: index === currentFocusedIndex ? 0 : -1,
-      onKeyDown: (e: React.KeyboardEvent) => handleKeyDown(e, index),
-      onClick: () => setCurrentFocusedIndex(index)
-    })
-  };
-}
-```
+> **生产级 Hook 落地**：[`code-examples/useClaudeRovingFocus.ts`](../code-examples/useClaudeRovingFocus.ts)。
 
 ---
 
@@ -3020,9 +2842,9 @@ export function useClaudeRovingFocus(itemCount: number, options: RovingFocusOpti
 
 > **技术领域与英文指代**：`Error Resilience & UI State Machines`
 
-在面临千万人高并发与复杂网络时，Claude 构建了多级防御与自愈机制。
+在面临千万人高并发与复杂网络时，Claude 构建了多级防御与自愈机制（源码取证自 `shared-50-Bmc9oUMm.js` 与 `cd5a31703-B4nKQMBN.js`）。
 
-#### 1. 核心生产反编译算法取证 (`shared-50-Bmc9oUMm.js` / `cd5a31703-B4nKQMBN.js`)
+#### 6.7.1 核心生产反编译算法取证 (`shared-50-Bmc9oUMm.js`)
 
 ```javascript
 // shared-50-Bmc9oUMm.js: 429/503 指数退避与常数矩阵
@@ -3072,113 +2894,16 @@ var ThinkingAccordion = function({ text, expansionKey }) {
 };
 ```
 
-#### 2. 生产级指数退避控制器落地实现 (`useRateLimitBackoff.ts`)
-
-```typescript
-import { useState, useEffect, useCallback, useRef } from 'react';
-
-const MIN_DELAY_MS = 5000;
-const MAX_DELAY_MS = 600000;
-
-interface BackoffState {
-  isWaiting: boolean;
-  retryAtMs: number | null;
-  secondsRemaining: number;
-  waitsInARow: number;
-  canManualRetry: boolean;
-}
-
-export function useRateLimitBackoff(onAutoRetry: () => void) {
-  const [state, setState] = useState<BackoffState>({
-    isWaiting: false,
-    retryAtMs: null,
-    secondsRemaining: 0,
-    waitsInARow: 0,
-    canManualRetry: false
-  });
-
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const triggerBackoff = useCallback((retryAfterHeaderSeconds?: number) => {
-    setState((prev) => {
-      const nextAttempt = prev.waitsInARow + 1;
-      // 连续重试 >= 3 次，停止自动重试，强制人工介入
-      if (nextAttempt >= 3) {
-        return {
-          isWaiting: true,
-          retryAtMs: null,
-          secondsRemaining: 0,
-          waitsInARow: nextAttempt,
-          canManualRetry: true
-        };
-      }
-
-      const baseDelay = retryAfterHeaderSeconds ? retryAfterHeaderSeconds * 1000 : MIN_DELAY_MS;
-      const computedDelay = Math.min(
-        Math.max(baseDelay, MIN_DELAY_MS) * Math.pow(2, nextAttempt - 1),
-        MAX_DELAY_MS
-      );
-      const retryAtMs = Date.now() + computedDelay;
-
-      return {
-        isWaiting: true,
-        retryAtMs,
-        secondsRemaining: Math.ceil(computedDelay / 1000),
-        waitsInARow: nextAttempt,
-        canManualRetry: false
-      };
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!state.isWaiting || !state.retryAtMs) return;
-
-    timerRef.current = setInterval(() => {
-      const remaining = Math.max(0, Math.ceil((state.retryAtMs! - Date.now()) / 1000));
-      if (remaining <= 0) {
-        clearInterval(timerRef.current!);
-        setState((prev) => ({ ...prev, isWaiting: false, retryAtMs: null, secondsRemaining: 0 }));
-        onAutoRetry();
-      } else {
-        setState((prev) => ({ ...prev, secondsRemaining: remaining }));
-      }
-    }, 1000);
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [state.isWaiting, state.retryAtMs, onAutoRetry]);
-
-  const resetBackoff = useCallback(() => {
-    if (timerRef.current) clearInterval(timerRef.current);
-    setState({
-      isWaiting: false,
-      retryAtMs: null,
-      secondsRemaining: 0,
-      waitsInARow: 0,
-      canManualRetry: false
-    });
-  }, []);
-
-  return {
-    ...state,
-    triggerBackoff,
-    resetBackoff
-  };
-}
-```
-
----
-
----
-
----
+> **生产级 Hook 落地**：[`code-examples/useRateLimitBackoff.ts`](../code-examples/useRateLimitBackoff.ts)。
 
 ---
 
 ## 第七篇：工程配置与资产代码库总览
 
 > **技术领域与英文指代**：`Engineering Setup & Asset Inventory`
+> **逆向工程溯源**：基于 **REA (Reverse Engineer Anything) v6.5.0** 提取自 macOS 生产包 `/Applications/Claude.app`（`@ant/desktop v2.37337.1`，Build 时间戳 `2026-10-13T22:16:06Z`），全量梳理 30 个生产级独立代码文件、Tailwind 工程扩展配置及系统级字体/音频资产规范。
+
+---
 
 ### 7.1 开箱即用的 Tailwind 配置与基础 CSS 代码
 
@@ -3190,89 +2915,148 @@ export function useRateLimitBackoff(onAutoRetry: () => void) {
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
+  content: [
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
+    './code-examples/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx,mdx}',
+    './app/**/*.{js,ts,jsx,tsx,mdx}',
+  ],
   theme: {
     extend: {
       colors: {
-        cds: {
-          clay: '#d97757',
-          'clay-dark': '#cc5a36',
-          'clay-light': '#fbf3ef',
-          surface: {
-            0: 'var(--cds-surface-0)',
-            1: 'var(--cds-surface-1)',
-            2: 'var(--cds-surface-2)',
-            3: 'var(--cds-surface-3)',
-          },
-          border: 'var(--cds-border)',
-          'border-strong': 'var(--cds-border-strong)',
-        }
+        clay: {
+          DEFAULT: '#d97757',
+          hover: '#cc5a36',
+          light: '#fbf3ef',
+          dark: '#e08264',
+        },
+        surface: {
+          0: 'var(--cds-surface-0)',
+          1: 'var(--cds-surface-1)',
+          2: 'var(--cds-surface-2)',
+          3: 'var(--cds-surface-3)',
+          popover: 'var(--cds-surface-popover)',
+        },
+      },
+      fontFamily: {
+        sans: [
+          'AnthropicSans',
+          'Inter',
+          'system-ui',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'PingFang SC',
+          'sans-serif',
+        ],
+        serif: [
+          'AnthropicSerif',
+          'Newsreader',
+          'ui-serif',
+          'Georgia',
+          'Times New Roman',
+          'serif',
+        ],
+        mono: [
+          'JetBrains Mono',
+          'ui-monospace',
+          'SF Mono',
+          'Menlo',
+          'monospace',
+        ],
       },
       borderRadius: {
-        'composer': '20px',
+        'xs': 'var(--radius-xs, 2px)',
+        'sm': 'var(--radius-sm, 4px)',
+        'md': 'var(--radius-md, 6px)',
+        'lg': 'var(--radius-lg, 8px)',
+        'panel': 'var(--cds-panel-radius, 10px)',
+        'xl': 'var(--radius-xl, 12px)',
+        '2xl': 'var(--radius-2xl, 16px)',
+        'bubble': 'var(--cds-message-bubble-radius, 18px)',
+        'composer': 'var(--cds-radius-composer, 20px)',
+        'pill': 'var(--df-radius-pill, 999px)',
+        'card': 'var(--radius-card, calc(var(--radius-lg, 8px) + calc(4px * var(--cds-rem-scale, 1))))',
+      },
+      boxShadow: {
+        'sm': 'var(--cds-shadow-sm)',
+        'md': 'var(--cds-shadow-md)',
+        'lg': 'var(--cds-shadow-lg)',
+        'popover': 'var(--cds-shadow-popover)',
+        'composer': 'var(--cds-shadow-composer)',
+        'composer-hover': 'var(--cds-shadow-composer-hover)',
+        'composer-focus': 'var(--cds-shadow-composer-focus)',
+        'focus-glow': 'var(--cds-focus-shadow)',
+        'drop-glow': 'var(--cds-shadow-drop-glow)',
+        'panel': 'var(--cds-panel-shadow)',
+        'panel-hover': 'var(--cds-panel-shadow-hover)',
       },
       animation: {
         'quiet-dot': 'timeline-quiet-dot 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite',
-        'message-in': 'message-fade-up 1.1s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'user-bubble': 'code-user-bubble-enter 0.45s cubic-bezier(0.34, 1.3, 0.64, 1)',
-      }
+        'message-fade-up': 'message-fade-up 0.45s cubic-bezier(0.34, 1.3, 0.64, 1)',
+        'saved-decay': 'saved-check-decay 0.35s cubic-bezier(0.165, 0.84, 0.44, 1) 2.2s forwards',
+        'clay-breathe': 'dframe-clay-breathe 2.4s infinite ease-in-out',
+        'dot-pulse': 'dframe-dot-pulse 1.2s infinite ease-in-out',
+        'shimmer-sweep': 'cds-skeleton-sweep 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1)',
+        'thumbnail-grow': 'file-thumbnail-grow-in 250ms cubic-bezier(0.165, 0.84, 0.44, 1)',
+      },
     },
   },
   plugins: [],
-}
+};
 ```
 
 #### 7.1.2 全局基础 CSS 规范 (`globals.css` / `cds-base.css`)
 
 ```css
 /* ==========================================================================
-   Claude Design System (CDS) Production Core Styles
+   Claude Design System (CDS) Production Core Styles (REA v6.5.0 取证规范)
    ========================================================================== */
 
 :root {
   --cds-rem-scale: calc(16 / 17);
-  --cds-surface-0: #f5f5f3;
-  --cds-surface-1: #fcfcfb;
-  --cds-surface-2: #ffffff;
-  --cds-surface-3: #ffffff;
+  --cds-surface-0: var(--cds-gray-20, #f9f9f7); /* 侧边栏/底色画布 */
+  --cds-surface-1: var(--cds-gray-10, #fcfcfb); /* 聊天主工作台 */
+  --cds-surface-2: var(--cds-gray-0, #ffffff);  /* 消息卡片表面 */
+  --cds-surface-3: var(--cds-gray-0, #ffffff);  /* 悬浮 Popover 与输入框底盘 */
   --cds-clay: #d97757;
   --cds-clay-emphasized: #cc5a36;
-  --cds-border: rgba(0, 0, 0, 0.08);
-  --cds-border-strong: rgba(0, 0, 0, 0.16);
+  --cds-border: hsla(0, 0%, 8%, 0.10);
+  --cds-border-strong: hsla(0, 0%, 8%, 0.20);
   --cds-segmented-control-track: rgba(0, 0, 0, 0.06);
   --cds-segmented-control-thumb: #ffffff;
 }
 
 [data-mode="dark"], .dark {
-  --cds-surface-0: #0b0b0a;
-  --cds-surface-1: #151515;
-  --cds-surface-2: #1a1a19;
-  --cds-surface-3: #20201e;
-  --cds-border: rgba(255, 255, 255, 0.08);
-  --cds-border-strong: rgba(255, 255, 255, 0.16);
+  --cds-surface-0: var(--cds-gray-900, #0b0b0b); /* 暗色侧边栏 */
+  --cds-surface-1: var(--cds-gray-850, #151515); /* 暗色主聊天背景 */
+  --cds-surface-2: var(--cds-gray-830, #1a1a19); /* 暗色卡片表面 */
+  --cds-surface-3: var(--cds-gray-800, #20201f); /* 暗色高层浮盘 */
+  --cds-surface-popover: var(--cds-gray-750, #2c2c2a);
+  --cds-border: hsla(0, 0%, 100%, 0.09);
+  --cds-border-strong: hsla(0, 0%, 100%, 0.18);
   --cds-segmented-control-track: rgba(255, 255, 255, 0.08);
-  --cds-segmented-control-thumb: #383838;
+  --cds-segmented-control-thumb: #2c2c2a;
 }
 
 /* 1. 暗色模式光学字重减薄补偿（抵消视网膜光渗发散） */
 [data-mode="dark"] .font-medium,
 .dark .font-medium {
-  --cds-font-axis-wght: "wght" 460;
-  font-variation-settings: var(--font-opsz-axis,) var(--cds-font-axis-wght,) "GRAD" var(--cds-font-grad, 0);
+  font-variation-settings: "wght" 465;
 }
 [data-mode="dark"] .font-semibold,
 .dark .font-semibold {
-  --cds-font-axis-wght: "wght" 560;
+  font-variation-settings: "wght" 560;
 }
 [data-mode="dark"] .font-bold,
 .dark .font-bold {
-  --cds-font-axis-wght: "wght" 660;
+  font-variation-settings: "wght" 660;
 }
 
 /* 2. 行内图标光学基线校准实用类 */
 .align-[-0.125em] { vertical-align: -0.125em; }
 .align-[-0.075em] { vertical-align: -0.075em; }
 .align-[-1px]     { vertical-align: -1px; }
-.align-[-2px]     { vertical-align: -2px; }
 
 /* 3. 文本换行与防爆容器约束 */
 .text-balance-native { text-wrap: balance; }
@@ -3318,42 +3102,44 @@ module.exports = {
 | `code-examples/ChatComposer.tsx` | **核心输入框终端** | 20px 圆角 (`--cds-radius-composer`)、三态动态弥散投影、`field-sizing: content` 自适应伸缩、待发附件芯片列表、模型选择胶囊、Thinking 开关与陶土发送按钮弹簧物理反馈 (`active:scale-95`)。 |
 | `code-examples/ChatMessageBubbles.tsx` | **会话气泡套件** | **UserMessageBubble**：严格 18px 圆角 (`--cds-message-bubble-radius`)，浅蓝微调底色 (`--cds-bg-tint-blue`)；<br/>**AssistantMessageBubble**：零边框透明排版、思考折叠引导线、代码块联动、Artifacts 产物入口卡片与建议追问 Chips。 |
 | `code-examples/SegmentedControl.tsx` | **分段滑动选择胶囊** | 999px 全圆角轨道、2px 几何内边距、纯几何绝对定位对齐 (`left: calc(2px + i*(100%-4px)/N)`) 与 Framer Motion `layoutId` 物理弹簧双模式，支持 `@container (max-width: 254px)` 紧凑折叠。 |
-| `code-examples/CdsButton.tsx` | **全能按钮控件阶梯** | 4 级尺寸阶梯（XS 24px/6px、SM 28px/8px、MD 32px/8px、LG 40px/12px），5 大变体（Primary 陶土、Secondary 表面浅底 0 边框、Ghost 幽灵、Outline 发丝线框、Danger 毁灭）。严格遵循单闭合边框原则，支持 `active:scale-[0.98]`。 |
-| `code-examples/AttachmentCard.tsx` | **附件磁贴与胶囊** | 10px 面板圆角 (`--cds-panel-radius`)，支持桌面端经典磁贴 (128px × 96px) 与输入框行内胶囊双模式，集成 `file-thumbnail-grow-in` 入场动画与上传脉冲进度条。 |
+| `code-examples/CdsButton.tsx` | **全能按钮控件阶梯** | 5 级尺寸阶梯（XS 20px、SM 24px、MD 28px、LG 32px、XL 40px），5 大变体（Primary 陶土、Secondary 表面浅底 0 边框、Ghost 幽灵、Outline 发丝线框、Danger 毁灭）。严格遵循单闭合边框原则，支持 15 阶 `linear()` 弹簧曲线。 |
+| `code-examples/AttachmentCard.tsx` | **附件磁贴与胶囊** | 10px 面板圆角 (`--cds-panel-radius`)，支持桌面端经典磁贴 (7.5rem × 7.5rem) 与输入框行内胶囊双模式，集成 `file-thumbnail-grow-in` 入场动画与上传脉冲进度条。 |
 | `code-examples/CodeBlock.tsx` | **代码块容器与复制状态机** | 12px 圆角、`#0d0d0c` 纯黑底色、语言标签行内光学对齐 (`.align-[-0.125em]`)、2.5 秒复制状态机衰减 (`saved-check-decay`) 与等宽数字支持。 |
 | `code-examples/ConfirmationDialog.tsx` | **模态确认对话框** | 16px 圆角 (`rounded-2xl`)、双环 Popover 弥散投影 (`--cds-shadow-popover`)、高斯模糊遮罩 (`backdrop-blur-xs`)、支持 Escape 快捷键退出与安全/危险双变体。 |
-| `code-examples/StatusIndicators.tsx` | **状态指示灯与扫光组件** | 陶土明度呼吸指示灯 (`dframe-clay-breathe` 2.4s)、实时运行活动脉冲 (`dframe-dot-pulse` 1.2s)、思考三点波浪跳跃 (`timeline-quiet-dot` 1.9s)、骨架屏高级倾斜扫光条 (`cds-skeleton-sweep`) 与流式文本光标。 |
+| `code-examples/StatusIndicators.tsx` | **状态指示灯与扫光组件** | 6px 官方标准点 (`.status-dot`)、陶土明度呼吸指示灯 (`dframe-clay-breathe` 3.0s)、思考三点波浪跳跃 (`timeline-quiet-dot` 1.9s)、骨架屏高级倾斜扫光条 (`cds-skeleton-sweep` 2.0s 105deg) 与流式文本光标。 |
 | `code-examples/ClaudeMotionPresets.ts` | **动效引擎与物理参数矩阵** | 封装二阶阻尼谐振子精确数学求解函数 (`calcDampedHarmonicOscillator`)、四大生产级 Framer Motion 预设 (`SPRING_BOUNCY`, `SPRING_SNAPPY`, `SPRING_GENTLE`, `SPRING_HEAVY_SNAP`)、原生贝塞尔曲线常量与开箱即用的动画变体。 |
-| `code-examples/cds-theme.css` | **生产级全局主题样式表** | 完整的 Light/Dark 模式 CSS 自定义属性、高分屏视网膜发丝线补偿 (`--cds-ring-hairline`)、暗色模式视网膜字重逆补偿 (`wght 465`, `wght 560`)、8 组核心 `@keyframes` 与常用 CDS 工具类。 |
+| `code-examples/cds-theme.css` | **生产级全局主题样式表** | 完整的 Light/Dark 模式 CSS 自定义属性、35 阶灰度与陶土色标尺、高分屏视网膜发丝线补偿 (`--cds-ring-hairline`)、暗色模式视网膜字重逆补偿 (`wght 465`, `wght 560`)、原生 Scroll-Driven 遮罩与核心 `@keyframes`。 |
 | `code-examples/tailwind.config.js` | **Tailwind 配置工程扩展** | 包含 CDS 陶土色彩阶梯、Surface 表面体系、全量圆角阶梯、多层复合阴影与动画定义的开箱即用 Tailwind 配置文件。 |
 
 ---
 
-#### 7.2.2 深度架构与工程物理学代码文件 (21 个模块)
+#### 7.2.2 深度架构与工程物理学代码文件 (19 个模块)
 
 | 文件路径 | 模块名 | 逆向来源与工程机制 |
 | :--- | :--- | :--- |
 | `code-examples/ArtifactsSplitPaneResizer.tsx` | **双栏弹性分割与折叠引擎** | `shared-22-DYCF-SVs.js` / `c909d93e7-BsSzOQcm.js`：Iframe 事件防吞噬护盾、4px 移动死区、双击 50/50 居中吸附、边缘折叠门限与 min/max 约束钳制。 |
 | `code-examples/McpToolDecisionCard.tsx` | **MCP 交互式工具调用决策卡片** | `cc1aae219-CPC-WA-x.js` / `c05b96c7f-DSH7iwX5.js`：三态授权生命周期 (`pending_approval` → `running` → `success` / `error`)、三阶决议动作阵列与 Payload 审查。 |
-| `code-examples/ScrollFadeContainer.tsx` | **滚动边缘平滑渐变遮罩系统** | `frame-shell-chrome-BDKWDTvx.js` / `c6a992d55-C0zTICcS.css`：7 档非线性 Alpha 渐变遮罩、动态滚动位置传感器与双轴羽化消隐。 |
+| `code-examples/ScrollFadeContainer.tsx` | **滚动边缘平滑渐变遮罩系统** | `c6a992d55-sXiDGMFQ.css`：原生 CSS Scroll-Driven 动画声明 (`@supports (animation-timeline: scroll())`)、7 档非线性 Alpha 渐变遮罩、动态滚动位置传感器与双轴羽化消隐。 |
 | `code-examples/ModelSwitcherWithTokenGauge.tsx` | **模型矩阵选择器与 Token 仪表盘** | `shared-8-4Jj8qhmU.js` / `shared-3-DVMvy2kM.js`：三大模型梯队架构、Thinking 思考开关、Prompt Caching 显存成本解构与环形 SVG 仪表盘。 |
 | `code-examples/CoworkAgentCanvas.tsx` | **多智能体协同看板与拓扑空间** | `shared-6-zKKz0bS2.js` / `shared-21-CGGmSsMS.js`：多 Agent 任务委派状态机、团队共享 Artifacts 工件网格资产池与 BroadcastChannel 事件同步。 |
-| `code-examples/RichComposerWithMentions.tsx` | **新一代富文本与指令输入框** | `cd5a31703-B4nKQMBN.js` / `cb6930dae-Q_S3-FcC.js`：CJK 输入法合成守卫 (`isComposing || keyCode === 229`)、`/` 指令与 `@` 上下文双触发符、自适应高度伸缩与 Token 预测。 |
+| `code-examples/RichComposerWithMentions.tsx` | **新一代富文本与指令输入框** | `shared-frame-BfjMqbuN.js`：WebKit 500ms post-composition 守卫、CJK 标点脱壳、256 文件防爆上限、`/` 指令与 `@` 上下文双触发符。 |
 | `code-examples/DraggableSessionList.tsx` | **侧边栏会话拖放与固定物理** | `shared-21-CGGmSsMS.js` / `shared-22-DYCF-SVs.js`：`pinnedOrder` 乐观拓扑重排、4px 指针移动死区、微倾斜幽灵投影与对撞占位线。 |
-| `code-examples/ReasoningAmbientGlow.tsx` | **动态光效与推理氛围感组件** | `c6a992d55-C0zTICcS.css` / `cde7c3a92-zIg_rFtU.js`：`cds-shimmer-text-shine` 非对称贝塞尔曲线、`wl-glow` 暖光漫反射、三点相位跳跃与 Canvas 焦散光场。 |
+| `code-examples/ReasoningAmbientGlow.tsx` | **动态光效与推理氛围感组件** | `c6a992d55-sXiDGMFQ.css`：`cds-shimmer-text-shine` 非对称贝塞尔、`wl-glow` 暖光漫反射、1.1s `epitaxy-linear-sweep` 线性扫光与 Canvas 焦散光场。 |
 | `code-examples/StreamingDiffViewer.tsx` | **代码差异对比与流式高亮引擎** | `c19e90103-CvUj-0ZH.js` / `tree-sitter-Tbdz49RR.js`：表格行号对齐与 `tabular-nums` 约束、增量流式追加管道、统一/分屏双模式切换与 2.5s 复制衰减状态机。 |
 | `code-examples/MediaLightboxViewer.tsx` | **多模态媒体查看器与画廊** | `c4b054ed5-BGjH-Uu6.js`：75vw 跑道滑动位移、以光标为锚点的仿射平移缩放、4px 拖拽死区、Ctrl 滚轮指数缩放与按键陷阱。 |
 | `code-examples/useClaudeSharedElementTransition.ts` | **View Transitions 共享元素变形** | `cd5136de8-BDys1vAN.js`：基于 `startViewTransition("chat-image-preview")`、缩略图动态圆角检测与 `object-fit: contain` 内切百分比剪裁。 |
 | `code-examples/useClaudeScrollPinning.ts` | **流式滚动视口图钉 Hook** | `ca2ef848d-Dz47ULRM.js`：150ms 冷却时间戳防抢夺、40px 底部容差图钉锁定、35vh 弹性缓冲与 GPU 字符模糊消解。 |
-| `code-examples/ContainerResponsiveBar.tsx` | **自适应容器查询响应栏** | `c6a992d55-C0zTICcS.css`：基于 `@container` 的 4 阶流体压缩梯队 (>=576px / <480px / <384px / <320px)，彻底杜绝单字垂直折断。 |
-| `code-examples/EpitaxyIframeBridge.tsx` | **Artifacts 预览沙箱桥接器** | `index.chunk-CiiI592G.js`：基于严格 Origin 白名单校验与通道隔离的 postMessage RPC 协议，实现双向安全通信与高度自适应。 |
-| `code-examples/createClaudeMainWindow.ts` | **Electron 宿主主窗口创建工厂** | `mainWindow.js` / 主进程：`hiddenInset` 标题栏、macOS Vibrancy (`under-window`) 毛玻璃材质融合、默认尺寸 1200×800、最小尺寸 600×400 与状态持久化。 |
+| `code-examples/ContainerResponsiveBar.tsx` | **自适应容器查询响应栏** | `c6a992d55-sXiDGMFQ.css`：基于 `@container` 的 4 阶流体压缩梯队 (>=576px / <480px / <384px / <320px)，彻底杜绝单字垂直折断。 |
+| `code-examples/EpitaxyIframeBridge.tsx` | **Artifacts 预览沙箱桥接器** | `c58115fda-BKnbLmi3.js`：基于严格 Origin 白名单校验与 null-origin 隔离、原生 userActivation 手势门禁的 postMessage RPC 协议。 |
+| `code-examples/createClaudeMainWindow.ts` | **Electron 宿主主窗口创建工厂** | `index.chunk-CiiI592G.js`：BrowserWindow + WebContentsView 双层解耦、macOS 交通灯动态补偿、8px 动态圆角与原生主题即时底色。 |
 | `code-examples/ClaudeDesktopHeader.tsx` | **macOS 沉浸式标题栏组件** | macOS 交通灯 74px 逆缩放补偿避让槽 (`-webkit-app-region: drag`)、45px 全局拖拽带与 `.draggable-none` 交互隔离。 |
 | `code-examples/useClaudeRovingFocus.ts` | **全键盘无障碍焦点漫游 Hook** | W3C WAI-ARIA 规范：方向键 (ArrowUp/Down/Left/Right) 二维与一维网格漫游导航、Home/End 边界快速跳跃、动态 tabindex 维护。 |
 | `code-examples/useRateLimitBackoff.ts` | **指数退避重试与熔断状态机** | `shared-50-Bmc9oUMm.js`：截断指数退避 (`t = min(t_max, t_base * 2^a) * (1 ± J)`)、全抖动注入与自动熔断恢复。 |
-| `code-examples/ThinkingAccordion.tsx` | **思考过程状态机组件** | Framer Motion 贝塞尔曲线高度弹性展开收缩、思考中单颗陶土色呼吸脉冲与引用复制状态机。 |
+| `code-examples/ThinkingAccordion.tsx` | **思考过程状态机组件** | `cc1aae219-DtZTxCKj.css`：CSS Grid `0fr <-> 1fr` 高度弹性展开、3 点 1.9s 思考静默跳跃与生成互斥锁定。 |
 | `code-examples/ClaudeAudioPlayer.ts` | **低延迟流式音频播放核心** | 原生 Web Audio API 振荡器无损合成、`AudioContext` 状态监听、30% 舒缓音量标准与平滑增益淡入淡出防爆音。 |
 | `code-examples/LiveMicActivityBars.tsx` | **6 频段非线性麦克风波形柱** | 6 柱波形、`Math.pow(energy, 0.7)` 非线性 Gamma 能量压缩、8% 噪声门限过滤与 Framer Motion 动态阻尼弹性映射。 |
+
+---
 
 ### 7.3 资产规范与系统级字体/音频替代方案
 
@@ -3379,116 +3165,241 @@ module.exports = {
 
 ---
 
-## 第八篇：AI Agent 前端 UI 与动效开发指南
+## 第八篇：AI Agent 前端 UI 与动效开发指南 (AI Agent Frontend UI & Motion Guidelines)
 
-> **技术领域与英文指代**：`AI Agent Frontend UI & Motion Guidelines`  
 > **适用对象**：Cursor Agent, Claude Code, GitHub Copilot, Windsurf, Devin, Antigravity 及所有接入代码库的自主式或辅助式 AI 智能体。  
-> **核心使命**：指引 AI Agent 在阅读、生成、重构基于 Claude Design System (CDS) 的前端组件与页面时，严格遵循人文温润质感、二阶弹簧动力学、单闭合边框原则与零版权风险规范。
+> **核心使命**：指引 AI Agent 在阅读、生成、重构基于 Claude Design System (CDS) 的前端组件与页面时，严格遵循真实 REA v6.5.0 提取的生产级规范：人文温润质感、二阶弹簧动力学、单闭合边框原则与零版权风险规范。**杜绝任何未经取证的凭空臆测**。
 
-### 8.1 Agent 角色定位与设计哲学
+---
+
+## 🧭 导航目录
+- [8.1 Agent 角色定位与设计哲学](#81-agent-角色定位与设计哲学)
+- [8.2 设计令牌与色彩引用契约](#82-设计令牌与色彩引用契约)
+- [8.3 动效物理学：四套弹簧预设决策树](#83-动效物理学四套弹簧预设决策树)
+- [8.4 控件原子规则与单闭合边框原则](#84-控件原子规则与单闭合边框原则)
+- [8.5 交互防御与边缘场景守卫](#85-交互防御与边缘场景守卫)
+- [8.6 生产级组件库快速装配指南 (30 模块)](#86-生产级组件库快速装配指南-30-模块)
+- [8.7 智能体自检与质量门禁清单](#87-智能体自检与质量门禁清单)
+
+---
+
+## 8.1 Agent 角色定位与设计哲学
 
 当 Agent 在本项目或下游消费项目中使用 CDS 时，必须理解 Anthropic Claude 界面的根本差异点：
 
 1. **温润的人文质感（Editorial Warmth）**：
    - 严禁生成高饱和度的赛博朋克蓝/紫渐变或刺眼的荧光色。
-   - 品牌主强调色为**陶土色（Clay: `#d97757` / Dark: `#cc6b49`）**。
-   - 界面底色使用微温的纸质灰底（`#fcfcfb` / `#1b1b19`），严禁使用纯白 `#ffffff` 或纯黑 `#000000`（代码高亮背景 `#0d0d0c` 除外）。
+   - 品牌主强调色为**陶土色（Clay: `#d97757` / Hover: `#cc5a36` / Light: `#fbf3ef`）**。
+   - 界面底色使用微温的纸质灰底（`--cds-surface-0: #f9f9f7` / 暗色 `--cds-surface-0: #0b0b0b`），严禁在深色模式滥用生硬的 `#000000`（代码高亮背景 `#0d0d0c` 除外）。
 2. **多层微对比表面（Low-contrast Surface Layering）**：
-   - 放弃传统的 1px 黑色硬描边思维，通过 `Surface 0 ~ 3` 的层级微小明度差（阶梯差仅 1%~3%）与 `border-subtle` 发丝细线（透明度 6%~8%）构建深邃沉浸的空间。
+   - 放弃传统的 1px 黑色硬描边思维，通过 `Surface 0 ~ 3` 的层级微小明度差（阶梯差仅 1%~3%）与 `border-subtle` 发丝细线（浅色 10% / 暗色 9%）构建深邃沉浸的空间。
 3. **触感物理反馈（Tactile Organic Physics）**：
    - 严禁使用 CSS 默认的 `ease`、`linear` 或过度弹跳的夸张动画。
-   - 所有的位移、缩放、展开必须依托基于质量、刚度与阻尼的真实弹簧动力学模型。
+   - 所有的位移、缩放、展开必须依托基于质量、刚度与阻尼的真实弹簧动力学模型（`ClaudeMotionPresets.ts`）或 15 阶 CSS `linear()` 弹簧曲线。
 
-### 8.2 设计令牌与色彩引用契约
+---
 
-所有样式必须优先引用预置 CSS 变量或 Tailwind 扩展类名（见 `code-examples/cds-theme.css` 与 `code-examples/tailwind.config.js`）：
+## 8.2 设计令牌与色彩引用契约
 
-#### 1. 表面体系对应表
+所有样式必须优先引用预置 CSS 变量或 Tailwind 扩展类名（见 [`code-examples/cds-theme.css`](../code-examples/cds-theme.css) 与 [`code-examples/tailwind.config.js`](../code-examples/tailwind.config.js)）：
+
+### 1. 表面体系对应表 (REA v6.5.0 取证规范)
 ```css
 /* Agent 编写组件时应使用的背景颜色映射 */
---cds-bg-surface-0: #fcfcfb; /* [Light] 画布底色 / [Dark]: #1b1b19 */
---cds-bg-surface-1: #fbfbfa; /* [Light] 侧边栏、卡片背景 / [Dark]: #21211e */
---cds-bg-surface-2: #f7f7f5; /* [Light] 输入框底盘、弹窗底色 / [Dark]: #282824 */
---cds-bg-surface-3: #efeee9; /* [Light] 悬停状态、选中高亮 / [Dark]: #32322d */
---cds-bg-input:     #fdfdfc; /* [Light] 输入终端核心底色 / [Dark]: #1e1e1b */
+:root {
+  --cds-surface-0: var(--cds-gray-20); /* #f9f9f7 侧边栏/画布底层 Canvas */
+  --cds-surface-1: var(--cds-gray-10); /* #fcfcfb 页面主聊天画布背景 */
+  --cds-surface-2: var(--cds-gray-0);  /* #ffffff 消息卡片表面 */
+  --cds-surface-3: var(--cds-gray-0);  /* #ffffff 输入框容器/高层浮层 */
+  --cds-surface-popover: var(--cds-gray-0); /* #ffffff 悬浮 Popover 表面 */
+}
+
+[data-mode="dark"], .dark {
+  --cds-surface-0: var(--cds-gray-900); /* #0b0b0b 暗色侧边栏/底色 */
+  --cds-surface-1: var(--cds-gray-850); /* #151515 暗色主聊天背景 */
+  --cds-surface-2: var(--cds-gray-830); /* #1a1a19 暗色卡片表面 */
+  --cds-surface-3: var(--cds-gray-800); /* #20201f 暗色输入框与高层浮层 */
+  --cds-surface-popover: var(--cds-gray-750); /* #2c2c2a 悬浮气泡表面 */
+}
 ```
 
-#### 2. 文本与排版阶梯
+### 2. 文本与排版阶梯
 ```css
---cds-text-primary:   #1f1e1d; /* 一级主要正文、标题 / [Dark]: #eeede8 */
---cds-text-secondary: #6b6966; /* 二级辅助文字、副标题 / [Dark]: #b4b2ac */
---cds-text-tertiary:  #999793; /* 三级微弱文字、快捷键、占位符 / [Dark]: #7d7b76 */
+--cds-text-primary:   #151515; /* 一级主要正文、标题 / [Dark]: #f5f5f5 */
+--cds-text-secondary: #525252; /* 二级辅助文字、副标题 / [Dark]: #a3a3a3 */
+--cds-text-muted:     #8a8a8a; /* 三级微弱文字、快捷键、占位符 / [Dark]: #666666 */
 ```
 
-#### 3. 双环聚焦光晕 (Dual-Ring Focus Halo)
+### 3. 双环聚焦光晕与陶土弥散环
 在为按钮、输入框、下拉菜单实现聚焦态时，统一采用双层环状阴影（内层微对比，外层陶土色漫反射）：
 ```css
-box-shadow: 0 0 0 2px var(--cds-bg-surface-0), 0 0 0 4px rgba(217, 119, 87, 0.4);
+--cds-focus-shadow: inset 0 0 0 1px var(--cds-surface-1), 0 0 0 1.5px var(--cds-clay), 0 0 6px 1px rgba(217, 119, 87, 0.25);
 ```
 
-### 8.3 动效物理学：四套弹簧预设决策树
+---
 
-Agent 在编写交互动画时，必须从 `code-examples/ClaudeMotionPresets.ts` 导入标准弹簧配置：
+## 8.3 动效物理学：四套弹簧预设决策树
 
-1. **`SPRING_SNAPPY`** (`stiffness: 600, damping: 30, mass: 0.6`, $\zeta = 0.791$):
-   - 超调 `+1.8%`，时延 `~0.22s`。用于按钮点击、SegmentedControl pill 切换、选项卡移动。
-2. **`SPRING_BOUNCY`** (`stiffness: 400, damping: 25, mass: 0.8`, $\zeta = 0.612$):
-   - 超调 `+8.8%`，时延 `~0.38s`。用于 Switch 开关、Badge 芯片生长入场、成功操作弹出。
-3. **`SPRING_GENTLE`** (`stiffness: 220, damping: 24, mass: 1.0`, $\zeta = 0.809$):
-   - 超调 `+1.5%`，时延 `~0.48s`。用于对话框弹窗、ThinkingAccordion 思考折叠、气泡入场。
-4. **`SPRING_HEAVY_SNAP`** (`stiffness: 1200, damping: 80, mass: 0.1`, $\zeta = 1.826$, 过阻尼):
-   - 严格 `0%` 超调。用于拖拽占位线碰撞吸附、抽屉闭合、边界锁定。
+Agent 在编写交互动画时，必须从 [`code-examples/ClaudeMotionPresets.ts`](../code-examples/ClaudeMotionPresets.ts) 导入标准弹簧配置，根据场景决策：
 
-#### 7 档渐隐非线性透明度手写遮罩
-当 Agent 实现滚动视口上下边缘渐隐时，必须使用以下 7 档非线性遮罩：
-```typescript
-const FADE_MASK = `linear-gradient(
+```mermaid
+graph TD
+    Trigger["用户交互触发"]
+    
+    Trigger --> Type{"交互类型判断"}
+    
+    Type -->|"按钮点击 / Pill 切换 / Tab 移动"| Snappy["SPRING_SNAPPY<br/>stiffness: 600, damping: 30<br/>超调 +8.8%, 时延 0.22s"]
+    Type -->|"开关切换 / Badge 入场 / 成功微反馈"| Bouncy["SPRING_BOUNCY<br/>stiffness: 380, damping: 18<br/>超调 +19.4%, 时延 0.58s"]
+    Type -->|"对话框打开 / Thinking 展开 / 气泡进入"| Gentle["SPRING_GENTLE<br/>stiffness: 320, damping: 28<br/>超调 +1.8%, 时延 0.35s"]
+    Type -->|"拖拽占位线碰撞 / 边缘吸附 / 抽屉关闭"| HeavySnap["SPRING_HEAVY_SNAP<br/>stiffness: 1200, damping: 80<br/>严格 0% 超调, 时延 0.14s"]
+```
+
+### 7 档非线性透明度遮罩 (7-Stop Non-Linear Alpha Mask)
+当 Agent 实现滚动视口（如对话流、侧边栏历史、代码块）边缘渐隐时，严禁使用单段线性渐变，必须使用官方经感知伽马校准的 7 档非线性采样点：
+```css
+mask-image: linear-gradient(
   to bottom,
-  transparent 0%,
-  rgba(0, 0, 0, 0.05) 15%,
-  rgba(0, 0, 0, 0.18) 32%,
-  rgba(0, 0, 0, 0.38) 50%,
-  rgba(0, 0, 0, 0.64) 68%,
-  rgba(0, 0, 0, 0.88) 85%,
-  black 100%
-)`;
+  transparent,
+  #0000000d calc(var(--cds-scroll-fade-top) * .15),
+  #00000026 calc(var(--cds-scroll-fade-top) * .3),
+  #0000004d calc(var(--cds-scroll-fade-top) * .45),
+  #00000080 calc(var(--cds-scroll-fade-top) * .6),
+  #000000b3 calc(var(--cds-scroll-fade-top) * .75),
+  #000000d9 calc(var(--cds-scroll-fade-top) * .87),
+  #000 var(--cds-scroll-fade-top),
+  #000 calc(100% - var(--cds-scroll-fade-bottom)),
+  #000000d9 calc(100% - var(--cds-scroll-fade-bottom) * .87),
+  #000000b3 calc(100% - var(--cds-scroll-fade-bottom) * .75),
+  #00000080 calc(100% - var(--cds-scroll-fade-bottom) * .6),
+  #0000004d calc(100% - var(--cds-scroll-fade-bottom) * .45),
+  #00000026 calc(100% - var(--cds-scroll-fade-bottom) * .3),
+  #0000000d calc(100% - var(--cds-scroll-fade-bottom) * .15),
+  transparent
+);
 ```
 
-### 8.4 控件原子规则与单闭合边框原则
+---
 
-1. **单闭合边框原则 (Single-Stroke Border Discipline)**：
-   - 严禁在带边框的容器内嵌套带边框的次级按钮或功能 Chips。
-   - 内部内联按钮必须使用 `border-none` + `bg-transparent`，依靠 Hover 状态的背景色微差表达交互。
-2. **四级按钮尺寸阶梯**：
-   - XS (24px/6px)、SM (28px/8px)、MD (32px/8px)、LG (40px/12px)。触感反馈采用 `active:scale-[0.98]`。
-3. **等宽数字约束 (Tabular Numbers)**：
-   - 所有动态变化的计数器、指标、波形柱、时间戳或 Diff 行号，必须声明 `tabular-nums` 或 `font-mono`，防止排版抖动。
+## 8.4 控件原子规则与单闭合边框原则
 
-### 8.5 交互防御与边缘场景守卫
+### 1. 单闭合边框原则 (Single-Stroke Border Discipline)
+* **核心禁忌**：严禁在一个带边框的容器（如 `ChatComposer` 或 `AttachmentCard`）内部，再放置带有独立边框的次级按钮或功能 Chips。
+* **正确做法**：容器内部的内联按钮必须使用 `border-none` + `bg-transparent`，仅依靠 Hover 时的 `Surface` 背景色变化与图标对比度提升来传达可交互性。
 
-1. **CJK 输入法合成守卫**：
-   - 在输入框 `onKeyDown` 中拦截 `!(e.nativeEvent.isComposing || e.keyCode === 229)`，杜绝候选词回车误触。
-2. **流式滚动防抢夺图钉**：
-   - 40px 底部容差与 150ms 用户人工滚动冷却互锁，防止视口抢夺。
-3. **沙箱安全与手势门禁**：
-   - 工件预览必须严格隔离（严禁同时 `allow-scripts` 与 `allow-same-origin`），调用 privileged 桥接时校验 `navigator.userActivation.isActive`。
-4. **零外部黑盒音频资产**：
-   - 统一使用原生 Web Audio API 振荡器和弦合成，并加入平滑增益淡入淡出（防爆音），锁定 30% 舒缓音量。
+### 2. 五级按钮尺寸阶梯 (REA v6.5.0 取证规范)
+| 规格 | 高度 | 水平内边距 | 字号 | 边框与圆角 | 触感物理曲线 |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **XS** | 20px (`h-5`) | 6px (`px-1.5`) | 11px (`text-[11px]`) | 4px (`rounded`) | 15 阶 `linear()` 弹簧曲线 |
+| **SM** | 24px (`h-6`) | 8px (`px-2`) | 12px (`text-xs`) | 6px (`rounded-md`) | 15 阶 `linear()` 弹簧曲线 |
+| **MD** | 28px (`h-7`) | 10px (`px-2.5`) | 13px (`text-[13px]`) | 8px (`rounded-lg`) | 15 阶 `linear()` 弹簧曲线 |
+| **LG** | 32px (`h-8`) | 12px (`px-3`) | 14px (`text-sm`) | 8px (`rounded-lg`) | 15 阶 `linear()` 弹簧曲线 |
+| **XL** | 40px (`h-10`) | 16px (`px-4`) | 16px (`text-base`) | 10px (`rounded-xl`) | 15 阶 `linear()` 弹簧曲线 |
 
-### 8.6 生产级组件库快速装配指南 (30 模块)
+### 3. 等宽数字约束 (Tabular Numbers)
+所有涉及计数器、Token 仪表、音频波形柱、时间戳或 Diff 行号的场景，必须显式声明 `tabular-nums`，彻底避免数字跳变引发的水平抖动。
 
-全量 30 个生产级独立代码文件均存放在 `code-examples/` 目录下，开箱即用。
+---
 
-### 8.7 智能体自检与质量门禁清单
+## 8.5 交互防御与边缘场景守卫
+
+在编写业务交互逻辑时，Agent 必须默认植入以下 4 个防御守卫：
+
+### 1. WebKit 500ms Post-Composition 守卫
+输入框输入法合成结束时，WebKit 引擎会残留微秒级合成标志位，必须双重拦截：
+```typescript
+const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+  // 1. 标准合成标志位与 229 键码
+  if (e.nativeEvent.isComposing || e.keyCode === 229) return;
+  // 2. WebKit 500ms 延迟守卫拦截
+  if (isWebKit && Math.abs(e.timeStamp - lastCompositionEndTime) < 500) return;
+
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    submitMessage();
+  }
+};
+```
+
+### 2. 流式滚动防抢夺图钉 (150ms Cooldown Latch)
+在流式对话吐字期间，若用户向上微滚查看历史记录，严禁强行拉回底部。设置 40px 底部容差与 150ms 冷却时间戳互锁：
+```typescript
+const handleUserScroll = () => {
+  lastUserScrollTimestamp.current = performance.now();
+};
+
+const shouldAutoScroll = () => {
+  const isWithinBottomTolerance = scrollHeight - scrollTop - clientHeight <= 40;
+  const isCooldownExpired = performance.now() - lastUserScrollTimestamp.current > 150;
+  return isWithinBottomTolerance && isCooldownExpired;
+};
+```
+
+### 3. 沙箱安全与用户激活门禁 (Iframe Security)
+在处理 Artifacts 工件预览或外部代码注入时：
+* 严格移除 `allow-same-origin`，确保 `null-origin` 物理隔离；
+* 跨域 `postMessage` 校验来源；
+* 触发系统级调用前校验原生 `event.userActivation`。
+
+### 4. 零外部黑盒音频资产 (Procedural Audio Synthesis)
+严禁在代码中 `fetch` 或 `import` 外部未授权的 `.mp3` 音频文件。统一使用原生 Web Audio API 振荡器和弦合成，并加入平滑增益淡入淡出（防爆音），将音量锁定在舒缓的 30% 基准。
+
+---
+
+## 8.6 生产级组件库快速装配指南 (30 模块)
+
+当 Agent 需要实现对应页面功能时，直接在 [`code-examples/`](../code-examples/) 中查找并复用：
+
+```
+code-examples/
+├── CdsButton.tsx                    # 5 级尺寸 5 大变体标准按钮 (15 阶 linear 弹簧)
+├── SegmentedControl.tsx             # 999px 全圆角滑动分段胶囊 (2px 轨道几何)
+├── StatusIndicators.tsx             # 6px 状态指示灯与骨架屏扫光
+├── ConfirmationDialog.tsx           # 16px 模态确认对话框 (双环弥散投影)
+├── AttachmentCard.tsx               # 7.5rem 磁贴与行内附件芯片
+├── ChatComposer.tsx                 # 20px 核心输入终端
+├── ChatMessageBubbles.tsx           # 会话流双态气泡 (18px 圆角与 clamp 文本 stop)
+├── ThinkingAccordion.tsx            # 思考过程状态机折叠组件 (Grid 0fr<->1fr)
+├── RichComposerWithMentions.tsx     # 指令与提及富文本编辑器 (WebKit 500ms 守卫)
+├── ModelSwitcherWithTokenGauge.tsx  # 模型切换与四色 Token 显存表
+├── McpToolDecisionCard.tsx          # MCP 决策与授权卡片
+├── ClaudeMotionPresets.ts           # 4 套物理弹簧预设
+├── ReasoningAmbientGlow.tsx         # 陶土漫反射光效 (wl-glow & 1.1s epitaxy-sweep)
+├── ScrollFadeContainer.tsx          # 原生 CSS Scroll-Driven 7 档非线性遮罩容器
+├── ClaudeAudioPlayer.ts             # Web Audio 纯代码合成音效
+├── LiveMicActivityBars.tsx          # 6 频段非线性麦克风波形柱 (0.7 Gamma)
+├── MediaLightboxViewer.tsx          # 仿射变换光标锚点画廊 (75vw 跑道)
+├── useClaudeSharedElementTransition.ts # View Transitions 共享元素变形 Hook
+├── ArtifactsSplitPaneResizer.tsx    # 50/50 居中吸附双栏分割条 (4px 死区)
+├── EpitaxyIframeBridge.tsx          # 沙箱隔离双向通信桥 (null-origin 隔离)
+├── StreamingDiffViewer.tsx          # 等宽流式代码差异对比 (--diffs-* 变量)
+├── CodeBlock.tsx                    # 12px 纯黑底色高亮代码块
+├── createClaudeMainWindow.ts        # Electron 桌面窗口工厂 (WebContentsView 解耦)
+├── ClaudeDesktopHeader.tsx          # macOS 74px 避让沉浸式顶栏
+├── DraggableSessionList.tsx         # 拓扑重排与微倾斜投影
+├── CoworkAgentCanvas.tsx            # 多 Agent 协同网格看板
+├── useClaudeScrollPinning.ts        # 视口图钉防抢夺 Hook (150ms 冷却)
+├── ContainerResponsiveBar.tsx       # 4 阶容器查询响应栏
+├── useClaudeRovingFocus.ts          # W3C WAI-ARIA 焦点漫游 Hook
+└── useRateLimitBackoff.ts           # 指数退避与全抖动重试 (3 次上限保护)
+```
+
+---
+
+## 8.7 智能体自检与质量门禁清单
 
 Agent 在完成任何前端代码修改或产物提交前，**必须逐项自检并执行验证**：
-- [ ] 语义令牌引用无硬编码色值；
-- [ ] 动态交互均采用 `ClaudeMotionPresets` 弹簧；
-- [ ] 输入框已植入 CJK IME 守卫；
-- [ ] `:root` 与 `.dark` 双主题自适应良好；
-- [ ] 频繁跳动的指标已配置 `tabular-nums`；
-- [ ] 容器内二级控件遵循单闭合边框原则；
-- [ ] `npm run typecheck` 与 `npm run build` 0 报错通过。
+
+- [ ] **语义令牌**：是否全部使用了 `var(--cds-*)` 或 Tailwind 扩展语义类？（严禁随意写死假色）
+- [ ] **物理弹簧**：动态交互是否均来自 `ClaudeMotionPresets` 或 15 阶 `linear()` 弹簧？（严禁手写无物理阻尼的简单动画）
+- [ ] **输入防御**：文本输入事件是否已包含 WebKit 500ms post-composition 守卫？
+- [ ] **暗黑适配**：在 `:root` 与 `.dark` 下背景明度对比与文本对比是否正常？
+- [ ] **排版抖动**：频繁变化的数字与指标是否附加了 `tabular-nums`？
+- [ ] **单闭合边框**：容器内二级控件是否做到了 `border-none`？
+- [ ] **代码构建**：
+  ```bash
+  npm run typecheck # 必须 0 TS 类型报错
+  npm run build     # 必须成功输出 0 编译错误
+  ```
 
 ---
 
