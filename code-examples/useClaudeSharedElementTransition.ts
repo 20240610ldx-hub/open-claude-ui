@@ -11,6 +11,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import { flushSync } from "react-dom";
 
 export interface UseSharedElementTransitionOptions {
   isOpen: boolean;
@@ -25,7 +26,7 @@ export function useClaudeSharedElementTransition({
 }: UseSharedElementTransitionOptions) {
   const [isMounted, setIsMounted] = useState(isOpen);
   const targetRef = useRef<HTMLElement | null>(null);
-  const isTransitioningRef = useRef<boolean>(false);
+  const prevIsOpenRef = useRef(isOpen);
 
   // 提取元素的当前生效圆角
   const getElementBorderRadius = (el: HTMLElement, defaultRadius = "0.5rem"): string => {
@@ -85,6 +86,12 @@ export function useClaudeSharedElementTransition({
   }, []);
 
   useEffect(() => {
+    // 初始渲染或状态无变更时不触发过渡
+    if (prevIsOpenRef.current === isOpen) {
+      return;
+    }
+    prevIsOpenRef.current = isOpen;
+
     const origin = originRef.current;
     const supportsViewTransition = typeof (document as any).startViewTransition === "function";
     const prefersReducedMotion = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
@@ -111,18 +118,20 @@ export function useClaudeSharedElementTransition({
       }
 
       const transition = (document as any).startViewTransition(() => {
-        setIsMounted(true);
-      });
+        // 同步提交 React DOM 变更，确保 targetRef 元素已就绪
+        flushSync(() => {
+          setIsMounted(true);
+        });
 
-      transition.ready.then(() => {
-        if (origin) {
-          origin.style.removeProperty("view-transition-name");
-        }
+        // 在新快照捕获前为 target 元素赋予 view-transition-name，保证新旧快照精准配对
         const target = targetRef.current;
         if (target) {
           target.style.setProperty("view-transition-name", transitionName, "important");
           const targetRadius = getElementBorderRadius(target, "1rem");
           root.style.setProperty("--vt-image-preview-target-radius", targetRadius);
+        }
+        if (origin) {
+          origin.style.removeProperty("view-transition-name");
         }
       });
 
@@ -130,6 +139,9 @@ export function useClaudeSharedElementTransition({
         const target = targetRef.current;
         if (target) {
           target.style.removeProperty("view-transition-name");
+        }
+        if (origin) {
+          origin.style.removeProperty("view-transition-name");
         }
         root.style.removeProperty("--vt-image-preview-source-radius");
         root.style.removeProperty("--vt-image-preview-target-radius");
@@ -141,24 +153,33 @@ export function useClaudeSharedElementTransition({
       if (target) {
         target.style.setProperty("view-transition-name", transitionName, "important");
       }
+      if (origin) {
+        origin.style.removeProperty("view-transition-name");
+      }
 
       const transition = (document as any).startViewTransition(() => {
-        setIsMounted(false);
-      });
-
-      transition.ready.then(() => {
-        if (target) {
-          target.style.removeProperty("view-transition-name");
-        }
         if (origin) {
           origin.style.setProperty("view-transition-name", transitionName, "important");
         }
+        if (target) {
+          target.style.removeProperty("view-transition-name");
+        }
+        flushSync(() => {
+          setIsMounted(false);
+        });
       });
 
       transition.finished.finally(() => {
         if (origin) {
           origin.style.removeProperty("view-transition-name");
         }
+        const currentTarget = targetRef.current;
+        if (currentTarget) {
+          currentTarget.style.removeProperty("view-transition-name");
+        }
+        root.style.removeProperty("--vt-image-preview-source-radius");
+        root.style.removeProperty("--vt-image-preview-target-radius");
+        root.style.removeProperty("--vt-image-preview-source-inset");
       });
     }
   }, [isOpen, originRef, transitionName]);

@@ -13,6 +13,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/Caho1/open-claude-ui/stargazers"><img src="https://img.shields.io/github/stars/Caho1/open-claude-ui?style=flat&logo=github&color=ea580c" alt="GitHub Stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://github.com/morluto/rea"><img src="https://img.shields.io/badge/Reverse%20Engineered%20with-REA-ea580c?logo=github" alt="Reverse Engineered with REA" /></a>
   <a href="assets/README.md"><img src="https://img.shields.io/badge/assets-clean--room%20compliance-success" alt="Asset Compliance" /></a>
@@ -354,6 +355,6 @@ open docs/claude-components-storybook.html
 
 <div align="center">
 
-[![Star History Chart](https://api.star-history.com/svg?repos=caho1/open-claude-ui&type=Date)](https://star-history.com/#caho1/open-claude-ui&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Caho1/open-claude-ui&type=Date)](https://star-history.com/#Caho1/open-claude-ui&Date)
 
 </div>

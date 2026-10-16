@@ -44,6 +44,7 @@ export function ChatComposer({
   const [isThinkingEnabled, setIsThinkingEnabled] = useState(true);
   const [isAddMenuOpen, setIsAddMenuOpen] = useState(false);
   const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const addMenuRef = useRef<HTMLDivElement>(null);
@@ -74,6 +75,11 @@ export function ChatComposer({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // 官方 Claude 核心断言: 如果正在进行输入法合成 (CJK) 或 keyCode 为 229，绝对放行并终止响应
+    if (isComposing || e.nativeEvent.isComposing || e.keyCode === 229) {
+      return;
+    }
+
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSend();
@@ -132,6 +138,8 @@ export function ChatComposer({
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           onKeyDown={handleKeyDown}
+          onCompositionStart={() => setIsComposing(true)}
+          onCompositionEnd={() => setIsComposing(false)}
           placeholder={placeholder}
           rows={1}
           className="w-full max-h-96 min-h-[3rem] bg-transparent border-none outline-none resize-none text-[15px] leading-[1.4] text-neutral-900 dark:text-neutral-100 placeholder-neutral-400 pl-1.5 focus:ring-0 overflow-y-auto"
