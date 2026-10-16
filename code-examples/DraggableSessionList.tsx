@@ -153,21 +153,22 @@ export const DraggableSessionList: React.FC<DraggableSessionListProps> = ({
     if (!draggedSessionId) return;
 
     setSessions((prev) => {
-      const draggedItem = prev.find((s) => s.id === draggedSessionId);
-      if (!draggedItem) return prev;
+      const removedAt = prev.findIndex((s) => s.id === draggedSessionId);
+      if (removedAt === -1) return prev;
+      const draggedItem = prev[removedAt];
 
       // 移出原项
       const remaining = prev.filter((s) => s.id !== draggedSessionId);
 
-      // 计算落点全局索引
-      let insertIdx = targetIdx;
-      if (dropPosition === 'after') insertIdx += 1;
+      // 计算落点全局索引并修正向下拖拽造成的索引偏移 (off-by-one)
+      const rawInsertIdx = targetIdx + (dropPosition === 'after' ? 1 : 0);
+      const insertIdx = removedAt < rawInsertIdx ? rawInsertIdx - 1 : rawInsertIdx;
 
       // 如果跨区域拖拽（如从 Recents 拖入 Pinned），自动赋予 isPinned 属性
       const newItem = { ...draggedItem, isPinned: targetIsPinned };
 
       const result = [...remaining];
-      result.splice(Math.min(insertIdx, result.length), 0, newItem);
+      result.splice(Math.min(Math.max(insertIdx, 0), result.length), 0, newItem);
       return result;
     });
 

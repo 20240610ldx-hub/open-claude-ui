@@ -1,7 +1,7 @@
 {
   "name": "open-claude-ui",
   "version": "1.0.0",
-  "description": "基于 REA 深度拆解并高保真还原 Claude 官方桌面端 UI。纯手写 33 个独立 React 组件与 8 项硬核交互物理算法，附带 3000+ 行逆向分析手册。",
+  "description": "基于 REA 深度拆解并高保真还原 Claude 官方桌面端 UI。还原 30 个独立 React 组件与 8 项硬核交互物理算法，附带 3000+ 行逆向分析手册。",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
