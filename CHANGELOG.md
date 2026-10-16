@@ -43,6 +43,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `--cds-ease-rise`: `cubic-bezier(.3, .7, .4, 1)` (status line enter rise)
     - `--cds-ease-fall`: `cubic-bezier(0, 0, .2, 1)` (status line exit fall)
 
+#### Chapter 2: Foundational Atoms & Controls (`docs/v1/02-基础原子组件与交互控件.md`)
+
+- **5-Tier Button Height Scale & Nested Control Heights**:
+  - Calibrated button sizes to official 5-tier scale: `xxs (18.8px, data-step="1")`, `xs (22.6px)`, `sm (26.35px)`, `md (30.1px desktop / 32px web, default)`, and `lg (37.65px desktop / 40px web)`.
+  - Added official `--cds-h-control-nested` scale (17px, 18.8px, 20.7px, 26.35px) for toolbar/composer-nested controls.
+- **6 Production Button Variants & Paint Layer Decoupling**:
+  - Extracted official variant matrix: `secondary` (default, borderless with `bg-fill-secondary`), `primary` (clay), `ghost` (`hover:bg-fill-ghost-hover`), `danger` (`bg-fill-danger`), `brand` (`--brand: #c6613f`), and `onContent` (media overlay with `backdrop-blur-md` and `var(--cds-button-on-content)`).
+  - Implemented decoupled paint layer (`data-cds-part="paint"`) to isolate focus ring outlines from inner background/shadow fills.
+- **15-Stop CSS `linear()` Spring Curve & Button Squish Physics**:
+  - Extracted official `--cds-btn-spring: linear(0, .2459, .6526, .9468, 1.0764, 1.0915, 1.0585, 1.0219, .9993, .9914, .9921, .9957, .9988, 1.0004, 1)` (+9.15% overshoot).
+  - Implemented `.cds-btn-squish` with runtime height damping `Bl(h) = Math.min(1.5, Math.max(0.5, h * (1/32)))`.
+- **Segmented Control 1px Precision Geometry & Dual Container Breakpoints**:
+  - Corrected track padding to strictly `1px` (not 2px) with `top: 1px; bottom: 1px;` indicator positioning.
+  - Formally specified multi-breakpoint container query: `@container (width <= 180px)` for 2-tab pills and `@container (width <= 254px)` for 3-tab pills.
+  - Extracted 0.5px hairline inset shadow: `inset 0 0 0 0.5px var(--cds-border), 0 1px 2px #0000000f, 0 2px 6px -1px #0000000d` (Light) and `inset 0 0 0 0.5px #ffffff14, 0 1px 2px #0000004d, 0 2px 6px -1px #00000040` (Dark).
+- **Official 6px Status Indicators & Accurate Trajectories**:
+  - Standardized `.status-dot` to 6px diameter with 4 semantic kinds: `ready` (accent steady), `running` (1.2s dot blink), `error` (danger steady), and `clay` (3.0s breathe cycle from brightness 0.96 scale 0.86 to brightness 1.06 scale 1).
+  - Specified `.timeline-quiet-dots` (3px dots, 3.5px gap, 1.9s cycle with 0s/0.15s/0.3s phase delays) and `cds-skeleton-sweep` (2s linear, 105deg angle, 255deg in RTL).
+- **6-Tier Confirmation Dialog Matrix & Nested Dialog Blur**:
+  - Extracted official `Qg` dialog scale: `sm: max-w-[400px]`, `md: max-w-[520px]`, `lg: max-w-[720px]`, `xl: max-w-[880px]`, `2xl: max-w-[1024px]`, `3xl: max-w-[1152px]`.
+  - Added dynamic `--environment-dialog-cap` formula and automated nested dialog blurring: `data-[nested-dialog-open]:blur-[2px]`.
+- **7.5rem Square Attachment Tiles & Bi-Directional Mid-Truncation**:
+  - Corrected attachment card from 128x96px rectangle to exact square 7.5rem (`size-[calc(7.5rem * var(--cds-rem-scale, 1))]`, ~112.94px on desktop) with `rounded-card` and `shadow-field-drop`.
+  - Documented floating remove button protocol: `absolute -end-2 -top-2 size-5 rounded-full bg-surface-3 shadow-card-ring`.
+  - Recreated intelligent bi-directional mid-truncation (`head` + `…` + `tailStem` + `tailExt`) preserving file extension visibility.
+
 ---
 
 ## [1.0.1] - 2026-10-16

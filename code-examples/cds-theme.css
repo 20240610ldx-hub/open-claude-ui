@@ -177,6 +177,7 @@
   --cds-ease-pulse: cubic-bezier(.4, 0, .2, 1);        /* 思考三点跳动呼吸脉冲 */
   --cds-ease-rise: cubic-bezier(.3, .7, .4, 1);        /* 状态条平滑抬升 */
   --cds-ease-fall: cubic-bezier(0, 0, .2, 1);          /* 状态条平滑下落 */
+  --cds-btn-spring: linear(0, .2459, .6526, .9468, 1.0764, 1.0915, 1.0585, 1.0219, .9993, .9914, .9921, .9957, .9988, 1.0004, 1); /* 15阶物理弹簧回弹 */
 
   /* 13. 字体栈与 CJK 真实回退链 */
   --font-cjk-sans-sc: "PingFang SC";
@@ -370,28 +371,69 @@
   100%    { opacity: 0; transform: scale(0.92); }
 }
 
-/* 8. 骨架屏高级倾斜扫光 */
+/* 8. 骨架屏高级倾斜扫光 (REA 取证：2s linear 105deg) */
 @keyframes cds-skeleton-sweep {
-  0%   { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
+  0%   { transform: translate(-100%); }
+  100% { transform: translate(100%); }
 }
 
-/* 9. 陶土呼吸指示灯 */
+/* 9. 陶土呼吸指示灯 (REA 取证：3s ease-in-out) */
 @keyframes dframe-clay-breathe {
-  0%, 100% { filter: brightness(0.96); transform: scale(0.92); }
-  50%      { filter: brightness(1.08); transform: scale(1.08); }
+  0%, 100% { filter: brightness(0.96); transform: scale(0.86); }
+  50%      { filter: brightness(1.06); transform: scale(1); }
 }
 
-/* 10. 活动脉冲灯 */
-@keyframes dframe-dot-pulse {
-  0%, 100% { opacity: 0.3; transform: scale(0.85); }
-  50%      { opacity: 1; transform: scale(1.15); }
+/* 10. 活动脉冲灯与思考点脉冲 (REA 取证：1.8s) */
+@keyframes cds-dot-pulse {
+  0%, 5%   { opacity: 0.2857; animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1); }
+  15%, 25% { opacity: 1;      animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1); }
+  65%, 100%{ opacity: 0.2857; }
+}
+
+@keyframes dframe-dot-blink {
+  0%, 100% { opacity: 0.3; }
+  50%      { opacity: 1; }
 }
 
 /* 11. 附件磁贴入场生长 */
 @keyframes file-thumbnail-grow-in {
   0%   { opacity: 0; transform: scale(0.85); }
   100% { opacity: 1; transform: scale(1); }
+}
+
+/* 12. 按钮动态物理阻尼按压与回弹 (REA 取证：.cds-btn-squish) */
+.cds-btn-squish {
+  --cds-btn-press-sx: 0.975;
+  --cds-btn-press-sy: 0.975;
+  transform-origin: 50%;
+  transition: transform var(--cds-dur-slow) var(--cds-btn-spring);
+}
+.cds-btn-squish:active, :active > .cds-btn-squish {
+  transform: scale(var(--cds-btn-press-sx), var(--cds-btn-press-sy));
+  transition: transform var(--cds-dur-fast) ease-out;
+}
+
+/* 13. 官方状态指示灯标准类 (REA 取证：.status-dot 6px) */
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: block;
+  position: relative;
+}
+.status-dot[data-kind="ready"] {
+  background: var(--cds-fill-brand, var(--cds-clay));
+}
+.status-dot[data-kind="running"] {
+  background: var(--cds-fill-brand, var(--cds-clay));
+  animation: 1.2s ease-in-out infinite dframe-dot-blink;
+}
+.status-dot[data-kind="error"] {
+  background: var(--cds-fill-danger);
+}
+.status-dot[data-kind="clay"] {
+  background: var(--cds-clay);
+  animation: 3s ease-in-out infinite dframe-clay-breathe;
 }
 
 /* ==========================================================================
