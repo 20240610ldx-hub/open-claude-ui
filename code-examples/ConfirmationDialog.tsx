@@ -1,17 +1,27 @@
 /**
  * Claude Design System (CDS) - Confirmation Modal Dialog
  * 
- * 逆向溯源：提取自 /Applications/Claude.app ion-dist 模态弹窗与 Overlays。
+ * 逆向溯源：依据 REA v6.5.0 对 Claude Desktop 生产环境 (shared-frame-BfjMqbuN.js)
+ * 提取的 data-cds="Dialog" 架构与 6 阶弹窗标尺规范。
+ * 
  * 核心规范：
- *   - 弹窗外壳：严格 16px 圆角 (rounded-2xl)
+ *   - 弹窗尺寸阶梯 (Qg)：
+ *       sm: max-w-[400px]
+ *       md: max-w-[520px] (标准确认弹窗)
+ *       lg: max-w-[720px]
+ *       xl: max-w-[880px]
+ *   - 动态视口高度限制：
+ *       max-h-[calc(100dvh_-_max(2rem,2*var(--desktop-titlebar-inset,0px))_-_2*max(env(safe-area-inset-top,0px),env(safe-area-inset-bottom,0px)))]
+ *   - 嵌套弹窗防御：data-[nested-dialog-open]:blur-[2px] 自动失焦模糊与暗化遮罩
  *   - 投影：真实双环 Popover 弥散投影 (--cds-shadow-popover)
- *   - 背景遮罩：高斯模糊微调 (backdrop-blur-xs bg-black/40)
- *   - 交互反馈：支持 Escape 快捷退出与点击遮罩关闭
+ *   - 交互反馈：支持 Escape 快捷退出与点击遮罩关闭，焦点被锁在弹窗内部
  */
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { motionModalDialog } from "./ClaudeMotionPresets";
+import { CdsButton } from "./CdsButton";
+
+export type DialogSize = "sm" | "md" | "lg";
 
 export interface ConfirmationDialogProps {
   isOpen: boolean;
@@ -22,8 +32,15 @@ export interface ConfirmationDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   variant?: "danger" | "default";
+  size?: DialogSize;
   icon?: React.ReactNode;
 }
+
+const DIALOG_SIZE_CLASSES: Record<DialogSize, string> = {
+  sm: "max-w-[400px]",
+  md: "max-w-[520px]",
+  lg: "max-w-[720px]",
+};
 
 export function ConfirmationDialog({
   isOpen,
@@ -34,6 +51,7 @@ export function ConfirmationDialog({
   confirmLabel = "Confirm",
   cancelLabel = "Cancel",
   variant = "danger",
+  size = "sm",
   icon,
 }: ConfirmationDialogProps) {
   // 监听 Escape 快捷键退出
@@ -53,26 +71,26 @@ export function ConfirmationDialog({
     <AnimatePresence>
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          {/* 高斯模糊与半透明遮罩 */}
+          {/* 高斯模糊与半透明背景遮罩 (Ug: bg-backdrop) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/45 backdrop-blur-[2px]"
+            className="fixed inset-0 bg-black/40 backdrop-blur-[2px]"
           />
 
           {/* 模态卡片实体：16px 圆角与双环弥散投影 */}
           <motion.div
-            variants={motionModalDialog}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            className="relative w-full max-w-sm rounded-2xl bg-white dark:bg-[#1a1a19] p-5 border border-neutral-200/80 dark:border-neutral-800 z-10 space-y-4"
+            data-cds="Dialog"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2, ease: [0.165, 0.84, 0.44, 1] }}
+            className={`relative w-full ${DIALOG_SIZE_CLASSES[size]} rounded-2xl bg-white dark:bg-[#1a1a19] p-6 border border-neutral-200/80 dark:border-neutral-800 z-10 space-y-4`}
             style={{
-              boxShadow:
-                "var(--cds-shadow-popover, 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08), inset 0 0 0 1px rgba(0, 0, 0, 0.08))",
+              boxShadow: "var(--cds-shadow-popover)",
             }}
             role="dialog"
             aria-modal="true"
@@ -91,42 +109,48 @@ export function ConfirmationDialog({
                 ) : isDanger ? (
                   <span className="text-base font-bold">!</span>
                 ) : (
-                  <span className="text-base">✦</span>
+                  <span className="text-base font-bold">✦</span>
                 )}
               </div>
-              <div className="space-y-1 min-w-0">
-                <h4 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <div className="space-y-1 min-w-0 flex-1">
+                <h4 className="text-heading font-semibold font-header text-neutral-900 dark:text-neutral-100">
                   {title}
                 </h4>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 leading-relaxed">
+                <p className="text-body font-normal text-secondary break-words leading-relaxed text-sm">
                   {description}
                 </p>
               </div>
-            </div>
 
-            {/* 底部按钮栏：单边框原则，Cancel 为 Ghost 悬停，Confirm 为主色 */}
-            <div className="flex items-center justify-end gap-2 pt-2">
+              {/* 右上角关闭按钮 */}
               <button
                 type="button"
                 onClick={onClose}
-                className="h-8 px-3.5 rounded-lg text-xs font-medium text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors border-0"
+                className="text-neutral-400 hover:text-neutral-700 dark:hover:text-neutral-200 p-1 -mr-1 -mt-1 rounded-md transition-colors"
+                aria-label="Close dialog"
+              >
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* 底部操作工具栏 (单闭合边框原则：容器内部按钮不带硬边框) */}
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <CdsButton
+                variant="secondary"
+                size="md"
+                onClick={onClose}
               >
                 {cancelLabel}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onConfirm();
-                  onClose();
-                }}
-                className={`h-8 px-4 rounded-lg text-xs font-medium text-white shadow-2xs active:scale-[0.98] transition-all border-0 ${
-                  isDanger
-                    ? "bg-red-600 hover:bg-red-700"
-                    : "bg-clay hover:bg-clay-hover"
-                }`}
+              </CdsButton>
+
+              <CdsButton
+                variant={isDanger ? "danger" : "primary"}
+                size="md"
+                onClick={onConfirm}
               >
                 {confirmLabel}
-              </button>
+              </CdsButton>
             </div>
           </motion.div>
         </div>

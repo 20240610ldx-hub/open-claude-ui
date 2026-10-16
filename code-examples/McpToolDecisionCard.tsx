@@ -4,26 +4,30 @@ import React, { useState } from 'react';
  * ==============================================================================
  * Claude Design System (CDS) - McpToolDecisionCard.tsx
  * 
- * 逆向还原自官方 Claude Desktop / Code 交互式工具调用与 MCP 决策卡片:
- * - `cc1aae219-CPC-WA-x.js` (channel_decision_card / tool_use / structured_content)
- * - `c05b96c7f-DSH7iwX5.js` (mcp_server_url / writeToolNames / onVerdict / resolved)
- * - `c6a992d55-C0zTICcS.css` (decision-card-glow, cds-shadow-card)
+ * 逆向还原自官方 Claude Desktop / Code 交互式工具调用与 MCP 决策卡片 (REA v6.5.0 取证):
+ * - `c05b96c7f-DklIyA-P.js`: structured_content / ws / onVerdict / PERMISSIONS_ERROR
+ * - `cc1aae219-DjR8LnUv.js`: user_denied / policy_denied / settleReason / streamSettled
+ * - `frame-shell-chrome-CAw-tYzh.js`: [data-cds=Card] 嵌套下重置 text-inset: 0px 规则
  * 
- * 核心工程机制:
+ * 核心生产级工程机制:
  * 1. 严格的三态授权生命周期 (Three-State Authorization Machine):
- *    - `pending_approval`: 等待授权，展现入参树与三阶决议动作
- *    - `running`: 执行中，触发陶土脉冲与终端管道捕获
- *    - `success` / `error`: 终态收口，折叠控制台结果预览
- * 2. 三阶决议按钮动作阵列:
- *    - [单次批准 (Allow Once)]: 仅对本次调用赋予一次性执行权
- *    - [始终信任 (Always Allow)]: 将该 MCP 模式加入本地会话白名单免检
- *    - [拒绝执行 (Deny)]: 中断执行流并向模型回传授权被拒信号
- * 3. 动态 Payload JSON 审查与只读/微调切换:
- *    高亮格式化展示即将执行的命令或参数，防止恶意或破坏性指令注入。
+ *    - `pending_approval`: 等待人工授权，呈现陶土色半透明微晕边框 (border-[var(--cds-border-accent)]/50)
+ *    - `running`: 执行中，捕获下游工具输出流
+ *    - `success` / `error`: 终态收口，折叠控制台输出预览
+ * 2. 真实 settleReason 判决体系：
+ *    - `user_denied`: 用户主动拒绝执行，向模型返回 is_error: true, error_text: "User denied tool execution"
+ *    - `policy_denied`: 系统安全沙箱策略拦截
+ *    - `PERMISSIONS_ERROR`: 缺少本地系统读写授权
+ * 3. 三阶决议动作阵列：
+ *    - [单次批准 (Allow Once)]: 仅赋予当前单次调用执行权限
+ *    - [始终允许 (Always Allow)]: 将该 MCP 模式加入本地白名单缓存 (bs 330s 垃圾回收)
+ *    - [拒绝执行 (Deny)]: 终止执行并促使模型反思提出替代路径
+ * 4. 结构化入参 JSON 审查与只读展示。
  * ==============================================================================
  */
 
 export type ToolExecutionStatus = 'pending_approval' | 'running' | 'success' | 'error';
+export type SettleReason = 'user_denied' | 'policy_denied' | 'PERMISSIONS_ERROR' | 'completed' | null;
 
 export interface McpToolCallData {
   id: string;
@@ -47,6 +51,7 @@ export const McpToolDecisionCard: React.FC<McpToolDecisionCardProps> = ({
   className = '',
 }) => {
   const [status, setStatus] = useState<ToolExecutionStatus>('pending_approval');
+  const [settleReason, setSettleReason] = useState<SettleReason>(null);
   const [isJsonExpanded, setIsJsonExpanded] = useState(true);
   const [isResultExpanded, setIsResultExpanded] = useState(false);
 
@@ -54,11 +59,13 @@ export const McpToolDecisionCard: React.FC<McpToolDecisionCardProps> = ({
   const handleAction = (verdict: 'allow_once' | 'always_allow' | 'deny') => {
     if (verdict === 'deny') {
       setStatus('error');
+      setSettleReason('user_denied');
     } else {
       setStatus('running');
       // 模拟工具执行返回
       setTimeout(() => {
         setStatus('success');
+        setSettleReason('completed');
       }, 1200);
     }
     onVerdict?.(verdict, toolCall.inputParams);
@@ -71,132 +78,140 @@ export const McpToolDecisionCard: React.FC<McpToolDecisionCardProps> = ({
 
   return (
     <div
+      data-cds="McpToolDecisionCard"
       role="region"
       aria-label={`工具调用决策卡片: ${toolCall.toolName}`}
       className={`relative w-full rounded-2xl border overflow-hidden transition-all duration-300 font-sans text-xs ${
         isPending
-          ? 'border-[var(--cds-border-accent,#d97757)]/50 bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#1c1b1a)] shadow-[0_4px_16px_rgba(217,119,87,0.12)]'
+          ? 'border-[var(--cds-border-accent,#d97757)]/50 bg-[var(--cds-surface-1,#ffffff)] dark:bg-[var(--cds-surface-1,#1c1b1a)] shadow-[0_4px_16px_rgba(217,119,87,0.12)]'
           : isRunning
-          ? 'border-[var(--cds-border-subtle,#e5e5e3)] dark:border-[var(--cds-border-subtle,#2e2e2c)] bg-[var(--cds-bg-secondary,#faf9f6)] dark:bg-[var(--cds-bg-secondary,#181817)]'
+          ? 'border-[var(--cds-border,#e5e5e3)] dark:border-[var(--cds-border,#2e2e2c)] bg-[var(--cds-surface-2,#faf9f6)] dark:bg-[var(--cds-surface-2,#181817)]'
           : isSuccess
-          ? 'border-[#10b981]/40 bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#171b18)]'
-          : 'border-[#ef4444]/40 bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#1f1717)]'
+          ? 'border-emerald-500/40 bg-[var(--cds-surface-1,#ffffff)] dark:bg-[var(--cds-surface-1,#171b18)]'
+          : 'border-red-500/40 bg-[var(--cds-surface-1,#ffffff)] dark:bg-[var(--cds-surface-1,#1f1717)]'
       } ${className}`}
     >
       {/* 顶部标题栏：工具名、来源 Server、执行状态徽标 */}
-      <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--cds-border-subtle,#e8e8e6)] dark:border-[var(--cds-border-subtle,#282827)] bg-[var(--cds-bg-secondary,#fbfbf9)] dark:bg-[var(--cds-bg-secondary,#191918)]">
+      <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--cds-border,#e8e8e6)] dark:border-[var(--cds-border,#282827)] bg-[var(--cds-surface-2,#fbfbf9)] dark:bg-[var(--cds-surface-2,#191918)]">
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-sm select-none">⚙️</span>
           <span className="font-mono font-semibold text-sm text-[var(--cds-text-primary,#1a1a1a)] dark:text-[var(--cds-text-primary,#f0f0f0)] truncate">
             {toolCall.toolName}
           </span>
           {toolCall.serverUrl && (
-            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-[var(--cds-alpha-1,rgba(0,0,0,0.06))] dark:bg-[var(--cds-alpha-1,rgba(255,255,255,0.08))] text-[var(--cds-text-muted,#8c8c8c)] truncate">
+            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono bg-neutral-200/60 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 truncate">
               {toolCall.serverUrl}
             </span>
           )}
         </div>
 
         {/* 状态徽标 */}
-        <div className="flex items-center gap-1.5 shrink-0">
+        <div className="flex items-center gap-1.5 select-none shrink-0">
           {isPending && (
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-[var(--cds-fill-brand-subtle,#fcf0ec)] dark:bg-[var(--cds-fill-brand-subtle,#36211a)] text-[var(--cds-text-accent,#d97757)]">
-              <span className="size-1.5 rounded-full bg-[var(--cds-fill-brand,#d97757)] animate-pulse" />
-              请求授权
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-clay/10 text-clay flex items-center gap-1">
+              <span className="size-1.5 rounded-full bg-clay animate-ping" />
+              等待授权 (Pending)
             </span>
           )}
           {isRunning && (
-            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400">
-              <span className="size-1.5 rounded-full bg-blue-500 animate-spin" />
-              执行中...
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-sky-500/10 text-sky-500 flex items-center gap-1">
+              <span className="size-1.5 rounded-full bg-sky-500 animate-pulse" />
+              执行中 (Running)
             </span>
           )}
           {isSuccess && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400">
-              ✓ 执行成功
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+              <span>✓</span> 已完成 (Success)
             </span>
           )}
           {isError && (
-            <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400">
-              ✕ 已拒绝 / 失败
+            <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/10 text-red-500 flex items-center gap-1">
+              <span>✕</span> {settleReason === 'user_denied' ? '已拒绝 (Denied)' : '执行失败 (Error)'}
             </span>
           )}
         </div>
       </div>
 
-      {/* 参数检查区：格式化 JSON 审查 */}
+      {/* 参数审查区 (Payload Inspector) */}
       <div className="p-3.5 space-y-2">
-        <div className="flex items-center justify-between text-[11px] text-[var(--cds-text-muted,#8c8c8c)]">
-          <span className="font-medium uppercase tracking-wider">执行参数 (Payload)</span>
+        <div className="flex items-center justify-between text-neutral-500 select-none">
           <button
             type="button"
             onClick={() => setIsJsonExpanded(!isJsonExpanded)}
-            className="hover:text-[var(--cds-text-primary,#1a1a1a)] transition-colors select-none"
+            className="flex items-center gap-1.5 font-medium hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors cursor-pointer"
           >
-            {isJsonExpanded ? '收起 ▲' : '展开 ▼'}
+            <span className={`text-[10px] transition-transform duration-200 ${isJsonExpanded ? 'rotate-90' : ''}`}>
+              ▶
+            </span>
+            <span>入参审查 (Structured Content)</span>
           </button>
+          <span className="text-[10px] font-mono text-neutral-400">
+            {Object.keys(toolCall.inputParams).length} fields
+          </span>
         </div>
 
         {isJsonExpanded && (
-          <pre className="p-2.5 rounded-lg bg-[var(--cds-bg-secondary,#f4f4f2)] dark:bg-[var(--cds-bg-secondary,#111110)] border border-[var(--cds-border-subtle,#e8e8e6)] dark:border-[var(--cds-border-subtle,#242423)] font-mono text-[11px] leading-relaxed text-[var(--cds-text-primary,#1a1a1a)] dark:text-[var(--cds-text-primary,#e5e5e5)] overflow-x-auto max-h-48">
-            <code>{JSON.stringify(toolCall.inputParams, null, 2)}</code>
+          <pre className="p-2.5 rounded-xl bg-neutral-900 text-neutral-200 font-mono text-[11px] leading-relaxed overflow-x-auto border border-neutral-800 select-text">
+            {JSON.stringify(toolCall.inputParams, null, 2)}
           </pre>
         )}
       </div>
 
-      {/* 终态控制台输出 (结果区) */}
-      {(isSuccess || isError) && (toolCall.resultOutput || toolCall.errorMessage) && (
-        <div className="px-3.5 pb-3">
-          <button
-            type="button"
-            onClick={() => setIsResultExpanded(!isResultExpanded)}
-            className="flex items-center gap-1.5 text-[11px] font-medium text-[var(--cds-text-secondary,#666666)] hover:text-[var(--cds-text-primary,#1a1a1a)] select-none"
-          >
-            <span>{isResultExpanded ? '收起控制台输出 ▲' : '查看控制台输出 ▼'}</span>
-          </button>
+      {/* 执行结果输出区 (Result Output) */}
+      {(isSuccess || isError) && (
+        <div className="px-3.5 pb-3.5 space-y-2 border-t border-[var(--cds-border,#e8e8e6)] dark:border-[var(--cds-border,#282827)] pt-2.5">
+          <div className="flex items-center justify-between text-neutral-500 select-none">
+            <button
+              type="button"
+              onClick={() => setIsResultExpanded(!isResultExpanded)}
+              className="flex items-center gap-1.5 font-medium hover:text-neutral-800 dark:hover:text-neutral-200 transition-colors cursor-pointer"
+            >
+              <span className={`text-[10px] transition-transform duration-200 ${isResultExpanded ? 'rotate-90' : ''}`}>
+                ▶
+              </span>
+              <span>执行输出 (Console Output)</span>
+            </button>
+            {toolCall.executionDurationMs && (
+              <span className="text-[10px] font-mono text-neutral-400 tabular-nums">
+                {toolCall.executionDurationMs}ms
+              </span>
+            )}
+          </div>
 
           {isResultExpanded && (
-            <div className="mt-2 p-2.5 rounded-lg bg-[#0d0d0c] text-[#ececeb] font-mono text-[11px] leading-relaxed overflow-x-auto max-h-48 border border-white/10">
-              {toolCall.errorMessage ? (
-                <div className="text-rose-400">{toolCall.errorMessage}</div>
-              ) : (
-                <pre>{toolCall.resultOutput || '执行完成，无返回值。'}</pre>
-              )}
-            </div>
+            <pre className="p-2.5 rounded-xl bg-neutral-950 text-neutral-300 font-mono text-[11px] leading-relaxed overflow-x-auto border border-neutral-800/80 max-h-48 overflow-y-auto select-text">
+              {isError
+                ? toolCall.errorMessage || 'User denied tool execution (settleReason: user_denied)'
+                : toolCall.resultOutput || 'Tool executed successfully with 0 exit code.'}
+            </pre>
           )}
         </div>
       )}
 
-      {/* 底部操作决议按钮组 (仅在 pending_approval 时展现) */}
+      {/* 三阶决议按钮动作阵列 (Pending 阶段展示) */}
       {isPending && (
-        <div className="flex items-center justify-between px-3.5 py-2.5 border-t border-[var(--cds-border-subtle,#e8e8e6)] dark:border-[var(--cds-border-subtle,#282827)] bg-[var(--cds-bg-secondary,#fbfbf9)] dark:bg-[var(--cds-bg-secondary,#161615)] select-none">
-          {/* 拒绝按钮 */}
+        <div className="flex items-center justify-end gap-2 px-3.5 py-2.5 bg-[var(--cds-surface-2,#fbfbf9)] dark:bg-[var(--cds-surface-2,#191918)] border-t border-[var(--cds-border,#e8e8e6)] dark:border-[var(--cds-border,#282827)] select-none">
           <button
             type="button"
             onClick={() => handleAction('deny')}
-            className="px-3 py-1.5 rounded-lg border border-[var(--cds-border-subtle,#e5e5e3)] dark:border-[var(--cds-border-subtle,#333331)] text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/30 active:scale-95 transition-all font-medium"
+            className="px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 hover:bg-red-500/10 transition-colors cursor-pointer"
           >
-            拒绝执行
+            拒绝 (Deny)
           </button>
-
-          {/* 批准按钮组 */}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => handleAction('always_allow')}
-              className="px-3 py-1.5 rounded-lg border border-[var(--cds-border-subtle,#e5e5e3)] dark:border-[var(--cds-border-subtle,#333331)] bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#222221)] text-[var(--cds-text-primary,#1a1a1a)] dark:text-[var(--cds-text-primary,#f0f0f0)] hover:bg-[var(--cds-bg-hover,#f5f5f5)] active:scale-95 transition-all font-medium"
-            >
-              始终允许该工具
-            </button>
-
-            <button
-              type="button"
-              onClick={() => handleAction('allow_once')}
-              className="px-3.5 py-1.5 rounded-lg bg-[var(--cds-fill-brand,#d97757)] text-white hover:bg-[var(--cds-fill-brand-hover,#c86849)] shadow-xs active:scale-95 transition-all font-medium"
-            >
-              单次批准
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => handleAction('always_allow')}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-200/70 dark:bg-neutral-800 hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors cursor-pointer"
+          >
+            始终允许 (Always Allow)
+          </button>
+          <button
+            type="button"
+            onClick={() => handleAction('allow_once')}
+            className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-white bg-clay hover:bg-clay-hover shadow-2xs transition-all active:scale-95 cursor-pointer"
+          >
+            单次批准 (Allow Once)
+          </button>
         </div>
       )}
     </div>

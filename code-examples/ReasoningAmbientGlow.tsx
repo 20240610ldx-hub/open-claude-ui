@@ -4,20 +4,21 @@ import React, { useEffect, useRef } from 'react';
  * ==============================================================================
  * Claude Design System (CDS) - ReasoningAmbientGlow.tsx
  * 
- * 逆向还原自官方 Claude 动态光效与推理氛围感引擎:
- * - `c6a992d55-C0zTICcS.css` (cds-shimmer-text-shine / cds-shimmer-text-band / wl-glow / cds-dot-pulse / epitaxy-linear-sweep)
- * - `cde7c3a92-zIg_rFtU.js` (--shadow-drop-glow / --shadow-drop-ring / warm-glow / flicker)
+ * 逆向还原自官方 Claude 动态光效与推理氛围感引擎 (REA v6.5.0 取证):
+ * - `c6a992d55-sXiDGMFQ.css`: cds-shimmer-text-shine / wl-glow / wl-halo / cds-dot-pulse / epitaxy-linear-sweep
+ * - `frame-shell-chrome-CAw-tYzh.js`: --cds-fill-brand / shadow-field-drop / color-mix
  * 
  * 核心视觉物理学:
- * 1. 陶土暖光推理晕染 (Warm Clay Ambient Glow):
- *    采用 HSL 动态光晕与双层复合扩散投影，基于 1.8s/2.4s 谐振周期缓动，
+ * 1. 陶土暖光推理晕染 (Warm Clay Ambient Glow / wl-glow):
+ *    采用 1.8s ease-in-out 双向呼吸脉冲，双层外晕结合 2px 品牌外轮廓，
  *    在长思维链推理 (Extended Thinking) 时营造沉浸式思考场域。
  * 2. 文本扫光波纹 (Shimmer Text Shine):
- *    贝塞尔曲线 `cubic-bezier(.714, .121, .211, .888)` 驱动的渐变光波扫描，
- *    光斑在 0%~15% 蓄力、85%~100% 匀速穿透，表现深度推理。
- * 3. 实时 Canvas/WebGL 光场粒子着色器 (可选轻量 Canvas 渲染器):
- *    在卡片底层渲染低频波动的柔和焦散光斑。
- * 4. 三段式脉冲指示器 (Three-phase Pulsing Dots)。
+ *    非对称贝塞尔曲线 `cubic-bezier(.714, .121, .211, .888)` 驱动的渐变光波扫描，
+ *    0%~15% 蓄力位移至 83.333%、85%~100% 回落至 16.667%，呈现突破性算力涌动。
+ * 3. 三相差分跳跃点 (cds-dot-pulse):
+ *    0%~5% 不透明度 0.2857 (2/7 黄金常数) -> 15%~25% 跃升至 1.0 (cubic-bezier(.165,.84,.44,1)) -> 65%~100% 衰减回 0.2857。
+ * 4. 底部 Epitaxy 线性扫光条 (epitaxy-linear-sweep):
+ *    精确 1.1s cubic-bezier(.45, 0, .55, 1) infinite 从 -100% 平移至 +350% (支持 RTL)。
  * ==============================================================================
  */
 
@@ -43,10 +44,11 @@ export const ReasoningAmbientGlow: React.FC<ReasoningAmbientGlowProps> = ({
 }) => {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border transition-all duration-500 ${
+      data-cds="ReasoningAmbientGlow"
+      className={`relative overflow-hidden rounded-2xl border transition-all duration-500 font-sans ${
         active
-          ? 'border-[var(--cds-fill-brand,#d97757)]/40 bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#1b1a18)] shadow-[0_0_24px_-4px_rgba(217,119,87,0.18)] dark:shadow-[0_0_32px_-4px_rgba(217,119,87,0.28)]'
-          : 'border-[var(--cds-border-subtle,#e5e5e5)] dark:border-[var(--cds-border-subtle,#262626)] bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#1c1c1c)]'
+          ? 'border-[var(--cds-fill-brand,#c6613f)]/40 bg-[var(--cds-surface-1,#ffffff)] dark:bg-[var(--cds-surface-1,#1b1a18)] shadow-[0_0_24px_-4px_rgba(217,119,87,0.18)] dark:shadow-[0_0_32px_-4px_rgba(217,119,87,0.28)]'
+          : 'border-[var(--cds-border,#e5e5e3)] dark:border-[var(--cds-border,#262626)] bg-[var(--cds-surface-1,#ffffff)] dark:bg-[var(--cds-surface-1,#1c1c1c)]'
       } ${className}`}
     >
       {/* 动态焦散光场画布 (Ambient Light Canvas) */}
@@ -54,7 +56,7 @@ export const ReasoningAmbientGlow: React.FC<ReasoningAmbientGlowProps> = ({
 
       {/* 顶部思考状态指示栏 */}
       {active && (
-        <div className="relative z-10 flex items-center justify-between px-4 py-2.5 border-b border-[var(--cds-fill-brand,#d97757)]/20 bg-[var(--cds-fill-brand-subtle,#fcf4f1)]/60 dark:bg-[var(--cds-fill-brand-subtle,#2c1b16)]/60 backdrop-blur-md">
+        <div className="relative z-10 flex items-center justify-between px-4 py-2.5 border-b border-[var(--cds-fill-brand,#c6613f)]/20 bg-[var(--cds-surface-2,#fcf4f1)]/70 dark:bg-[#2c1b16]/70 backdrop-blur-md select-none">
           <div className="flex items-center gap-2.5">
             {/* 三点相位脉冲 */}
             <ThreePhasePulseDots />
@@ -63,7 +65,7 @@ export const ReasoningAmbientGlow: React.FC<ReasoningAmbientGlowProps> = ({
           </div>
 
           {durationSeconds !== undefined && (
-            <span className="text-[11px] font-mono text-[var(--cds-text-accent,#d97757)] tabular-nums font-medium">
+            <span className="text-[11px] font-mono text-clay tabular-nums font-medium">
               {durationSeconds}s
             </span>
           )}
@@ -73,7 +75,7 @@ export const ReasoningAmbientGlow: React.FC<ReasoningAmbientGlowProps> = ({
       {/* 内容投影区 */}
       <div className="relative z-10 p-4">{children}</div>
 
-      {/* 底部线性能量扫光条 */}
+      {/* 底部线性能量扫光条 (REA 官方 1.1s cubic-bezier(.45,0,.55,1)) */}
       {active && <LinearSweepProgress />}
     </div>
   );
@@ -92,9 +94,9 @@ export const ShimmerText: React.FC<{ text: string; className?: string }> = ({
       className={`inline-block font-sans text-xs font-medium tracking-wide bg-clip-text text-transparent select-none ${className}`}
       style={{
         backgroundImage:
-          'linear-gradient(90deg, var(--cds-text-accent, #d97757) 0%, var(--cds-text-primary, #1a1a1a) 35%, #ffffff 50%, var(--cds-text-primary, #1a1a1a) 65%, var(--cds-text-accent, #d97757) 100%)',
+          'linear-gradient(90deg, var(--cds-clay, #d97757) 0%, var(--cds-text-primary, #1a1a1a) 35%, #ffffff 50%, var(--cds-text-primary, #1a1a1a) 65%, var(--cds-clay, #d97757) 100%)',
         backgroundSize: '250% 100%',
-        animation: 'cds-shimmer-text-shine 2.8s linear infinite',
+        animation: 'cds-shimmer-text-shine 3s linear infinite',
       }}
     >
       {text}
@@ -115,17 +117,17 @@ export const ShimmerText: React.FC<{ text: string; className?: string }> = ({
 
 /**
  * 3. 官方三相差分跳跃点 (ThreePhasePulseDots)
- * 对应 `cds-dot-pulse`
+ * 对应 `cds-dot-pulse` (0%~5%: 0.2857 -> 15%~25%: 1.0 -> 65%~100%: 0.2857)
  */
 export const ThreePhasePulseDots: React.FC = () => {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 select-none">
       {[0, 1, 2].map((i) => (
         <span
           key={i}
-          className="size-1.5 rounded-full bg-[var(--cds-fill-brand,#d97757)]"
+          className="size-1.5 rounded-full bg-clay"
           style={{
-            animation: `cds-dot-pulse 1.2s cubic-bezier(.165,.84,.44,1) infinite`,
+            animation: `cds-dot-pulse 1.2s cubic-bezier(.165, .84, .44, 1) infinite`,
             animationDelay: `${i * 180}ms`,
           }}
         />
@@ -134,15 +136,14 @@ export const ThreePhasePulseDots: React.FC = () => {
         @keyframes cds-dot-pulse {
           0%, 5% {
             opacity: 0.2857;
-            transform: scale(0.85);
+            animation-timing-function: cubic-bezier(.165, .84, .44, 1);
           }
-          20%, 35% {
+          15%, 25% {
             opacity: 1;
-            transform: scale(1.15);
+            animation-timing-function: cubic-bezier(.165, .84, .44, 1);
           }
           65%, 100% {
             opacity: 0.2857;
-            transform: scale(0.85);
           }
         }
       `}</style>
@@ -152,24 +153,24 @@ export const ThreePhasePulseDots: React.FC = () => {
 
 /**
  * 4. 底部 Epitaxy 线性扫光条 (LinearSweepProgress)
- * 对应 `epitaxy-linear-sweep`
+ * REA 取证自 c6a992d55-sXiDGMFQ.css pos 1784290: 1.1s cubic-bezier(.45, 0, .55, 1)
  */
 export const LinearSweepProgress: React.FC = () => {
   return (
-    <div className="relative h-0.5 w-full overflow-hidden bg-[var(--cds-fill-brand,#d97757)]/15">
+    <div className="relative h-0.5 w-full overflow-hidden bg-clay/15">
       <div
-        className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[var(--cds-fill-brand,#d97757)] to-transparent"
+        className="absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-clay to-transparent"
         style={{
-          animation: 'epitaxy-linear-sweep 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite',
+          animation: 'epitaxy-linear-sweep 1.1s cubic-bezier(0.45, 0, 0.55, 1) infinite',
         }}
       />
       <style>{`
         @keyframes epitaxy-linear-sweep {
           0% {
-            transform: translateX(-100%);
+            transform: translate(-100%);
           }
           100% {
-            transform: translateX(350%);
+            transform: translate(350%);
           }
         }
       `}</style>

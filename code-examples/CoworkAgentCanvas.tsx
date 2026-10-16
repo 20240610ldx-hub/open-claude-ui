@@ -7,7 +7,7 @@ import React, { useState } from 'react';
  * 逆向还原自官方 Claude Cowork 多代理协同看板与工程拓扑空间:
  * - `shared-6-zKKz0bS2.js` (channel_delegation / member_session / cowork_space)
  * - `shared-21-CGGmSsMS.js` (projectGroupings / customGroupsByScope / task_grid)
- * - `c6a992d55-C0zTICcS.css` (task-grid-fade-in / task-grid-clip-reveal)
+ * - `c6a992d55-sXiDGMFQ.css` (task-grid-fade-in / task-grid-clip-reveal)
  * 
  * 核心工程架构:
  * 1. 多智能体委派拓扑状态机 (Multi-Agent Task Delegation):

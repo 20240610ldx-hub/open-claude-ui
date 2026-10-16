@@ -62,6 +62,7 @@ module.exports = {
         'bubble': 'var(--cds-message-bubble-radius, 18px)',
         'composer': 'var(--cds-radius-composer, 20px)',
         'pill': 'var(--df-radius-pill, 999px)',
+        'card': 'var(--radius-card, calc(var(--radius-lg, 8px) + calc(4px * var(--cds-rem-scale, 1))))',
       },
       boxShadow: {
         'sm': 'var(--cds-shadow-sm)',
