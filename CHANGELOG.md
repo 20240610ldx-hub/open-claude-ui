@@ -69,6 +69,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Documented floating remove button protocol: `absolute -end-2 -top-2 size-5 rounded-full bg-surface-3 shadow-card-ring`.
   - Recreated intelligent bi-directional mid-truncation (`head` + `…` + `tailStem` + `tailExt`) preserving file extension visibility.
 
+#### Chapter 3: Chat Stream & Composer Engine (`docs/v1/03-会话核心流与指令交互引擎.md`)
+
+- **Message Bubbles & Typography Scale (`[data-cds=UserMessage]`, `[data-cds=AssistantMessage]`)**:
+  - Extracted exact bubble radius formula `--cds-message-bubble-radius: calc(var(--cds-radius) + calc(.25rem * var(--cds-rem-scale, 1)))` and padding `--cds-message-bubble-pad-x: var(--cds-pad-lg)` (16px), `--cds-message-bubble-pad-y: var(--cds-pad-md)` (12px).
+  - Documented dynamic tinting: default `var(--cds-bg-neutral)` vs personal `#dde8f7` (Light) / `#193c5f` (Dark) with hover mixing `--feed-bubble-mix: 16%`.
+  - Documented 300px collapse threshold with 3rem bottom decay mask: `[mask-image:linear-gradient(to_bottom,black_calc(100%_-_3rem),transparent)]`.
+  - Extracted Assistant message Text Inset & Stop Law: `--cds-assistant-message-text-inset: 4px; --cds-assistant-message-text-stop: clamp(0px, (100% - 384px) * .175, 56px);` with `0px` reset when embedding cards or tables.
+  - Documented vertical rhythm: `--chat-turn-gap = chat-body * chat-leading * 0.75` and `--chat-item-gap = chat-body * chat-leading * 0.5`.
+- **Thinking Accordion Timeline Physics (`.timeline-quiet-dots`, `.timeline-expand`)**:
+  - Discovered exact `.timeline-quiet-dots` keyframe physics in `cc1aae219-DtZTxCKj.css` (3 dots, 3.5px gap, 3px diameter, 1.9s infinite `cubic-bezier(.4, 0, .2, 1)` with 0s/0.15s/0.3s delays).
+  - Extracted CSS Grid 0fr $\leftrightarrow$ 1fr expansion (`.2s cubic-bezier(.19, 1, .22, 1) timeline-expand`) eliminating height recalculation reflow.
+  - Documented status line entrance/exit physics: `.timeline-status-enter-quiet` (.24s rise 6px) and `.timeline-status-exit-quiet` (.18s fall -4px).
+  - Implemented streaming generation lock (`isThinkingLive` locks `open=true` and suppresses toggle clicks).
+- **Composer Engine & WebKit 500ms Post-Composition Delta Guard**:
+  - Discovered Anthropic's WebKit 500ms post-composition delta guard (`Lm() && Math.abs(e.timeStamp - Fm) < 500`) in `shared-frame-BfjMqbuN.js`, eliminating false Enter submissions following CJK IME selection.
+  - Implemented capture-phase `beforeinput` interceptor preventing synthetic line breaks.
+  - Reverse engineered Slash & Mention tokenizer (`cb6930dae-BD0W5ZM9.js`): CJK punctuation stripper `$o = /[.,;:!?'"\u3001\u3002\uFF0C\uFF1B\uFF1A\uFF01\uFF1F\u2026]+$/`, `rs = 1024` max path length, and 256 file mentions defense cap.
+  - Implemented `field-sizing: content` with ghost element fallback and `max-h-[min(40svh,24rem)]` (384px) cap.
+- **Model Matrix & Prompt Caching Gauge**:
+  - Updated official model architecture with Claude 3.7 Sonnet, Haiku 3.5, and Opus 3; documented deprecation of `thinking.type=enabled` in favor of `thinking.type=adaptive`.
+  - Deconstructed 5m (`3e5` ms) and 1h (`36e5` ms) ephemeral cache token lifetimes with 4-part cost decomposition (`cache_read`, `cache_creation`, `input`, `output`).
+  - Standardized circular SVG gauge formula: `strokeDashoffset = 2 * PI * r * (1 - ratio)` with 80% capacity alert threshold.
+- **MCP Decision Cards & Security Lifecycle**:
+  - Reverse engineered 3-stage authorization lifecycle (`pending_approval`, `running`, `success`/`error`) with real settle reasons: `user_denied`, `policy_denied`, `PERMISSIONS_ERROR`.
+  - Extracted `structured_content` parameter inspection and session whitelist map (`bs`) with 330s automatic garbage collection.
+
 ---
 
 ## [1.0.1] - 2026-10-16

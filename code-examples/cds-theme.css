@@ -152,11 +152,33 @@
   --radius-xl: .75rem;   /* 12px */
   --radius-2xl: 1rem;    /* 16px */
   --radius-3xl: 1.5rem;  /* 24px */
-  --cds-message-bubble-radius: 18px;
   --cds-radius-composer: 20px;
   --df-radius-pill: 999px;
   --radius: var(--cds-radius, 8px);
   --radius-card: calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)));
+
+  /* 会话气泡与版心计量核心令牌 (REA v6.5.0 取证自 frame-shell-chrome-CAw-tYzh.js) */
+  --cds-bg-user-message: var(--cds-bg-neutral);
+  --cds-bg-user-message-personal: var(--cds-bg-tint-blue);
+  --cds-text-user-message-personal: var(--cds-text-tint-blue, #193c5f);
+  --cds-message-bubble-radius: calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)));
+  --cds-message-bubble-pad-x: var(--cds-pad-lg, 16px);
+  --cds-message-bubble-pad-y: var(--cds-pad-md, 12px);
+  --cds-message-bubble-measure: 85%;
+  --cds-message-bubble-stack-gap: 4px;
+  --cds-message-bubble-radius-meeting: 4px;
+  --cds-message-bubble-radius-head: var(--cds-message-bubble-radius);
+  --cds-message-bubble-radius-foot: var(--cds-message-bubble-radius);
+  --cds-message-bubble-join-gap: min(8px, var(--cds-message-bubble-pad-y));
+  --cds-assistant-message-text-inset: 4px;
+  --cds-assistant-message-text-stop: clamp(0px, (100% - 384px) * .175, 56px);
+
+  /* 纵向节奏与排版律动 (REA v6.5.0 取证自 shared-styles-Bl9zqrv-.css) */
+  --chat-gutter: 32px;
+  --chat-body: calc(.875rem * var(--cds-rem-scale, 1));
+  --chat-leading: 1.42857;
+  --chat-turn-gap: calc(var(--chat-body) * var(--chat-leading) * .75);
+  --chat-item-gap: calc(var(--chat-body) * var(--chat-leading) * .5);
 
   /* 11. 滚动时间轴驱动遮罩 (Scroll Fade 28px) */
   --cds-scroll-fade-size: 28px;
@@ -485,4 +507,102 @@
 
 .border-hairline {
   border-width: var(--cds-ring-hairline);
+}
+
+/* ==========================================================================
+   Chapter 3: 会话核心流、时间轴与气泡排版引擎 (REA v6.5.0 取证规范)
+   ========================================================================== */
+
+/* 1. 思考时间轴与状态转场 (取证自 cc1aae219-DtZTxCKj.css) */
+.timeline-status-layer {
+  grid-area: 1 / 1;
+  align-items: center;
+  gap: .25rem;
+  min-width: 0;
+  display: inline-flex;
+}
+.timeline-status-enter { animation: .25s ease-in-out timeline-fade-in; }
+.timeline-status-exit { animation: .15s ease-out forwards timeline-fade-out; }
+.timeline-status-enter-quiet { animation: .24s cubic-bezier(.3, .7, .4, 1) timeline-status-rise; }
+.timeline-status-exit-quiet { animation: .18s ease-out forwards timeline-status-fall; }
+
+.timeline-expand {
+  grid-template-rows: 1fr;
+  display: grid;
+}
+.timeline-expand > * {
+  align-self: start;
+  min-width: 0;
+  min-height: 0;
+}
+.timeline-expand-enter {
+  animation: .2s cubic-bezier(.19, 1, .22, 1) timeline-expand;
+}
+
+.timeline-quiet-dots {
+  gap: 3.5px;
+  display: inline-flex;
+  position: relative;
+  top: .26em;
+}
+.timeline-quiet-dots > span {
+  background: var(--cds-clay, #d97757);
+  opacity: 0;
+  border-radius: 50%;
+  width: 3px;
+  height: 3px;
+  animation: 1.9s cubic-bezier(.4, 0, .2, 1) infinite timeline-quiet-dot;
+}
+.timeline-quiet-dots > span:nth-child(2) { animation-delay: .15s; }
+.timeline-quiet-dots > span:nth-child(3) { animation-delay: .3s; }
+
+.timeline-block-enter {
+  animation: .3s cubic-bezier(.22, 1, .36, 1) both timeline-block-enter;
+}
+@keyframes timeline-block-enter {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(5px) scale(.9);
+  }
+  30% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: none;
+  }
+  100% {
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+@keyframes timeline-fade-in { 0% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes timeline-fade-out { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* 2. 气泡悬浮反应与动态底色注入 (取证自 frame-window-BEI3vR8Q.css / c6a992d55-sXiDGMFQ.css) */
+@media (hover: hover) {
+  .feed-bubble-reacts:has([data-feed-pill-band]):hover :is([data-bubble-variant], [data-cds="AssistantMessage"][data-variant="bubble"]),
+  .feed-bubble-reacts:has([data-feed-pill-band]:focus-within) :is([data-bubble-variant], [data-cds="AssistantMessage"][data-variant="bubble"]),
+  .feed-bubble-reacts[data-menu-open] :is([data-bubble-variant], [data-cds="AssistantMessage"][data-variant="bubble"]) {
+    --cds-bg-user-message: var(--cds-bg-neutral-hover);
+    --feed-bubble-mix: 16%;
+  }
+}
+
+/* 3. 会话排版与气泡嵌套约束 (取证自 frame-shell-chrome-CAw-tYzh.js) */
+[data-cds="UserMessage"] {
+  --cds-message-bubble-radius: calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)));
+  --cds-message-bubble-pad-x: var(--cds-pad-lg, 16px);
+  --cds-message-bubble-pad-y: var(--cds-pad-md, 12px);
+  --cds-message-bubble-measure: 85%;
+}
+
+[data-cds="AssistantMessage"] {
+  --cds-assistant-message-text-inset: 4px;
+  --cds-assistant-message-text-stop: clamp(0px, (100% - 384px) * .175, 56px);
+}
+
+[data-cds="AssistantMessage"] :is([data-cds="Card"], [data-cds="Surface"], [data-cds="Panel"], [data-cds="Banner"], [data-cds="Aside"], [data-cds="Accordion"], [data-cds="PreviewCard"], [data-cds="Table"], [data-cds="DataTable"], [data-cds="AskUserQuestion"], [data-cds="CommentCard"], [data-cds="ChartContainer"], [data-cds="PointChartContainer"], [data-cds="FileDiff"], [data-cds="UserMessage"]) {
+  --cds-assistant-message-text-inset: 0px;
+  --cds-assistant-message-text-stop: 0px;
 }
