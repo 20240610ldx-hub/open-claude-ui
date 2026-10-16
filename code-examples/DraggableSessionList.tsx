@@ -7,7 +7,7 @@ import React, { useState, useRef, useCallback } from 'react';
  * 逆向还原自官方 Claude Desktop 侧边栏会话拖放与固定物理引擎:
  * - `shared-21-CGGmSsMS.js` (pinReorder / Gce / Wce / onMoveUp / onMoveDown)
  * - `shared-22-DYCF-SVs.js` (data-pin-dragging / data-session-dragging / pinnedOrder)
- * - `c6a992d55-C0zTICcS.css` (df-sidebar-row, dframe-drag-ghost)
+ * - `c6a992d55-sXiDGMFQ.css` (df-sidebar-row, dframe-drag-ghost)
  * 
  * 核心工程机制:
  * 1. 乐观拓扑重排状态机 (Optimistic Topological Reordering):
