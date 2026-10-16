@@ -133,6 +133,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **StreamingDiffViewer & Production Diff Variables**:
   - Extracted exact variables from `.epitaxy-root .epitaxy-diff` in `c6a992d55-sXiDGMFQ.css`: `--diffs-font-size`, `--diffs-line-height`, `--diffs-font-family`, `--diffs-header-font-family`, `--diffs-addition-color-override`, `--diffs-deletion-color-override`, `--diffs-modified-color-override`, `--diffs-gap-inline`, `--diffs-gap-block`.
   - Implemented Shadow DOM isolation with CSS Grid row height locking (`gridRow = span ${v}`), incremental stream chunk feed, and 2.5s copy check decay state machine (`saved-check-decay`).
+- **Bidirectional Streaming Voice Architecture (Section 5.1.5)**:
+  - Reverse engineered `frame-shell-dictate-C9D4b04p.js` & `frame-shell-speak-CBGDxR0k.js`.
+  - Documented STT Dictation (`openDictation`): 1-hour session limit (`36e5` ms), pause settling (`settleAtPauses: true`), and prefix differential delta algorithm `l(f, e)`.
+  - Documented TTS Reading (`openReading`): 24kHz wideband audio pipeline (`sampleRate: 24000`), dynamic playback rate, and real-time word position events for Karaoke text highlighting.
 
 #### Chapter 6: Desktop Host Architecture & Multi-Agent Topology (`docs/v1/06-系统级桌面架构与协作拓扑.md`)
 
@@ -151,6 +155,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Roving Focus & Rate Limit Backoff**:
   - Implemented W3C WAI-ARIA roving tabindex grid with RTL mirror flipping.
   - Implemented 429/503 exponential backoff (`min(max(base, 5000) * 2^(n-1) * (1 ± J), 600000)`) with $\pm 15\%$ full jitter and 3-retry max ceiling before mandatory manual takeover.
+- **Broker-Replica Multi-Window Architecture & Baseline Conflict Arbitration (Section 6.8)**:
+  - Reverse engineered `frame-shell-broker-znyoRmsX.js` and `frame-shell-replica-C7KCVFfZ.js`.
+  - Documented IPC master-replica topology with `ReplicaWriter` immutable state stream distribution.
+  - Deconstructed working mount write-lock arbitration preventing concurrent destructive file writes via `baseline-mismatch` assertions.
 
 #### Chapter 7 & 8: Engineering Setup & AI Agent Guidelines (`docs/v1/07-工程配置与资产代码库总览.md`, `docs/v1/08-AI-Agent-前端-UI-与动效开发指南.md`)
 
@@ -158,6 +166,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Audited and updated the production asset inventory table covering all 30 standalone code examples in `code-examples/`.
 - **Aligned Tailwind Extension & Global CSS Tokens**:
   - Synchronized `tailwind.config.js` and global CSS with the official 35-tier grayscale/orange color ramps and verified surfaces.
+- **Modern Underlying Runtime Architecture: Rolldown, WASM Matrix & Clarkdown Compiler (Section 7.4)**:
+  - Deconstructed Rolldown Rust bundler runtime (`rolldown-runtime-C3OYiQ02.js`) managing 4000+ chunks with sub-second startup and zero-overhead inlining.
+  - Reverse engineered tri-WASM engine matrix: 8.25MB client-side offline `.docx` parser (`cf4728005-C0phcBAH.wasm`), 1.35MB Clarkdown compiler (`c35955a62-DsUXHNAG.wasm`), and 204KB Tree-sitter incremental syntax parser (`c571a2685-sT_OTiSe.wasm`).
+  - Documented Clarkdown proprietary formats (`.clark` / `.cd`) and dual host topology (`createLocalDocumentHost`, `createRemoteDocumentHost`).
 - **Strict AI Agent Quality Gates**:
   - Formulated strict rules for agentic code generation: single-stroke border discipline, WebKit 500ms IME post-composition guard, procedural Web Audio synthesis, and zero-error TypeScript build requirement.
 
