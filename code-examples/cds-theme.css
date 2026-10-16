@@ -1,21 +1,99 @@
 /* ==========================================================================
    Claude Design System (CDS) - Complete Production Theme & Motion Stylesheet
-   逆向溯源：反编译自 /Applications/Claude.app ion-dist 及 macOS 生产环境资源。
+   逆向溯源：基于 REA (Reverse Engineer Anything) v6.5.0 对 macOS 生产包
+   /Applications/Claude.app (@ant/desktop v2.37337.1) 全量 AST 与运行时解构提取。
    ========================================================================== */
 
 :root {
-  /* 1. 表面色彩阶梯 (Surfaces & Colors) */
-  --cds-surface-0: #f5f5f3;        /* 全局应用背景 Canvas */
-  --cds-surface-1: #fcfcfb;        /* 侧边栏/中间层基底 */
-  --cds-surface-2: #ffffff;        /* 消息气泡/卡片表面 */
-  --cds-surface-3: #ffffff;        /* 浮动面板/输入框高层表面 */
-  --cds-surface-popover: #ffffff;  /* 悬浮 Popover 纯白表面 */
+  /* 0. 桌面端光学缩放与基准变量 */
+  --cds-rem-scale: calc(16 / 17); /* 桌面端光学微调系数 ≈ 0.94117647 */
+  --brand: #c6613f;               /* 官方桌面端主品牌色 */
+  --cds-clay: #d97757;            /* 经典陶土橙（微标与呼吸灯回退） */
+  --cds-clay-hover: #cc5a36;      /* 陶土色悬停加深态 */
+  --cds-clay-light: #fbf3ef;      /* 陶土极浅背景色 */
 
-  --cds-clay: #d97757;             /* 品牌陶土主色 */
-  --cds-clay-hover: #cc5a36;       /* 陶土色悬停加深态 */
-  --cds-clay-light: #fbf3ef;       /* 陶土极浅背景色 */
+  /* 1. Anthropic 官方 35 阶高精灰度标尺 (Grayscale Ramp) */
+  --cds-gray-0: #fff;
+  --cds-gray-10: #fcfcfb;
+  --cds-gray-20: #f9f9f7;
+  --cds-gray-30: #f6f6f4;
+  --cds-gray-40: #f3f3f0;
+  --cds-gray-50: #f0efec;
+  --cds-gray-60: #edece8;
+  --cds-gray-70: #eae9e4;
+  --cds-gray-80: #e7e6e1;
+  --cds-gray-90: #e4e3dd;
+  --cds-gray-100: #e1e0d9;
+  --cds-gray-150: #d2d1c7;
+  --cds-gray-200: #c3c2b7;
+  --cds-gray-250: #b4b3a8;
+  --cds-gray-300: #a5a49a;
+  --cds-gray-350: #97958d;
+  --cds-gray-400: #898781;
+  --cds-gray-450: #7b7974;
+  --cds-gray-500: #6d6b67;
+  --cds-gray-550: #5f5e5a;
+  --cds-gray-600: #52514e;
+  --cds-gray-650: #454442;
+  --cds-gray-700: #383835;
+  --cds-gray-750: #2c2c2a;
+  --cds-gray-800: #20201f;
+  --cds-gray-810: #1e1e1d;
+  --cds-gray-820: #1c1c1b;
+  --cds-gray-830: #1a1a19;
+  --cds-gray-840: #181817;
+  --cds-gray-850: #151515;
+  --cds-gray-860: #131313;
+  --cds-gray-870: #111111;
+  --cds-gray-880: #0f0f0f;
+  --cds-gray-890: #0d0d0d;
+  --cds-gray-900: #0b0b0b;
 
-  /* 2. Alpha 透明度与边框色系 */
+  /* 2. Anthropic 官方 35 阶橙色/陶土色标尺 (Orange/Clay Ramp) */
+  --cds-orange-0: #fff;
+  --cds-orange-10: #fefbfa;
+  --cds-orange-20: #fdf7f5;
+  --cds-orange-30: #fcf4f0;
+  --cds-orange-40: #faf0ec;
+  --cds-orange-50: #f9ece7;
+  --cds-orange-60: #f8e9e2;
+  --cds-orange-70: #f7e5dd;
+  --cds-orange-80: #f7e1d7;
+  --cds-orange-90: #f7dcd1;
+  --cds-orange-100: #f7d8cb;
+  --cds-orange-150: #f3c5b2;
+  --cds-orange-200: #f4ae94;
+  --cds-orange-250: #f09978;
+  --cds-orange-300: #ec835a;
+  --cds-orange-350: #eb6834;
+  --cds-orange-400: #d95926;
+  --cds-orange-450: #c25124;
+  --cds-orange-500: #ae461c;
+  --cds-orange-550: #993d19;
+  --cds-orange-600: #863311;
+  --cds-orange-650: #712b0f;
+  --cds-orange-700: #5d230b;
+  --cds-orange-750: #4b1b08;
+  --cds-orange-800: #371407;
+  --cds-orange-810: #341307;
+  --cds-orange-820: #301106;
+  --cds-orange-830: #2d1006;
+  --cds-orange-840: #290f06;
+  --cds-orange-850: #240e07;
+  --cds-orange-860: #1f0e08;
+  --cds-orange-870: #1a0e09;
+  --cds-orange-880: #150d0a;
+  --cds-orange-890: #100c0b;
+  --cds-orange-900: #0b0b0b;
+
+  /* 3. 真实表面色彩阶梯 (Surfaces - Light Mode) */
+  --cds-surface-0: var(--cds-gray-20); /* #f9f9f7 侧边栏/底层 Canvas 基底 */
+  --cds-surface-1: var(--cds-gray-10); /* #fcfcfb 页面主聊天画布背景 */
+  --cds-surface-2: var(--cds-gray-0);  /* #ffffff 消息卡片表面 */
+  --cds-surface-3: var(--cds-gray-0);  /* #ffffff 输入框容器/高层浮层 */
+  --cds-surface-popover: var(--cds-gray-0); /* #ffffff 悬浮 Popover 表面 */
+
+  /* 4. Alpha 透明度与边框色系 */
   --cds-alpha-0: hsla(0, 0%, 8%, 0);
   --cds-alpha-1: hsla(0, 0%, 8%, 0.05); /* Ghost hover, skeleton */
   --cds-alpha-2: hsla(0, 0%, 8%, 0.10); /* Standard border */
@@ -26,12 +104,12 @@
   --cds-border-strong: var(--cds-alpha-3);
   --cds-ring-hairline: 1px;
 
-  /* 3. 双环浮动气泡架构 (Dual-Ring Architecture - 浅色模式) */
+  /* 5. 双环浮动气泡架构 (Dual-Ring Architecture - 浅色模式) */
   --cds-ring-inner: 0px;
   --cds-ring-outer: 1px;
   --cds-ring-color: var(--cds-border);
 
-  /* 4. 阴影系统 (Elevation Shadows) */
+  /* 6. 阴影系统 (Elevation Shadows) */
   --cds-shadow-color: rgba(0, 0, 0, 0.08);
   --cds-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05), 0 2px 8px 0 var(--cds-shadow-color);
   --cds-shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.05), 0 6px 16px 0 var(--cds-shadow-color);
@@ -43,16 +121,16 @@
   --cds-panel-shadow: 0 0 0 1px var(--cds-border), var(--cds-shadow-sm);
   --cds-panel-shadow-hover: 0 0 0 1px var(--cds-border-strong), 0 4px 16px -2px rgba(0, 0, 0, 0.09);
 
-  /* 5. 核心输入终端双环阴影 (Composer Shadow) */
+  /* 7. 核心输入终端双环阴影 (Composer Shadow) */
   --cds-shadow-composer: 0 4px 20px rgba(0, 0, 0, 0.035), inset 0 0 0 1px var(--cds-border);
   --cds-shadow-composer-hover: 0 4px 24px rgba(0, 0, 0, 0.06), inset 0 0 0 1px var(--cds-border-strong);
   --cds-shadow-composer-focus: 0 4px 24px rgba(0, 0, 0, 0.08), inset 0 0 0 1px var(--cds-border-strong), 0 0 0 1px var(--cds-border-strong);
 
-  /* 6. 三层焦点微光环与拖拽微光 */
+  /* 8. 三层焦点微光环与拖拽微光 */
   --cds-focus-shadow: inset 0 0 0 1px var(--cds-surface-1), 0 0 0 1.5px var(--cds-clay), 0 0 6px 1px rgba(217, 119, 87, 0.25);
   --cds-shadow-drop-glow: inset 0 0 24px -2px rgba(217, 119, 87, 0.20), inset 0 0 0 2px var(--cds-clay);
 
-  /* 7. 交互填充与文本色阶 */
+  /* 9. 交互填充与文本色阶 */
   --cds-fill-ghost-hover: var(--cds-alpha-1);
   --cds-fill-ghost-selected: var(--cds-alpha-2);
   --cds-fill-secondary: var(--cds-alpha-2);
@@ -65,19 +143,53 @@
   --cds-segmented-track: rgba(0, 0, 0, 0.06);
   --cds-segmented-thumb: #ffffff;
 
-  /* 8. 圆角阶梯 (Radius Hierarchy) */
-  --radius-xs: 2px;
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  /* 10. 精密圆角阶梯与自适应嵌套公式 */
+  --radius-xs: .125rem;  /* 2px */
+  --radius-sm: .25rem;   /* 4px */
+  --radius-md: .375rem;  /* 6px */
+  --radius-lg: .5rem;    /* 8px */
   --cds-panel-radius: 10px;
-  --radius-xl: 12px;
-  --radius-2xl: 16px;
+  --radius-xl: .75rem;   /* 12px */
+  --radius-2xl: 1rem;    /* 16px */
+  --radius-3xl: 1.5rem;  /* 24px */
   --cds-message-bubble-radius: 18px;
   --cds-radius-composer: 20px;
   --df-radius-pill: 999px;
+  --radius: var(--cds-radius, 8px);
+  --radius-card: calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)));
 
-  /* 9. 语义化组件别名映射 (Component Semantic Aliases) */
+  /* 11. 滚动时间轴驱动遮罩 (Scroll Fade 28px) */
+  --cds-scroll-fade-size: 28px;
+  --cds-scroll-fade-top: 0px;
+  --cds-scroll-fade-bottom: 0px;
+  --cds-scroll-fade-left: 0px;
+  --cds-scroll-fade-right: 0px;
+  --cds-scroll-fade-strip-color: var(--cds-surface-1);
+
+  /* 12. 真实物理动效贝塞尔曲线全集 (REA v6.5.0 取证) */
+  --cds-ease-swift: cubic-bezier(.16, 1, .3, 1);       /* 幽灵按钮/高频微交互 */
+  --cds-ease-expand: cubic-bezier(.19, 1, .22, 1);     /* Grid 0fr->1fr 展开防抖 */
+  --cds-ease-enter: cubic-bezier(.22, 1, .36, 1);      /* 消息块入场消融 */
+  --cds-ease-out: cubic-bezier(.165, .84, .44, 1);     /* 标准平滑出场 */
+  --cds-ease-snap: cubic-bezier(.32, .72, 0, 1);       /* 磁吸快速对齐 */
+  --cds-ease-overshoot: cubic-bezier(.34, 1.3, .64, 1);/* 经典机械果冻过冲 (+30%) */
+  --cds-ease-pop: cubic-bezier(.34, 1.56, .64, 1);     /* 弹窗/重图标回弹 (+56%) */
+  --cds-ease-pulse: cubic-bezier(.4, 0, .2, 1);        /* 思考三点跳动呼吸脉冲 */
+  --cds-ease-rise: cubic-bezier(.3, .7, .4, 1);        /* 状态条平滑抬升 */
+  --cds-ease-fall: cubic-bezier(0, 0, .2, 1);          /* 状态条平滑下落 */
+
+  /* 13. 字体栈与 CJK 真实回退链 */
+  --font-cjk-sans-sc: "PingFang SC";
+  --font-cjk-sans-tc: "PingFang TC";
+  --font-cjk-sans-jp: "Hiragino Sans";
+  --font-cjk-sans-kr: "Apple SD Gothic Neo";
+  --font-cjk-sans-fallback: var(--font-cjk-sans-sc), var(--font-cjk-sans-tc), var(--font-cjk-sans-jp), var(--font-cjk-sans-kr);
+  --font-sans-fallbacks: system-ui, "Segoe UI", Roboto, Helvetica, Arial, var(--font-cjk-sans-fallback), sans-serif;
+  --font-anthropic-sans: "anthropic-sans", var(--font-sans-fallbacks);
+  --font-anthropic-serif: "anthropic-serif", ui-serif, Georgia, "Times New Roman", var(--font-cjk-sans-fallback), serif;
+  --font-anthropic-mono: "anthropic-mono", ui-monospace, monospace;
+
+  /* 14. 语义化组件别名映射 (Component Semantic Aliases) */
   --cds-bg-surface: var(--cds-surface-2);
   --cds-bg-surface-elevated: var(--cds-surface-3);
   --cds-bg-primary: var(--cds-surface-0);
@@ -86,7 +198,7 @@
   --cds-bg-selected: var(--cds-fill-ghost-selected);
   --cds-border-subtle: var(--cds-alpha-2);
   --cds-border-accent: var(--cds-clay);
-  --cds-fill-brand: var(--cds-clay);
+  --cds-fill-brand: var(--brand);
   --cds-fill-brand-hover: var(--cds-clay-hover);
   --cds-fill-brand-subtle: var(--cds-clay-light);
   --cds-fill-danger: #ef4444;
@@ -106,14 +218,16 @@
 }
 
 /* ==========================================================================
-   Dark Mode 暗色模式变量重载
+   Dark Mode 暗色模式变量重载 (REA v6.5.0 严苛等距色阶)
    ========================================================================== */
 [data-mode="dark"], .dark {
-  --cds-surface-0: #0b0b0a;
-  --cds-surface-1: #151515;
-  --cds-surface-2: #1a1a19;
-  --cds-surface-3: #20201e;
-  --cds-surface-popover: #222220;
+  --cds-surface-0: var(--cds-gray-900); /* #0b0b0b */
+  --cds-surface-1: var(--cds-gray-850); /* #151515 */
+  --cds-surface-2: var(--cds-gray-830); /* #1a1a19 */
+  --cds-surface-3: var(--cds-gray-800); /* #20201f */
+  --cds-surface-popover: var(--cds-gray-750); /* #2c2c2a */
+  --cds-scroll-fade-strip-color: var(--cds-surface-1);
+
   --cds-clay: #d97757;
   --cds-clay-hover: #e08264;
 
@@ -126,7 +240,7 @@
   --cds-border: var(--cds-alpha-2);
   --cds-border-strong: var(--cds-alpha-3);
 
-  /* 双环暗色模式：内高光 1px + 外轮廓 0px */
+  /* 双环暗色模式：内高光 1px + 外轮廓 0px (模拟倒角物理顶光) */
   --cds-ring-inner: 1px;
   --cds-ring-outer: 0px;
   --cds-ring-color: rgba(255, 255, 255, 0.10);
@@ -169,7 +283,7 @@
   --cds-bg-selected: var(--cds-fill-ghost-selected);
   --cds-border-subtle: var(--cds-alpha-2);
   --cds-border-accent: var(--cds-clay);
-  --cds-fill-brand: var(--cds-clay);
+  --cds-fill-brand: var(--brand);
   --cds-fill-brand-hover: var(--cds-clay-hover);
   --cds-fill-brand-subtle: rgba(217, 119, 87, 0.15);
   --cds-fill-danger: #f87171;
@@ -218,45 +332,63 @@
   100% { opacity: 1; filter: blur(0); }
 }
 
-/* 2. 思考中三点波浪跳跃 */
+/* 2. 思考中三点波浪跳跃 (REA 取证：1.9s infinite cubic-bezier(.4, 0, .2, 1)) */
 @keyframes timeline-quiet-dot {
-  0%, 8%   { opacity: 0.2; transform: translateY(2px); }
+  0%, 8%   { opacity: 0; transform: translateY(2px); }
   22%      { opacity: 1; transform: translateY(-2.5px); }
   36%, 70% { opacity: 1; transform: translateY(0); }
-  90%, 100%{ opacity: 0.2; transform: translateY(0); }
+  90%, 100%{ opacity: 0; transform: translateY(0); }
 }
 
-/* 3. 消息气泡微弹进入 */
+/* 3. 网格高度平滑展开 (Grid 0fr -> 1fr 消除高度抖动) */
+@keyframes timeline-expand {
+  0%   { opacity: 0; grid-template-rows: 0fr; }
+  100% { opacity: 1; grid-template-rows: 1fr; }
+}
+
+/* 4. 状态行平滑抬升入场 */
+@keyframes timeline-status-rise {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: none; }
+}
+
+/* 5. 状态行平滑下落退场 */
+@keyframes timeline-status-fall {
+  0%   { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-4px); }
+}
+
+/* 6. 消息气泡微弹进入 */
 @keyframes message-fade-up {
   0%   { opacity: 0; transform: translateY(12px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
-/* 4. 复制勾选 2.5s 衰减消退 */
+/* 7. 复制勾选 2.5s 衰减消退 */
 @keyframes saved-check-decay {
   0%, 75% { opacity: 1; transform: scale(1); }
   100%    { opacity: 0; transform: scale(0.92); }
 }
 
-/* 5. 骨架屏高级倾斜扫光 */
+/* 8. 骨架屏高级倾斜扫光 */
 @keyframes cds-skeleton-sweep {
   0%   { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
 
-/* 6. 陶土呼吸指示灯 */
+/* 9. 陶土呼吸指示灯 */
 @keyframes dframe-clay-breathe {
   0%, 100% { filter: brightness(0.96); transform: scale(0.92); }
   50%      { filter: brightness(1.08); transform: scale(1.08); }
 }
 
-/* 7. 活动脉冲灯 */
+/* 10. 活动脉冲灯 */
 @keyframes dframe-dot-pulse {
   0%, 100% { opacity: 0.3; transform: scale(0.85); }
   50%      { opacity: 1; transform: scale(1.15); }
 }
 
-/* 8. 附件磁贴入场生长 */
+/* 11. 附件磁贴入场生长 */
 @keyframes file-thumbnail-grow-in {
   0%   { opacity: 0; transform: scale(0.85); }
   100% { opacity: 1; transform: scale(1); }
@@ -274,7 +406,7 @@
 
 .cds-composer-shadow { 
   box-shadow: var(--cds-shadow-composer) !important;
-  transition: box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1), border-color 220ms ease;
+  transition: box-shadow 220ms var(--cds-ease-swift), border-color 220ms ease;
 }
 .cds-composer-shadow:hover { 
   box-shadow: var(--cds-shadow-composer-hover) !important; 
@@ -284,7 +416,7 @@
 }
 
 .cds-hover-ghost {
-  transition: background-color 150ms cubic-bezier(0.16, 1, 0.3, 1), color 150ms ease, transform 100ms ease;
+  transition: background-color 150ms var(--cds-ease-swift), color 150ms ease, transform 100ms ease;
 }
 .cds-hover-ghost:hover {
   background-color: var(--cds-fill-ghost-hover) !important;
@@ -297,7 +429,8 @@
 
 .cds-card-interactive {
   box-shadow: var(--cds-panel-shadow);
-  transition: box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), transform 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+  border-radius: var(--radius-card);
+  transition: box-shadow 200ms var(--cds-ease-swift), transform 200ms var(--cds-ease-swift), border-color 200ms ease;
 }
 .cds-card-interactive:hover {
   box-shadow: var(--cds-panel-shadow-hover) !important;
