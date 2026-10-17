@@ -243,17 +243,19 @@ open-claude-ui/
 
 ## 🚀 Quick Start
 
-### 1. Import Stylesheet & Tailwind Extension
+### 1. Import Stylesheet & Tokens (Pure CSS Support)
 
-Import the CDS core theme stylesheet into your application:
+Regardless of whether you use React, you can directly import the CDS core stylesheet and its 183 design tokens:
 ```css
-/* Import global theme variables and keyframes */
-@import "open-claude-ui/code-examples/cds-theme.css";
+/* Import global theme variables, scroll-fade masks, and keyframes */
+@import "open-claude-ui/css";
+/* Or via the tokens alias */
+@import "open-claude-ui/tokens";
 ```
 
-Extend your `tailwind.config.js`:
+If you use Tailwind CSS, extend your theme in `tailwind.config.js`:
 ```javascript
-const cdsTheme = require("open-claude-ui/code-examples/tailwind.config.js");
+const cdsTheme = require("open-claude-ui/tailwind");
 
 module.exports = {
   content: [

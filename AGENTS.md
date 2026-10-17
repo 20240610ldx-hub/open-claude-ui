@@ -17,7 +17,7 @@ When assisting users with building, modifying, or reviewing frontend components,
    - Single-stroke border discipline: inside bordered containers (such as cards or the chat composer), secondary buttons and chips must NOT have redundant borders (`border-none`).
 3. **Organic Motion Physics**:
    - Never use generic `linear` or exaggerated bouncy CSS transitions.
-   - Use the 4 calibrated Framer Motion spring presets from [`code-examples/ClaudeMotionPresets.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ClaudeMotionPresets.ts).
+   - Use the 4 calibrated Framer Motion spring presets from [`code-examples/ClaudeMotionPresets.ts`](code-examples/ClaudeMotionPresets.ts).
 4. **Pure Code & Zero Copyright Violations**:
    - Zero proprietary binary fonts (`.otf`/`.ttf`) or audio files (`.mp3`/`.wav`).
    - Use the calibrated system fallback font stacks and procedural Web Audio API oscillator synthesis.
@@ -29,47 +29,49 @@ When assisting users with building, modifying, or reviewing frontend components,
 
 ## 🎨 1. Design Tokens & Styling Architecture
 
-All tokens are defined in [`code-examples/cds-theme.css`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/cds-theme.css) and exposed through Tailwind classes via [`code-examples/tailwind.config.js`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/tailwind.config.js).
+All tokens are defined in [`code-examples/cds-theme.css`](code-examples/cds-theme.css) and exposed through Tailwind classes via [`code-examples/tailwind.config.js`](code-examples/tailwind.config.js).
 
 ### Surface & Background Tokens
 | Token | Light Mode Value | Dark Mode Value | Usage |
 | :--- | :--- | :--- | :--- |
-| `--cds-bg-surface-0` | `#fcfcfb` | `#1b1b19` | Base application background, page canvas |
-| `--cds-bg-surface-1` | `#fbfbfa` | `#21211e` | Sidebar panels, secondary cards |
-| `--cds-bg-surface-2` | `#f7f7f5` | `#282824` | Input bars, dialog backdrops, floating popovers |
-| `--cds-bg-surface-3` | `#efeee9` | `#32322d` | Active states, hover fills, elevated tags |
-| `--cds-bg-input` | `#fdfdfc` | `#1e1e1b` | Text fields, chat input background |
+| `--cds-surface-0` | `#f9f9f7` | `#0b0b0b` | Base application background, page canvas (alias: `--cds-bg-surface-0`, `--cds-bg-primary`) |
+| `--cds-surface-1` | `#fcfcfb` | `#151515` | Sidebar panels, secondary cards (alias: `--cds-bg-surface-1`, `--cds-bg-secondary`) |
+| `--cds-surface-2` | `#ffffff` | `#1a1a19` | Input bars, dialog backdrops, floating popovers (alias: `--cds-bg-surface-2`, `--cds-bg-surface`) |
+| `--cds-surface-3` | `#ffffff` | `#20201f` | Active states, hover fills, elevated tags (alias: `--cds-bg-surface-3`, `--cds-bg-surface-elevated`) |
+| `--cds-surface-popover` | `#ffffff` | `#262624` | Floating popovers, dropdown menus |
+| `--cds-bg-input` | `var(--cds-surface-3)` | `var(--cds-surface-3)` | Text fields, chat input background |
 
 ### Text & Border Tokens
 | Token | Light Mode Value | Dark Mode Value | Usage |
 | :--- | :--- | :--- | :--- |
-| `--cds-text-primary` | `#1f1e1d` | `#eeede8` | Headings, primary body text, active labels |
-| `--cds-text-secondary` | `#6b6966` | `#b4b2ac` | Timestamps, subtitles, secondary actions |
-| `--cds-text-tertiary` | `#999793` | `#7d7b76` | Placeholders, disabled text, hotkey hints |
-| `--cds-border-subtle` | `rgba(0, 0, 0, 0.06)` | `rgba(255, 255, 255, 0.08)` | Dividers, subtle list borders |
-| `--cds-border-card` | `rgba(0, 0, 0, 0.08)` | `rgba(255, 255, 255, 0.12)` | Component cards, attachments, popovers |
+| `--cds-text-primary` | `#151515` | `#ffffff` | Headings, primary body text, active labels |
+| `--cds-text-secondary` | `#525252` | `#c2c2c2` | Timestamps, subtitles, secondary actions |
+| `--cds-text-muted` | `#8a8a8a` | `#808080` | Placeholders, disabled text, hotkey hints (alias: `--cds-text-tertiary`) |
+| `--cds-text-accent` | `var(--cds-clay)` | `var(--cds-clay)` | Highlighted brand terracotta text |
+| `--cds-border` | `var(--cds-alpha-2)` | `var(--cds-alpha-2)` | Dividers, subtle list borders (alias: `--cds-border-subtle`, `--cds-border-card`) |
+| `--cds-border-strong` | `var(--cds-alpha-3)` | `var(--cds-alpha-3)` | Emphasized component borders |
+| `--cds-border-subtle` | `var(--cds-alpha-2)` | `var(--cds-alpha-2)` | Fine hairline dividers |
+| `--cds-border-accent` | `var(--cds-clay)` | `var(--cds-clay)` | Focus and active borders |
 
 ### Brand Clay Palette
-* `clay-500` (Default brand): `#d97757` (Light) / `#cc6b49` (Dark)
-* `clay-600` (Hover): `#c56445` (Light) / `#e07a58` (Dark)
-* `clay-700` (Active): `#b2563a` (Light) / `#b55a3d` (Dark)
-* Dual-ring focus shadow: `box-shadow: 0 0 0 2px var(--cds-bg-surface-0), 0 0 0 4px rgba(217, 119, 87, 0.4)`
+* `--brand`: `#c6613f` (Official desktop brand primary color)
+* `--cds-clay`: `#d97757` (Light / pulse indicator) / `#cc6b49` (Dark)
+* Focus shadow: `var(--cds-focus-shadow)` (`inset 0 0 0 1px var(--cds-surface-1), 0 0 0 1.5px var(--cds-clay), 0 0 6px 1px rgba(217, 119, 87, 0.25)`)
 
 ### Geometric Corner Radii
-* `9999px` (`--cds-radius-pill`): Pill buttons, segmented control tracks, model switcher capsules.
-* `20px` (`--cds-radius-composer`): Main chat composer terminal.
-* `18px` (`--cds-radius-message-bubble`): User message bubbles.
-* `16px` (`--cds-radius-dialog`): Confirmation dialogs, modal popups.
-* `12px` (`--cds-radius-code`): Code blocks, large buttons (`LG`).
-* `10px` (`--cds-radius-card`): Attachment cards, image containers.
-* `8px` (`--cds-radius-btn-md`): Standard interactive buttons (`MD`/`SM`), tool decision cards.
-* `6px` (`--cds-radius-btn-xs`): Compact badge buttons (`XS`), shortcut chips.
+* `var(--cds-radius)`: `8px` (Base component radius)
+* `var(--radius-card)` / `--cds-card-radius`: `calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)))` (12px standard / concentric card radius, alias: `--cds-radius-card`)
+* `--cds-radius-composer`: `20px` (Main chat composer terminal)
+* `--cds-panel-radius`: `10px` (Panels, attachment cards)
+* `--df-radius-pill` / `--cds-radius-pill`: `999px` / `9999px` (Pill buttons, segmented control tracks)
+* `--cds-message-bubble-radius`: `calc(var(--cds-radius, 8px) + calc(.25rem * var(--cds-rem-scale, 1)))` (User message bubble radius, alias: `--cds-radius-message-bubble`)
+* Precision scale: `--radius-xs` (2px), `--radius-sm` (4px), `--radius-md` (6px, alias: `--cds-radius-btn-xs`), `--radius-lg` (8px, alias: `--cds-radius-btn-md`), `--radius-xl` (12px, alias: `--cds-radius-code`), `--radius-2xl` (16px, alias: `--cds-radius-dialog`), `--radius-3xl` (24px)
 
 ---
 
 ## ⚡ 2. Motion Physics & Spring Presets
 
-Always import canonical spring presets from [`code-examples/ClaudeMotionPresets.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ClaudeMotionPresets.ts) instead of hardcoding random transition parameters.
+Always import canonical spring presets from [`code-examples/ClaudeMotionPresets.ts`](code-examples/ClaudeMotionPresets.ts) instead of hardcoding random transition parameters.
 
 ```typescript
 import {
@@ -108,53 +110,53 @@ mask-image: linear-gradient(
   black 100%
 );
 ```
-See [`code-examples/ScrollFadeContainer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ScrollFadeContainer.tsx) for dynamic top/bottom edge zeroing logic.
+See [`code-examples/ScrollFadeContainer.tsx`](code-examples/ScrollFadeContainer.tsx) for dynamic top/bottom edge zeroing logic.
 
 ---
 
 ## 🧩 3. Component Directory: 30 Production Modules
 
-Refer to or import from [`code-examples/`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/) when composing UI:
+Refer to or import from [`code-examples/`](code-examples/) when composing UI:
 
 ### Atomic Controls (5)
-* [`CdsButton.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/CdsButton.tsx): 4-tier ladder (XS: 24/6px, SM: 28/8px, MD: 32/8px, LG: 40/12px), 5 variants (Primary, Secondary, Ghost, Outline, Danger).
-* [`SegmentedControl.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/SegmentedControl.tsx): 9999px rounded pill track, 2px geometric padding, CSS & Framer Motion dual-mode.
-* [`StatusIndicators.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/StatusIndicators.tsx): Clay 2.4s breathing light, 1.2s active run pulse, 3-dot wave, skeleton sweep.
-* [`ConfirmationDialog.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ConfirmationDialog.tsx): 16px corner radius, dual-ring popover shadow, focus trap.
-* [`AttachmentCard.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/AttachmentCard.tsx): 10px panel radius, desktop card grid (128×96px) and inline composer pill dual-mode.
+* [`CdsButton.tsx`](code-examples/CdsButton.tsx): 4-tier ladder (XS: 24/6px, SM: 28/8px, MD: 32/8px, LG: 40/12px), 5 variants (Primary, Secondary, Ghost, Outline, Danger).
+* [`SegmentedControl.tsx`](code-examples/SegmentedControl.tsx): 9999px rounded pill track, 2px geometric padding, CSS & Framer Motion dual-mode.
+* [`StatusIndicators.tsx`](code-examples/StatusIndicators.tsx): Clay 2.4s breathing light, 1.2s active run pulse, 3-dot wave, skeleton sweep.
+* [`ConfirmationDialog.tsx`](code-examples/ConfirmationDialog.tsx): 16px corner radius, dual-ring popover shadow, focus trap.
+* [`AttachmentCard.tsx`](code-examples/AttachmentCard.tsx): 10px panel radius, desktop card grid (128×96px) and inline composer pill dual-mode.
 
 ### Conversation Stream & Input (6)
-* [`ChatComposer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ChatComposer.tsx): 20px core input terminal, dual-ring focus shadow, `field-sizing: content` auto-resize.
-* [`ChatMessageBubbles.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ChatMessageBubbles.tsx): User 18px radius with soft tint vs Assistant zero-border transparent layout.
-* [`ThinkingAccordion.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ThinkingAccordion.tsx): Framer Motion height spring expansion, single clay breathing pulse dot, active generation mutex.
-* [`RichComposerWithMentions.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/RichComposerWithMentions.tsx): CJK IME composition guard, `/` command & `@` context dual triggers, token budget estimator.
-* [`ModelSwitcherWithTokenGauge.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ModelSwitcherWithTokenGauge.tsx): 3-tier model switcher, Extended Thinking toggle, Prompt Caching 4-color memory SVG gauge.
-* [`McpToolDecisionCard.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/McpToolDecisionCard.tsx): 3-state authorization lifecycle (`pending_approval` → `running` → `success`/`error`), 3-tier action array.
+* [`ChatComposer.tsx`](code-examples/ChatComposer.tsx): 20px core input terminal, dual-ring focus shadow, `field-sizing: content` auto-resize.
+* [`ChatMessageBubbles.tsx`](code-examples/ChatMessageBubbles.tsx): User 18px radius with soft tint vs Assistant zero-border transparent layout.
+* [`ThinkingAccordion.tsx`](code-examples/ThinkingAccordion.tsx): Framer Motion height spring expansion, single clay breathing pulse dot, active generation mutex.
+* [`RichComposerWithMentions.tsx`](code-examples/RichComposerWithMentions.tsx): CJK IME composition guard, `/` command & `@` context dual triggers, token budget estimator.
+* [`ModelSwitcherWithTokenGauge.tsx`](code-examples/ModelSwitcherWithTokenGauge.tsx): 3-tier model switcher, Extended Thinking toggle, Prompt Caching 4-color memory SVG gauge.
+* [`McpToolDecisionCard.tsx`](code-examples/McpToolDecisionCard.tsx): 3-state authorization lifecycle (`pending_approval` → `running` → `success`/`error`), 3-tier action array.
 
 ### Atmosphere & Motion (3)
-* [`ClaudeMotionPresets.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ClaudeMotionPresets.ts): 4 calibrated physics presets.
-* [`ReasoningAmbientGlow.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ReasoningAmbientGlow.tsx): Warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric sweep, caustic canvas.
-* [`ScrollFadeContainer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ScrollFadeContainer.tsx): 7-stop non-linear mask with edge sensors.
+* [`ClaudeMotionPresets.ts`](code-examples/ClaudeMotionPresets.ts): 4 calibrated physics presets.
+* [`ReasoningAmbientGlow.tsx`](code-examples/ReasoningAmbientGlow.tsx): Warm Clay diffuse light field, `cds-shimmer-text-shine` asymmetric sweep, caustic canvas.
+* [`ScrollFadeContainer.tsx`](code-examples/ScrollFadeContainer.tsx): 7-stop non-linear mask with edge sensors.
 
 ### Audiovisual & Media (8)
-* [`ClaudeAudioPlayer.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ClaudeAudioPlayer.ts): Procedural Web Audio API oscillator synthesis, 30% gentle volume standard, anti-pop gain ramp smoothing.
-* [`LiveMicActivityBars.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/LiveMicActivityBars.tsx): 6-band speech spectrum visualizer (85Hz-4.8kHz), 8% noise floor gate, `Math.pow(energy, 0.7)` non-linear Gamma power compression.
-* [`MediaLightboxViewer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/MediaLightboxViewer.tsx): 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming.
-* [`useClaudeSharedElementTransition.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/useClaudeSharedElementTransition.ts): `startViewTransition` wrapper with dynamic corner radius detection and `object-fit: contain` clip calculation.
-* [`ArtifactsSplitPaneResizer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ArtifactsSplitPaneResizer.tsx): Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds.
-* [`EpitaxyIframeBridge.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/EpitaxyIframeBridge.tsx): Strict Origin validation & channel-isolated postMessage RPC, user-gesture gating (`navigator.userActivation`).
-* [`StreamingDiffViewer.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/StreamingDiffViewer.tsx): Table line-number alignment with `tabular-nums`, incremental streaming pipeline, unified/split view, 2.5s copy cooldown.
-* [`CodeBlock.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/CodeBlock.tsx): 12px radius, `#0d0d0c` solid black background, inline optical alignment for language tags.
+* [`ClaudeAudioPlayer.ts`](code-examples/ClaudeAudioPlayer.ts): Procedural Web Audio API oscillator synthesis, 30% gentle volume standard, anti-pop gain ramp smoothing.
+* [`LiveMicActivityBars.tsx`](code-examples/LiveMicActivityBars.tsx): 6-band speech spectrum visualizer (85Hz-4.8kHz), 8% noise floor gate, `Math.pow(energy, 0.7)` non-linear Gamma power compression.
+* [`MediaLightboxViewer.tsx`](code-examples/MediaLightboxViewer.tsx): 75vw runway viewport, cursor-anchored affine pan/zoom equation, 4px drag deadzone, Ctrl + wheel zooming.
+* [`useClaudeSharedElementTransition.ts`](code-examples/useClaudeSharedElementTransition.ts): `startViewTransition` wrapper with dynamic corner radius detection and `object-fit: contain` clip calculation.
+* [`ArtifactsSplitPaneResizer.tsx`](code-examples/ArtifactsSplitPaneResizer.tsx): Iframe pointer shield, 4px deadzone, double-click 50/50 spring snap, collapse thresholds.
+* [`EpitaxyIframeBridge.tsx`](code-examples/EpitaxyIframeBridge.tsx): Strict Origin validation & channel-isolated postMessage RPC, user-gesture gating (`navigator.userActivation`).
+* [`StreamingDiffViewer.tsx`](code-examples/StreamingDiffViewer.tsx): Table line-number alignment with `tabular-nums`, incremental streaming pipeline, unified/split view, 2.5s copy cooldown.
+* [`CodeBlock.tsx`](code-examples/CodeBlock.tsx): 12px radius, `#0d0d0c` solid black background, inline optical alignment for language tags.
 
 ### Desktop & System Architecture (8)
-* [`createClaudeMainWindow.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/createClaudeMainWindow.ts): Electron host window factory: `hiddenInset` titlebar, macOS Vibrancy (`under-window`) glass blending, 1200×800 default, 600×400 min.
-* [`ClaudeDesktopHeader.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ClaudeDesktopHeader.tsx): macOS traffic light 74px inverse zoom compensation slot (`ew = 74`), 45px global drag band.
-* [`DraggableSessionList.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/DraggableSessionList.tsx): `pinnedOrder` optimistic topological reordering, 4px deadzone, tilted ghost shadow.
-* [`CoworkAgentCanvas.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/CoworkAgentCanvas.tsx): Multi-agent task delegation state machine, team-shared artifact asset pool, cross-window `BroadcastChannel` sync.
-* [`useClaudeScrollPinning.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/useClaudeScrollPinning.ts): 150ms cooldown latch against scroll hijacking, 40px bottom-tolerance scroll pin, GPU subpixel blur elimination.
-* [`ContainerResponsiveBar.tsx`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/ContainerResponsiveBar.tsx): `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing glyph breaks.
-* [`useClaudeRovingFocus.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/useClaudeRovingFocus.ts): W3C WAI-ARIA compliance: 1D & 2D arrow key grid navigation, Home/End boundary jumps.
-* [`useRateLimitBackoff.ts`](file:///Users/jiahao/Desktop/PythonProject/open-claude-ui/code-examples/useRateLimitBackoff.ts): 429/503 truncated exponential backoff (`t = min(t_max, t_base * 2^a) * (1 ± J)`), full jitter, circuit breaker.
+* [`createClaudeMainWindow.ts`](code-examples/createClaudeMainWindow.ts): Electron host window factory: `hiddenInset` titlebar, macOS Vibrancy (`under-window`) glass blending, 1200×800 default, 600×400 min.
+* [`ClaudeDesktopHeader.tsx`](code-examples/ClaudeDesktopHeader.tsx): macOS traffic light 74px inverse zoom compensation slot (`ew = 74`), 45px global drag band.
+* [`DraggableSessionList.tsx`](code-examples/DraggableSessionList.tsx): `pinnedOrder` optimistic topological reordering, 4px deadzone, tilted ghost shadow.
+* [`CoworkAgentCanvas.tsx`](code-examples/CoworkAgentCanvas.tsx): Multi-agent task delegation state machine, team-shared artifact asset pool, cross-window `BroadcastChannel` sync.
+* [`useClaudeScrollPinning.ts`](code-examples/useClaudeScrollPinning.ts): 150ms cooldown latch against scroll hijacking, 40px bottom-tolerance scroll pin, GPU subpixel blur elimination.
+* [`ContainerResponsiveBar.tsx`](code-examples/ContainerResponsiveBar.tsx): `@container`-driven 4-tier fluid compression matrix (>=576px / <480px / <384px / <320px), preventing glyph breaks.
+* [`useClaudeRovingFocus.ts`](code-examples/useClaudeRovingFocus.ts): W3C WAI-ARIA compliance: 1D & 2D arrow key grid navigation, Home/End boundary jumps.
+* [`useRateLimitBackoff.ts`](code-examples/useRateLimitBackoff.ts): 429/503 truncated exponential backoff (`t = min(t_max, t_base * 2^a) * (1 ± J)`), full jitter, circuit breaker.
 
 ---
 
@@ -192,8 +194,38 @@ Whenever you write or modify code in this repository, you **MUST** run the follo
 # 1. Typecheck the entire project
 npm run typecheck
 
-# 2. Build TypeScript output
+# 2. Verify design token consistency
+npm run check:tokens
+
+# 3. Build library output
 npm run build
 ```
 
 Both commands must exit with code 0 and output **0 errors**.
+
+---
+
+## 🔌 6. Runtime Portability & Host Bridging (运行时分层与宿主桥接)
+
+To maximize consumption surface across different host environments (e.g. non-React web apps, Electron desktop harnesses like DSH, or custom plugin shells), the repository assets are structured into 3 portability tiers:
+
+### 1. The Three Portability Tiers
+* 🎨 **Pure CSS (Tokens & Shaders)**: Zero JavaScript runtime dependency. Includes `code-examples/cds-theme.css`, CSS-driven scroll fade (`.cds-scroll-fade`), breathing lights (`.cds-dot-breathe`), and skeleton sweeps. Can be consumed by any HTML/CSS project directly.
+* ⚡ **Pure Logic / Headless**: Pure math and browser APIs without React UI bindings. Includes `code-examples/ClaudeMotionPresets.ts` (spring formulas), `code-examples/ClaudeAudioPlayer.ts` (Web Audio synthesis), `code-examples/useClaudeScrollPinning.ts`, and `code-examples/useRateLimitBackoff.ts`.
+* ⚛️ **React Components**: Stateful, interactive UI controls relying on React hooks/refs. Includes `MediaLightboxViewer.tsx`, `DraggableSessionList.tsx`, `McpToolDecisionCard.tsx`, `ChatComposer.tsx`, etc.
+
+### 2. Host Bridge Mapping Pattern (宿主别名桥接)
+If your host application uses a custom design token prefix (e.g., `--app-*` or `--dsw-*`), bridge to CDS by defining aliases in your host stylesheet:
+
+```css
+/* Host application stylesheet */
+:root {
+  --app-brand-primary: var(--brand);                  /* #c6613f */
+  --app-brand-accent: var(--cds-clay);                /* #d97757 */
+  --app-bg-canvas: var(--cds-surface-0);              /* #f9f9f7 / #0b0b0b */
+  --app-bg-card: var(--cds-surface-2);                /* #ffffff / #1a1a19 */
+  --app-border-base: var(--cds-border);               /* hairline divider */
+  --app-radius-card: var(--radius-card);              /* concentric card radius */
+  --app-shadow-composer: var(--cds-shadow-composer);  /* composer diffuse shadow */
+}
+```
