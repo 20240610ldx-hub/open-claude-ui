@@ -242,17 +242,19 @@ open-claude-ui/
 
 ## 🚀 快速上手 (Quick Start)
 
-### 1. 引入样式表与 Tailwind 配置
+### 1. 引入样式表与 Tokens (纯 CSS 支持)
 
-在你的项目中引入 CDS 核心主题样式表：
+无论是否使用 React，均可直接引入 CDS 核心样式表与 183 个设计令牌：
 ```css
-/* 引入全局主题变量与关键帧 */
-@import "open-claude-ui/code-examples/cds-theme.css";
+/* 引入全局主题变量、渐变消隐遮罩与核心关键帧 */
+@import "open-claude-ui/css";
+/* 或者通过 tokens 别名引入 */
+@import "open-claude-ui/tokens";
 ```
 
-在你的 `tailwind.config.js` 中扩展主题：
+若使用 Tailwind CSS，在 `tailwind.config.js` 中直接扩展主题：
 ```javascript
-const cdsTheme = require("open-claude-ui/code-examples/tailwind.config.js");
+const cdsTheme = require("open-claude-ui/tailwind");
 
 module.exports = {
   content: [

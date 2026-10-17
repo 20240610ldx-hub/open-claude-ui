@@ -226,6 +226,23 @@
   --cds-fill-brand-subtle: var(--cds-clay-light);
   --cds-fill-danger: #ef4444;
   --cds-text-accent: var(--cds-clay);
+
+  /* 15. 语义化向后兼容别名与跨宿主通用别名 (Backward-Compatibility & Host Aliases) */
+  --cds-bg-surface-0: var(--cds-surface-0);
+  --cds-bg-surface-1: var(--cds-surface-1);
+  --cds-bg-surface-2: var(--cds-surface-2);
+  --cds-bg-surface-3: var(--cds-surface-3);
+  --cds-bg-input: var(--cds-surface-3);
+  --cds-text-tertiary: var(--cds-text-muted);
+  --cds-border-card: var(--cds-border);
+  --cds-radius-pill: 9999px;
+  --cds-radius-card: var(--radius-card);
+  --cds-card-radius: var(--radius-card);
+  --cds-radius-message-bubble: var(--cds-message-bubble-radius);
+  --cds-radius-dialog: 16px;
+  --cds-radius-code: 12px;
+  --cds-radius-btn-md: 8px;
+  --cds-radius-btn-xs: 6px;
 }
 
 /* 高分屏视网膜物理发丝细线补偿 */
@@ -770,7 +787,9 @@
 }
 
 @supports (animation-timeline: scroll()) {
-  .scroll-fade {
+  .scroll-fade,
+  .cds-scroll-fade,
+  .cds-scroll-fade-vertical {
     --cds-scroll-fade-top: calc(var(--cds-scroll-fade-top-raw) * var(--cds-scroll-fade-y-active) * var(--cds-scroll-fade-top-on));
     --cds-scroll-fade-bottom: calc(var(--cds-scroll-fade-bottom-raw) * var(--cds-scroll-fade-y-active) * var(--cds-scroll-fade-bottom-on));
     --cds-scroll-fade-left: calc(var(--cds-scroll-fade-left-raw) * var(--cds-scroll-fade-x-active) * var(--cds-scroll-fade-left-on));
@@ -787,3 +806,10 @@
     mask-composite: intersect;
   }
 }
+
+/* 纯 CSS 滚动消隐回退 (无 scroll-driven 浏览器) */
+.cds-scroll-fade-static-v {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black var(--cds-scroll-fade-size), black calc(100% - var(--cds-scroll-fade-size)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, black var(--cds-scroll-fade-size), black calc(100% - var(--cds-scroll-fade-size)), transparent);
+}
+
