@@ -182,12 +182,13 @@ export const RichComposerWithMentions: React.FC<RichComposerProps> = ({
     }
 
     // REA 核心发明：WebKit 500ms post-composition 虚假回车防护
+    // 仅拦截 Safari/WebKit 在输入法候选词确认 (compositionend) 后派发的虚假回车事件，
+    // 避免误触提交；同时重置时间戳防止误吞后续快速键入的正常字符。
     const timeSinceCompositionEnd = Math.abs(e.nativeEvent.timeStamp - lastCompositionEndTimeRef.current);
-    if (isAppleWebKit() && timeSinceCompositionEnd < 500) {
-      if (!e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        return;
-      }
+    if (isAppleWebKit() && (e.key === 'Enter' || e.keyCode === 13) && timeSinceCompositionEnd < 500) {
+      lastCompositionEndTimeRef.current = -1;
+      e.preventDefault();
+      return;
     }
 
     // 建议弹窗开启时的方向键导航与确认
