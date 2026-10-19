@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### 🐛 Fixed (Issue #20 - WebKit Post-Composition Key Swallowing Guard)
+- **Scoped Post-Composition Guard**: Constrained the WebKit 500ms post-composition guard in `code-examples/RichComposerWithMentions.tsx` to target only the phantom `Enter` (`e.key === 'Enter' || e.keyCode === 13`) dispatched by Safari/WebKit after IME candidate commit (`compositionend`), preventing regular keystrokes (letters, Space, Backspace, arrows) from being swallowed.
+- **Immediate Timestamp Reset**: Reset `lastCompositionEndTimeRef.current = -1` immediately upon intercepting the phantom Enter, ensuring at most one phantom keydown event is consumed and subsequent typing passes through without delay.
+- **Documentation Alignment**: Synchronized the post-composition guard code examples in `docs/v1/08-AI-Agent-前端-UI-与动效开发指南.md` and `docs/v1/Claude Design System (CDS).full.md`.
+
+### 🐛 Fixed (Issue #21 - Split Pane Collapse State Restoration on Escape)
+- **Escape Cancellation State Recovery**: Fixed `code-examples/ArtifactsSplitPaneResizer.tsx` where pressing `Escape` during a drag that collapsed the right pane would only restore `splitRatio` but leave `isRightCollapsed = true` (permanently hiding the right pane and unmounting the drag handle). Added explicit `setIsRightCollapsed(false)` to restore the pre-drag split layout and re-mount the resizer handle.
+- **Pre-Drag Ratio Preservation**: Enhanced the collapsed state wake-up button ("展开产物") to restore to `previousRatioRef.current` if valid, rather than jumping unconditionally to a hard-coded 0.5.
+
 ### 🐛 Fixed (Issue #16 - Token Table Desync & Build Pipeline)
 - **Token Synchronization**: Calibrated `AGENTS.md` design token tables with `code-examples/cds-theme.css`, eliminating 14 undefined token discrepancies.
 - **Backward-Compatible Token Aliases**: Added aliases in `cds-theme.css` for `--cds-bg-surface-0` ~ `--cds-bg-surface-3`, `--cds-bg-input`, `--cds-text-tertiary`, `--cds-border-card`, `--cds-radius-pill`, `--cds-card-radius`, etc.
