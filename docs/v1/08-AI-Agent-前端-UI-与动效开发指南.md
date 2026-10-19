@@ -156,8 +156,12 @@ mask-image: linear-gradient(
 const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
   // 1. 标准合成标志位与 229 键码
   if (e.nativeEvent.isComposing || e.keyCode === 229) return;
-  // 2. WebKit 500ms 延迟守卫拦截
-  if (isWebKit && Math.abs(e.timeStamp - lastCompositionEndTime) < 500) return;
+  // 2. WebKit 500ms 虚假回车守卫拦截（仅针对回车键，并重置时间戳防误吞后续正常输入）
+  if (isWebKit && (e.key === 'Enter' || e.keyCode === 13) && Math.abs(e.timeStamp - lastCompositionEndTime) < 500) {
+    lastCompositionEndTime = -1;
+    e.preventDefault();
+    return;
+  }
 
   if (e.key === 'Enter' && !e.shiftKey) {
     e.preventDefault();

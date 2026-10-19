@@ -118,6 +118,7 @@ export const ArtifactsSplitPaneResizer: React.FC<SplitPaneProps> = ({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (isDragging && e.key === 'Escape') {
         setIsDragging(false);
+        setIsRightCollapsed(false);
         setSplitRatio(previousRatioRef.current);
         pointerStartRef.current = null;
       }
@@ -208,7 +209,9 @@ export const ArtifactsSplitPaneResizer: React.FC<SplitPaneProps> = ({
           aria-label="展开 Artifacts 面板"
           onClick={() => {
             setIsRightCollapsed(false);
-            setSplitRatio(0.5);
+            const restoreRatio =
+              previousRatioRef.current > 0 && previousRatioRef.current < 1 ? previousRatioRef.current : 0.5;
+            setSplitRatio(restoreRatio);
           }}
           className="absolute right-2 top-3 z-30 flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[var(--cds-bg-surface,#ffffff)] dark:bg-[var(--cds-bg-surface,#222221)] border border-[var(--cds-border-subtle,#e0e0de)] dark:border-[var(--cds-border-subtle,#333331)] shadow-sm text-xs font-medium text-[var(--cds-text-secondary,#666666)] hover:text-[var(--cds-text-primary,#1a1a1a)] hover:border-[var(--cds-fill-brand,#d97757)] active:scale-95 transition-all"
         >
