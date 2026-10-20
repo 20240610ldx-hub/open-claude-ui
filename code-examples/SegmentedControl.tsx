@@ -90,7 +90,7 @@ export function SegmentedControl({
       {/* 1. 原生纯几何定位滑动指示器 */}
       {!useFramerMotion ? (
         <div
-          className="df-pill-indicator absolute top-[1px] bottom-[1px] rounded-full bg-white dark:bg-[#2c2c2a] pointer-events-none transition-all duration-120 ease-[cubic-bezier(0.32,0.72,0,1)] will-change-transform"
+          className="df-pill-indicator absolute top-[1px] bottom-[1px] rounded-full bg-white dark:bg-[#2c2c2a] pointer-events-none transition-all duration-[var(--cds-dur-snap)] ease-[var(--cds-ease-snap)] will-change-transform"
           style={{
             left: `calc(1px + ${activeIndex} * (100% - 2px) / ${normalizedTabs.length})`,
             width: `calc((100% - 2px) / ${normalizedTabs.length})`,
