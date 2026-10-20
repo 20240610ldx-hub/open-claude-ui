@@ -83,18 +83,71 @@ import {
 ```
 
 ### The 4 Canonical Spring Presets
-1. **`SPRING_SNAPPY`** (`stiffness: 600, damping: 30, mass: 0.6`, $\zeta = 0.791$):
-   - **Overshoot**: `+1.8%`, settle time: `~0.22s`.
-   - **Where to use**: Primary button clicks, segmented control pill switching (`layoutId`), tabs, micro-interactions.
-2. **`SPRING_BOUNCY`** (`stiffness: 400, damping: 25, mass: 0.8`, $\zeta = 0.612$):
-   - **Overshoot**: `+8.8%`, settle time: `~0.38s`.
-   - **Where to use**: Toggle switches, badge growth entrances, success confirmation pop-ins.
-3. **`SPRING_GENTLE`** (`stiffness: 220, damping: 24, mass: 1.0`, $\zeta = 0.809$):
-   - **Overshoot**: `+1.5%`, settle time: `~0.48s`.
-   - **Where to use**: Modals, Thinking Accordion height expansion, message bubble entry, split-pane 50/50 reset.
-4. **`SPRING_HEAVY_SNAP`** (`stiffness: 1200, damping: 80, mass: 0.1`, $\zeta = 1.826$, overdamped):
+
+Presets 1, 2 and 4 are observed values extracted from `Claude.app` `ion-dist`.
+Preset 3 (`SPRING_GENTLE`) is a project-local addition, not a CDS observation —
+no client release checked here contains `stiffness:380` or `damping:18`. Values
+below are recomputed from the exported constants, not copied from prose.
+`Observed use` lines record call sites found in the shipped bundle, not inferred intent.
+
+> **Provenance and version scope.** `Observed use` and the client inventory in
+> this section were verified against **`/Applications/Claude.app` 2.42304.2**.
+> The `docs/v1` chapters describe **v1.28** and are deliberately left as the
+> historical record of that release; the `docs/v2` chapters describe
+> **v2.37337.1** but do not carry a spring table. Constant values are stable
+> across these releases; call sites are not.
+
+1. **`SPRING_BOUNCY`** (`stiffness: 600, damping: 30, mass: 1.0`, $\zeta = 0.612$):
+   - **Overshoot**: `+8.8%`.
+   - **Observed use**: Microphone button mount/unmount `scale`+`opacity`, voice-bar
+     `width: 0 → 32` expansion, button padding morphs, and `popLayout` icon swaps.
+   - **Source**: `ion-dist/assets/v1/shared-8-PHXy9B6B.js`.
+2. **`SPRING_SNAPPY`** (`stiffness: 320, damping: 28, mass: 1.0`, $\zeta = 0.783$):
+   - **Overshoot**: `+1.9%`.
+   - **Observed use**: Drag-release rebound — paired `animate(dx|dy, target, {...preset, velocity})`
+     calls that settle a dragged element onto its slot using the release velocity.
+     Not an entrance animation. Guarded by `prefers-reduced-motion`, which snaps instead.
+   - **Source**: `ion-dist/assets/v1/c427176b2-DuM09fKk.js`.
+3. **`SPRING_GENTLE`** (`stiffness: 380, damping: 18, mass: 1.0`, $\zeta = 0.462$):
+   - **Overshoot**: `+19.5%`.
+   - **Observed use**: none — this preset has no client call site.
+   - **Source**: none. Project-local preset filling the gap between the
+     near-critically-damped pair and the high-frequency pop; do not present it as a Claude reading.
+   - **Do not equate it with `duration .32 / bounce .15`.** That real client config
+     (`shared-9-Co0ph6Xn.js`, dictation↔rest state swap) resolves through framer-motion
+     `tn()` to `stiffness ≈ 244, damping ≈ 26.6, ζ ≈ 0.85` — `+0.6%` overshoot, not `+19.5%`.
+4. **`SPRING_HEAVY_SNAP`** (`stiffness: 1200, damping: 80, mass: 0.1`, $\zeta = 3.652$, overdamped):
    - **Overshoot**: `0%` (Zero overshoot).
-   - **Where to use**: Session item drag-and-drop placeholder collision, magnetic drawer snapping.
+   - **Observed use**: `file_viewer` panel width animation — `animate(width, 384, preset)`
+     on open and back to the computed initial width on close. In the same module
+     `kt = 320` is the minimum width and `At = 480` the default width.
+   - **Source**: `ion-dist/assets/v1/c8ad300b7-07P9B-v4.js`.
+
+### Other spring presets observed in the client
+
+The four names above are a project convention, not a complete client inventory.
+The shipped bundle contains 14 distinct spring configs; these three are missing
+from the preset file and are worth knowing about:
+
+| Config | ζ | Overshoot | Observed use | Source |
+| :--- | :--- | :--- | :--- | :--- |
+| `420 / 28` | 0.683 | `+5.3%` | Draggable capture popover, `scale .25 → 1` entrance with `dragElastic: .05` | `c0447db9a-KKfDTbDr.js` |
+| `260 / 16` | 0.496 | `+16.6%` | Capture-selection handle rotation, `-90°` arrow marker; exit `scale .6` | `c0447db9a-KKfDTbDr.js` |
+| `300 / 35 / mass 1` | 1.01 | `0%` | Staggered list entrance, `translateY 32 → 0` with `staggerChildren: .15` and a separate `opacity` ease-out | `ccd647019-DrnyijvI.js` |
+
+Two more appear as timing variants rather than reusable presets: `320 / 30`
+(`delay: 1`, credits controls row) and `500 / 30 / mass .7`.
+
+### Version caveat
+
+`docs/v1` records the matrix as it appeared in client **v1.28**, labelling
+`600 / 30` as "buttons" and `1200 / 80 / .1` as "sidebar drag damping". That
+mapping was correct for that release. In **2.42304.2** both constants survive
+unchanged but their call sites moved: `600 / 30` now drives the microphone and
+voice bar, and `1200 / 80 / .1` drives the `file_viewer` panel width. Neither
+`docs/v1` nor `docs/v2` covers 2.42304.2, so the table above is the only
+current-version record in this repo. When a scenario label matters, re-derive it
+from the bundle rather than trusting either volume.
 
 ### 7-Stop Non-Linear Fade Mask
 Never use a linear gradient for scroll fading. Use the calibrated 7-stop non-linear mask:
