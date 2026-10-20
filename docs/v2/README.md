@@ -51,6 +51,7 @@
   - 4.1 纯 CSS 动效参数 (47 项 @keyframes cds-* 完整清单)
   - 4.2 原生组件命名空间 (40 大 data-cds 原生组件命名空间契约)
   - 4.3 响应时间与贝塞尔曲线 (5 阶时间 Token 60ms~450ms 与 3 大精确贝塞尔控制点)
+  - 4.4 物理弹簧参数矩阵 (14 组 Framer Motion spring 实测调用点、`linear()` 弹簧曲线与时长 Token 的耦合失效)
 - [第五章：生产级参考实现代码](05-生产级参考实现代码.md)
   - 5.1 模型选择与算力调节器 (`ModelSelectorEffort.tsx`)
   - 5.2 输入框底部工具栏 (`ChatComposerChin.tsx`)
