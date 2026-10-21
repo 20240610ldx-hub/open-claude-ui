@@ -1,7 +1,16 @@
 # Open Claude UI (`open-claude-ui`)
 
 <p align="center">
-  <img src="assets/images/logo.svg" width="96" height="96" alt="Open Claude UI Logo" />
+  <a href="https://openclaudeui.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/images/ocu-wordmark-dark.svg" />
+      <img src="assets/images/ocu-wordmark-light.svg" width="180" alt="Open Claude UI (OCU) logo" />
+    </picture>
+  </a>
+</p>
+
+<p align="center">
+  🌐 <strong>官网：<a href="https://openclaudeui.com">openclaudeui.com</a></strong>
 </p>
 
 <p align="center">
@@ -13,6 +22,7 @@
 </p>
 
 <p align="center">
+  <a href="https://openclaudeui.com"><img src="https://img.shields.io/badge/%E5%AE%98%E7%BD%91-openclaudeui.com-ea580c" alt="官网" /></a>
   <a href="https://github.com/Caho1/open-claude-ui/stargazers"><img src="https://img.shields.io/github/stars/Caho1/open-claude-ui?style=flat&logo=github&color=ea580c" alt="GitHub Stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://github.com/morluto/rea"><img src="https://img.shields.io/badge/Reverse%20Engineered%20with-REA-ea580c?logo=github" alt="Reverse Engineered with REA" /></a>
