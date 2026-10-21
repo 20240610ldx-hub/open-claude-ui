@@ -1,7 +1,12 @@
 # Open Claude UI (`open-claude-ui`)
 
 <p align="center">
-  <img src="assets/images/logo.svg" width="96" height="96" alt="Open Claude UI Logo" />
+  <a href="https://openclaudeui.com">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/images/ocu-logo-dark.svg" />
+      <img src="assets/images/ocu-logo-light.svg" width="96" height="96" alt="Open Claude UI (OCU) logo" />
+    </picture>
+  </a>
 </p>
 
 <p align="center">
