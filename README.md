@@ -5,6 +5,10 @@
 </p>
 
 <p align="center">
+  🌐 <strong>官网：<a href="https://openclaudeui.com">openclaudeui.com</a></strong>
+</p>
+
+<p align="center">
   <strong>基于 REA 深度拆解，高保真生产级还原 Claude 设计系统 (CDS) 与工程交互物理学。</strong>
 </p>
 
@@ -13,6 +17,7 @@
 </p>
 
 <p align="center">
+  <a href="https://openclaudeui.com"><img src="https://img.shields.io/badge/%E5%AE%98%E7%BD%91-openclaudeui.com-ea580c" alt="官网" /></a>
   <a href="https://github.com/Caho1/open-claude-ui/stargazers"><img src="https://img.shields.io/github/stars/Caho1/open-claude-ui?style=flat&logo=github&color=ea580c" alt="GitHub Stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://github.com/morluto/rea"><img src="https://img.shields.io/badge/Reverse%20Engineered%20with-REA-ea580c?logo=github" alt="Reverse Engineered with REA" /></a>
