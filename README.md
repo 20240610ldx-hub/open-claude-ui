@@ -3,8 +3,8 @@
 <p align="center">
   <a href="https://openclaudeui.com">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="assets/images/ocu-logo-dark.svg" />
-      <img src="assets/images/ocu-logo-light.svg" width="180" alt="Open Claude UI (OCU) logo" />
+      <source media="(prefers-color-scheme: dark)" srcset="assets/images/ocu-wordmark-dark.svg" />
+      <img src="assets/images/ocu-wordmark-light.svg" width="180" alt="Open Claude UI (OCU) logo" />
     </picture>
   </a>
 </p>
