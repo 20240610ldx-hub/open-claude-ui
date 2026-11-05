@@ -23,7 +23,7 @@
 
 <p align="center">
   <a href="https://openclaudeui.com"><img src="https://img.shields.io/badge/Website-openclaudeui.com-ea580c" alt="Website" /></a>
-  <a href="https://github.com/Caho1/open-claude-ui/stargazers"><img src="https://img.shields.io/github/stars/Caho1/open-claude-ui?style=flat&logo=github&color=ea580c" alt="GitHub Stars" /></a>
+  <a href="https://github.com/Caho1/open-claude-ui"><img src="https://img.shields.io/github/stars/Caho1/open-claude-ui?style=flat&logo=github&color=ea580c" alt="GitHub Stars" /></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT" /></a>
   <a href="https://github.com/morluto/rea"><img src="https://img.shields.io/badge/Reverse%20Engineered%20with-REA-ea580c?logo=github" alt="Reverse Engineered with REA" /></a>
   <a href="assets/README.md"><img src="https://img.shields.io/badge/assets-clean--room%20compliance-success" alt="Asset Compliance" /></a>
@@ -39,9 +39,9 @@
 
 `open-claude-ui` is a high-fidelity open-source UI component library and motion physics engine, built through in-depth clean-room reverse engineering of the modern desktop AI client.
 
-> 🧭 **Forensic baseline**: values are aligned to **Claude Desktop `@ant/desktop 4.4212.0`** (primary forensics on 3.6556.2, re-verified on 4.29.0 and 4.4212.0), all verified through dual channels — **REA v6.8.0** static extraction plus live measurement via the app's **Main Process Debugger** (see [docs/v4.29.0-4.4212.0](docs/v4.29.0-4.4212.0/README.md)).
+> 🧭 **Forensic baseline**: the **current volume** is [`docs/v4.16336.0`](docs/v4.16336.0/README.md) (`@ant/desktop 4.16336.0`, verified by `Info.plist`, `app.asar/package.json`, process args and live `app.getVersion()`). Earlier volumes: [`docs/v4.29.0-4.4212.0`](docs/v4.29.0-4.4212.0/README.md) (primary forensics on 3.6556.2, re-verified on 4.29.0 and 4.4212.0 — **historical baseline**). Every release is verified through dual channels — **REA** static extraction plus live measurement via the app's **Main Process Debugger** / 9229 Node inspector (read-only).
 >
-> 📁 **Doc versioning convention**: from this release on, manual directory names **track the Claude Desktop version** (e.g. `docs/v4.29.0-4.4212.0/`); future Claude updates will get a new directory named after their version. A directory may name a single version (e.g. `docs/v5.0.0/`) or a covered range (e.g. `docs/v4.29.0-4.4212.0/`, meaning primary forensics on the first version with incremental re-checks on the later ones). Earlier `docs/v1/` and `docs/v2/` keep their names as historical snapshots (v2 values are superseded — defer to `docs/v4.29.0-4.4212.0/`).
+> 📁 **Doc versioning convention**: manual directory names **track the Claude Desktop version** (e.g. `docs/v4.16336.0/`); future Claude updates get a new directory named after their version. A directory may name a single version or a covered range (e.g. `docs/v4.29.0-4.4212.0/`). Chapters are **organised by feature point**, following the `docs/v1/` format — never by date, topic, or investigation workflow. Full rule: [`AGENTS.md` §7](AGENTS.md#-7-documentation-versioning-convention-文档版本卷约定). Earlier `docs/v1/` and `docs/v2/` keep their names as historical snapshots (v2 values are superseded).
 
 All reverse derivation, de-obfuscation static analysis, and ASAR package deconstruction were conducted using the advanced multi-platform reverse engineering framework **[REA (Reverse Engineer Anything)](https://github.com/morluto/rea)**. Leveraging REA's static AST deconstruction, closure de-obfuscation, and runtime tracing capabilities, we penetrated production bundles to faithfully extract the underlying physical constants, interaction constraints, and mathematical models.
 
@@ -51,7 +51,7 @@ Unlike superficial visual approximations or guesswork replicas, every component 
 * **Audiovisual & Desktop Architecture**: Zero-latency procedural audio synthesis via Web Audio API oscillators, cursor-anchored gallery pan/zoom affine transformations, macOS vibrancy glass fusion, and Cowork multi-agent orchestration topologies.
 
 > 💡 **Architecture & Portability Note**:  
-> The **Design Tokens and Pure-CSS presentation layer can be consumed completely independently from React and Tailwind**. Whether you are integrating into custom desktop harnesses (e.g. DSH, agent desktop shells), standard web pages, or Vue/Svelte environments, simply import `@import "open-claude-ui/tokens.css";` or `@import "open-claude-ui/pure.css";` to access all 242 design tokens (aligned with Claude Desktop 3.6556.2 runtime measurements), zero-JS native scroll-fade masks (`[data-cds-scroll-fade]`), and core animations.
+> The **Design Tokens and Pure-CSS presentation layer can be consumed completely independently from React and Tailwind**. Whether you are integrating into custom desktop harnesses (e.g. DSH, agent desktop shells), standard web pages, or Vue/Svelte environments, simply import `@import "open-claude-ui/tokens.css";` or `@import "open-claude-ui/pure.css";` to access all 261 design tokens (first measured on 3.6556.2; see docs/v4.16336.0 for live values), zero-JS native scroll-fade masks (`[data-cds-scroll-fade]`), and core animations.
 
 > ⚖️ **Copyright & Asset Compliance (DMCA & Assets Policy)**:  
 > This open-source repository **does not distribute any proprietary binary assets** (including commercial `.ttf` fonts and recorded `.mp3` audio). We provide native system font fallback stacks and procedural Web Audio synthesis algorithms, ensuring a completely self-contained, legal, and clean-room compliant codebase. For details, see [assets/README.md](assets/README.md).
@@ -73,16 +73,16 @@ graph TD
     OCUI --> Setup["7. Production Setup & Zero-Binary Delivery<br/>(Tailwind, CSS Themes, Zero-Binary Dependency)"]
 ```
 
-1. **30 Production-Grade Independent Modules**: 11 atomic UI components + 19 deep architecture physics modules and React Hooks. Copy-paste ready with zero black-box dependencies.
+1. **37 Ready-to-Use Files**: 30 v1 baseline modules (11 atomic UI components + 19 deep architecture physics modules and React Hooks) + 5 later-version modules + 2 theme/config assets. Zero black-box dependencies.
 2. **Native System Typography & Procedural Audio**: Engineered system font fallback stacks and zero-latency Web Audio oscillator synthesis engines.
 3. **Interactive Offline Storybook Preview**: Single-file offline storybook previewable directly in any browser without spinning up local dev servers.
-4. **Complete 7-Part Technical Engineering Manual**: Accompanied by a 3,000+ line reverse engineering manual: [`docs/Claude Design System (CDS).md`](docs/Claude%20Design%20System%20(CDS).md).
+4. **Complete 8-Part Technical Engineering Manual**: Accompanied by a 4,600+ line reverse engineering manual: [`docs/v1/Claude Design System (CDS).full.md`](docs/v1/Claude%20Design%20System%20%28CDS%29.full.md).
 
 ---
 
-## 📚 Complete Technical Manual (Seven Volumes)
+## 📚 Complete Technical Manual (Eight Parts)
 
-The crown jewel of this repository is the exhaustive 3,000+ line, 31-chapter reverse engineering manual: [`docs/Claude Design System (CDS).md`](docs/Claude%20Design%20System%20(CDS).md).
+The crown jewel of this repository is the exhaustive 4,600+ line, 8-part / 41-section reverse engineering manual: [`docs/v1/Claude Design System (CDS).full.md`](docs/v1/Claude%20Design%20System%20%28CDS%29.full.md).
 
 It documents exact decompilation evidence locations alongside Anthropic's architectural solutions for modern LLM client engineering hurdles:
 
@@ -131,17 +131,20 @@ It documents exact decompilation evidence locations alongside Anthropic's archit
 
 ### 🛠️ Part 7: Engineering Setup & Codebase Overview
 * **[7.1 Out-of-the-Box Tailwind Configuration & Base CSS](docs/v1/07-工程配置与资产代码库总览.md#71-开箱即用的-tailwind-配置与基础-css-代码)**: Complete global theme stylesheet and Tailwind engineering configuration extensions.
-* **[7.2 Production Source Code Inventory](docs/v1/07-工程配置与资产代码库总览.md#72-生产级工程源码清单)**: Full inventory of all 30 standalone production source files (11 atomic controls + 19 architecture modules).
+* **[7.2 Production Source Code Inventory](docs/v1/07-工程配置与资产代码库总览.md#72-生产级工程源码清单)**: Full inventory of the v1 baseline's 30 standalone production source files (11 atomic controls + 19 architecture modules); the repo now ships 37 files, see Repository Structure below.
 * **[7.3 Asset Specifications & System-Level Font/Audio Alternatives](docs/v1/07-工程配置与资产代码库总览.md#73-资产规范与系统级字体音频替代方案)**: High-fidelity system font fallback stacks and procedural Web Audio synthesis specifications.
 
 ### 🤖 Part 8: AI Agent Frontend UI & Motion Guidelines
 * **[8.1~8.7 Agent Roles, Design Token Contracts & Spring Decision Tree](docs/v1/08-AI-Agent-前端-UI-与动效开发指南.md)**: Standardized guidelines for AI Coding Agents to implement pixel-perfect CDS components.
 
 ### 🚀 Claude Desktop 2.0 (v2.37337.1) Comprehensive Reverse Engineering Analysis
-* **[1~6 Overview, Additions, Refactorings, Baseline Secrets, Reference Implementations & Summary](docs/v2/README.md)**: Standalone decompilation report for Claude Desktop 2.0. **(Historical snapshot: superseded by 3.6556.2 — defer to v3 for values)**
+* **[1~6 Overview, Additions, Refactorings, Baseline Secrets, Reference Implementations & Summary](docs/v2/README.md)**: Standalone decompilation report for Claude Desktop 2.0. **(Historical snapshot — defer to docs/v4.16336.0 for values)**
 
-### 🧬 Claude Desktop 4.4212.0 Full Analysis Report (current baseline)
-* **[v4.29.0/README.md — seven chapters + merged edition](docs/v4.29.0-4.4212.0/README.md)**: full reverse engineering of the current production build, **every claim backed by code evidence and a repro command**. Directory name tracks the Claude version.
+### 🧬 Claude Desktop 4.16336.0 Side Browser Manual (current volume)
+* **[v4.16336.0/README.md — eight feature-oriented chapters + merged edition](docs/v4.16336.0/README.md)**: full reverse engineering of the current production build's Browser / Preview pane, **every claim backed by code evidence or a REA Evidence ID**. Chapters follow the `docs/v1/` format and are grouped by feature (architecture/tokens, navigation, preview, security, element inspect, annotation, motion physics, host & engineering). Reference implementation: [`code-examples/ElementInspectHighlight.ts`](code-examples/ElementInspectHighlight.ts).
+
+### 🧬 Claude Desktop 4.4212.0 Full Analysis Report (historical baseline)
+* **[v4.29.0/README.md — seven chapters + merged edition](docs/v4.29.0-4.4212.0/README.md)**: full reverse engineering of that production build, **every claim backed by code evidence and a repro command**. Directory name tracks the Claude version.
   - **Ch.1 Scope & version boundary**: `@ant/desktop 3.6556.2`, ASAR digest, 532-file semantic truncation boundary, six structural zeros
   - **Ch.2 Electron architecture**: 6 Sentry IPC channels / 0 business handlers in the main process, 12 literal bridge API names, 7 renderer entry points
   - **Ch.3 Architecture refactorings**: two-layer skeleton components + `data-hold` three-state reveal, real wave/lockstep delay formulas, RTL `:lang()` list, dual reduced-motion guards
@@ -221,51 +224,36 @@ Gently boosting quiet vocal nuances while curbing peak saturation for a silky, b
 
 ```
 open-claude-ui/
-├── assets/                           # Compliance guidelines & asset notices
-│   ├── images/logo.svg               # Open-source vector mark
-│   └── README.md                     # Asset compliance & fallback stack guide
-├── code-examples/                    # 30 standalone production source files (ready-to-use)
-│   ├── ArtifactsSplitPaneResizer.tsx # Split pane elastic resizer & collapse engine
-│   ├── AttachmentCard.tsx            # Attachment cards & inline context pills
-│   ├── cds-theme.css                 # Global theme stylesheet (CSS variables & Keyframes)
-│   ├── CdsButton.tsx                 # 4 sizes, 5 variants universal button suite
-│   ├── ChatComposer.tsx              # Core composer input terminal
-│   ├── ChatMessageBubbles.tsx        # Conversation bubbles (User & Assistant)
-│   ├── ClaudeAudioPlayer.ts          # Low-latency audio engine (procedural Web Audio oscillators)
-│   ├── ClaudeDesktopHeader.tsx       # macOS immersive titlebar component
-│   ├── ClaudeMotionPresets.ts        # Motion presets & damped harmonic oscillator math solver
-│   ├── CodeBlock.tsx                 # Code container with 2.5s copy cooldown state machine
-│   ├── ConfirmationDialog.tsx        # Modal confirmation dialog
-│   ├── ContainerResponsiveBar.tsx    # Responsive container query bar
-│   ├── CoworkAgentCanvas.tsx         # Multi-agent collaboration canvas & topology
-│   ├── createClaudeMainWindow.ts     # Electron main window host factory
-│   ├── DraggableSessionList.tsx      # Sidebar drag-and-drop session reordering physics
-│   ├── EpitaxyIframeBridge.tsx       # Artifacts preview sandbox bridge
-│   ├── LiveMicActivityBars.tsx       # 6-band non-linear microphone visualizer bars
-│   ├── McpToolDecisionCard.tsx       # MCP interactive tool decision card
-│   ├── MediaLightboxViewer.tsx       # Multimodal media viewer & runway lightbox
-│   ├── ModelSwitcherWithTokenGauge.tsx # Model matrix switcher with token gauge
-│   ├── ReasoningAmbientGlow.tsx      # Dynamic glow & reasoning atmosphere component
-│   ├── RichComposerWithMentions.tsx  # CJK guard, / and @ dual trigger input terminal
-│   ├── ScrollFadeContainer.tsx       # 7-stop quintic ease non-linear alpha scroll fade mask
-│   ├── SegmentedControl.tsx          # 999px fully rounded sliding segmented pill
-│   ├── StatusIndicators.tsx          # Clay breathing indicator, activity pulse & skeleton sweeps
-│   ├── StreamingDiffViewer.tsx       # Code diff viewer with streaming highlight engine
-│   ├── tailwind.config.js            # Tailwind theme extension config
-│   ├── ThinkingAccordion.tsx         # Thinking process state machine accordion
-│   ├── useClaudeRovingFocus.ts       # Full keyboard accessibility roving focus hook
-│   ├── useClaudeScrollPinning.ts     # Streaming scroll viewport pinning hook
-│   ├── useClaudeSharedElementTransition.ts # View Transitions shared-element morphing hook
-│   └── useRateLimitBackoff.ts        # 429/503 exponential backoff & circuit breaker hook
-├── docs/
-│   ├── Claude Design System (CDS).md # 7-part / 31-chapter deep technical guide
+├── assets/                            # Compliance guidelines & asset notices
+│   ├── images/                        # Vector marks (logo + light/dark wordmarks, no binary fonts)
+│   └── README.md                      # Asset compliance & system fallback stack guide
+├── code-examples/                     # 37 files: 30 v1 baseline modules + 5 later modules + 2 config assets
+│   ├── cds-theme.css / cds-pure.css   # Global theme tokens / standalone pure-CSS distribution
+│   ├── tailwind.config.js             # Tailwind engineering extension
+│   ├── CdsButton.tsx / SegmentedControl.tsx / ... # 30 v1 baseline modules (atoms / chat / motion / desktop)
+│   ├── CdsMotionEngine.tsx            # v2 motion engine
+│   ├── ChatComposerChin.tsx           # v2 composer chin
+│   ├── ModelSelectorEffort.tsx        # v2 effort selector
+│   └── ElementInspectHighlight.ts     # v4.16336.0 inspect overlay + React Fiber reflection (new)
+├── docs/                              # Version-named volumes (convention: AGENTS.md §7)
+│   ├── README.md                      # Doc index: versioning convention + volume status table
+│   ├── v1/                            # 1.x historical snapshot: 8 parts / 41 sections + .full.md
+│   ├── v2/                            # 2.37337.1 historical snapshot: 6 chapters
+│   ├── v4.29.0-4.4212.0/             # 3.6556.2 → 4.4212.0 historical baseline: 7 chapters + merged edition
+│   ├── v4.16336.0/                   # Current volume: 8 feature-oriented parts + README + .full.md
 │   └── claude-components-storybook.html # Interactive offline visual storybook
+├── scripts/
+│   └── check-tokens.mjs               # Design token / keyframe consumption gate
 ├── src/
-│   └── index.ts                      # Unified TypeScript library entry point
-├── package.json
-├── tsconfig.json
-├── README.md                         # Chinese documentation (Default)
-└── README-en.md                      # English documentation
+│   ├── index.ts                       # Unified library entry (incl. ElementInspectHighlight)
+│   └── types.d.ts
+├── AGENTS.md                          # Agent rules: tokens / physics / versioning §7 / gates
+├── CLAUDE.md                          # Claude Code specific guidance
+├── CHANGELOG.md / LICENSE
+├── package.json / package-lock.json
+├── tsconfig.json / tsconfig.build.json
+├── README.md                          # Chinese documentation (default)
+└── README-en.md                       # English documentation
 ```
 
 ---
@@ -274,7 +262,7 @@ open-claude-ui/
 
 ### 1. Import Stylesheet & Tokens (Pure CSS Support)
 
-Regardless of whether you use React, you can directly import the CDS core stylesheet and its 242 design tokens (aligned with Claude Desktop 3.6556.2):
+Regardless of whether you use React, you can directly import the CDS core stylesheet and its 261 design tokens (first measured on 3.6556.2; see docs/v4.16336.0 for live values):
 ```css
 /* Import global theme variables, scroll-fade masks, and keyframes */
 @import "open-claude-ui/css";
@@ -391,3 +379,19 @@ Distributed under the [MIT License](LICENSE). All decompiled research findings a
 [![Star History Chart](https://api.star-history.com/svg?repos=Caho1/open-claude-ui&type=Date)](https://star-history.com/#Caho1/open-claude-ui&Date)
 
 </div>
+
+---
+
+## 🐧 Support & Follow
+
+If **open-claude-ui** helped you, please ⭐ [Star the repo](https://github.com/Caho1/open-claude-ui). Feedback and discussions on CDS design tokens, Claude interaction physics and AI-agent frontend engineering are always welcome.
+
+| Platform | Account | Link |
+| :--- | :--- | :--- |
+| 𝕏 **X (Twitter)** | [@BystAnd3rs](https://x.com/BystAnd3rs) | [Open profile](https://x.com/BystAnd3rs) |
+| 📕 **Xiaohongshu / RED** | 企鹅AI指南 | [Open profile](https://xhslink.cn/o/AK5ds1Bx0vw) |
+| 💬 **WeChat Official Account** | 企鹅AI指南 | Search「企鹅AI指南」inside WeChat |
+
+**⭐ [Star this repo](https://github.com/Caho1/open-claude-ui) · 🐛 [Open an issue](https://github.com/Caho1/open-claude-ui/issues) · 🔀 [Open a PR](https://github.com/Caho1/open-claude-ui/pulls)**
+
+> No QR-code image for the WeChat account yet; a text search hint is used for now. Any future QR asset will live under `assets/` and be referenced here.
